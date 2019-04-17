@@ -85,13 +85,17 @@
   <ItemGroup>
     <ClInclude Include="include\camera.h" />
     <ClInclude Include="include\enemy.h" />
+    <ClInclude Include="include\ovector.h" />
     <ClInclude Include="include\person.h" />
     <ClInclude Include="include\player.h" />
     <ClInclude Include="include\world.h" />
-    <ClInclude Include="ovector.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\camera.cpp" />
     <ClCompile Include="src\graphics_final.cpp" />
+    <ClCompile Include="src\ovector.cpp" />
+    <ClCompile Include="src\person.cpp" />
+    <ClCompile Include="src\world.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="bin\freeglut.dll" />

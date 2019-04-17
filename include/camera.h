@@ -11,6 +11,7 @@ camera.h
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include "../include/world.h"
 #include "../include/ovector.h"
 
 class Camera {
@@ -25,13 +26,5 @@ public:
 	};
 	void move();
 };
-
-void Camera::move() {
-	ovector v(&destination);
-	v.sub(&location);
-	v.mult(easing*World::speed);
-
-	location.add(&v);
-}
 
 #endif

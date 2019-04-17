@@ -13,25 +13,45 @@ Superclass for all people in the game (player, enemies)
 #ifndef PERSON_H
 #define PERSON_H
 
+//core headers
+#if defined(__APPLE__)
+#define GL_SILENCE_DEPRECATION
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
+
 #include "../include/world.h"
 #include "../include/ovector.h"
 
 class Person {
 public:
+	static int dimsHead[3];
+	static int dimsTorso[3];
+
 	ovector location;
 	ovector velocity;
 	float heading;
+	float colorHead[3];
+	float colorBody[3];
 
 	Person() {
 		heading = 0;
+
+		colorHead[0] = 1;//0.75;
+		colorHead[1] = 1;//0.75;
+		colorHead[2] = 1;//0.75;
+
+		colorBody[0] = 0.25;
+		colorBody[1] = 0.25;
+		colorBody[2] = 0.25;
 	};
 	void move();
-};
+	void display();
 
-void Person::move() {
-	ovector v(&velocity);
-	v.mult(World::speed);
-	location.add(&velocity);
-}
+protected:
+	//TODO draw parts of the body
+	void drawHead();
+};
 
 #endif

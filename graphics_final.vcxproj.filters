@@ -30,12 +30,24 @@
     <ClInclude Include="include\world.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ovector.h">
+    <ClInclude Include="include\ovector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\graphics_final.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\world.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ovector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\person.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

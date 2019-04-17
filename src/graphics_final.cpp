@@ -16,17 +16,26 @@ moves, and slower when the player stands still.
 #include <cmath>
 #include <string>
 
-//apple vs windows glut
+int osSpeed = 1;		//speed if Windows
+
+//apple vs windows glut and opengl
 #if defined(__APPLE__)
+
 #define GL_SILENCE_DEPRECATION
 #include <GLUT/glut.h>
+
+#define osSpeed 15		//if Mac, override other osSpeed
+
 #else
+
 #include <GL/glut.h>
+
 #endif
 
 //local headers
 #include "../include/world.h"
-#include "../include/player.h"
+#include "../include/person.h"
+//#include "../include/player.h"
 #include "../include/enemy.h"
 #include "../include/camera.h"
 
@@ -36,19 +45,21 @@ using namespace std;
 //application variables
 #define GAME_NAME "Graphics Final"
 int dimsWindow[] = {600,600,600};
-int dimsScreen[3];
-
-void initGL() {
-	glMatrixMode(GL_PROJECTION);
-	glViewport(0,0,dimsWindow[0],dimsWindow[1]);
-	glLoadIdentity();
-	//TODO replace glOrtho2D with glPerspective
-	gluOrtho2D(0,dimsWindow[0],0,dimsWindow[1]);
-	glMatrixMode(GL_MODELVIEW);
-}
+int dimsScreen[2];
+#define FOV 60
+Person person;
 
 void display() {
-	cout << "GLUT::display()" << endl;
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glLoadIdentity();
+
+	//TODO delete this (it's for testing the universe dimensions and camera setup
+	glutWireCube(100);
+
+	//person.display();
+
+	glutSwapBuffers();
 }
 
 void reshape(int w, int h) {
@@ -56,23 +67,93 @@ void reshape(int w, int h) {
 	//implicity calls glutPostRedisplay()
 }
 
+void keydown (unsigned char key, int x , int y)
+{
+	if (key == 'w') {
+		World::keyW = true;
+	}
+	else if (key == 'd') {
+		World::keyD = true;
+	}
+	else if (key == 's') {
+		World::keyS = true;
+	}
+	else if (key == 'a') {
+		World::keyA = true;
+	}
+}
+
+void keyup (unsigned char key, int x , int y) {
+	if (key == 'w') {
+		World::keyW = false;
+	}
+	else if (key == 'd') {
+		World::keyD = false;
+	}
+	else if (key == 's') {
+		World::keyS = false;
+	}
+	else if (key == 'a') {
+		World::keyA = false;
+	}
+}
+
+void mousemove(int x, int y) {
+	World::mouse[0] = x / (float)dimsWindow[0]; //0 = left, 1 = right
+	World::mouse[1] = 1 - (y / (float)dimsWindow[1]); //0 = top, 1 = bottom
+}
+
+void mouseclick(int button, int status, int x, int y) {
+	if (status == GLUT_DOWN) {
+		if (button == GLUT_LEFT_BUTTON) {
+			cout << "mouse.leftButton" << endl;
+			World::clicked = true;
+		}
+	}
+	else if (status == GLUT_UP) {
+		if (button == GLUT_LEFT_BUTTON) {
+			World::clicked = false;
+		}
+	}
+}
+
 void initGLUT(int argc, char**argv) {
 	//glut window
 	glutInit(&argc,argv);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	
 	glutInitWindowSize(dimsWindow[0],dimsWindow[1]);
-	//TODO get screen size
-	//TODO center window
-	glutInitWindowPosition(100,100);
+	dimsScreen[0] = glutGet(GLUT_SCREEN_WIDTH);
+	dimsScreen[1] = glutGet(GLUT_SCREEN_HEIGHT);
+	glutInitWindowPosition(dimsScreen[0]/2 - dimsWindow[0]/2, dimsScreen[1]/2 - dimsWindow[1]/2);
 	glutCreateWindow(GAME_NAME);
 	
 	//glut event handlers
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
-	//TODO mouse funcs
-	//TODO keyboard down func
-	//TODO keyboard up func
+	glutKeyboardFunc(keydown);
+	glutKeyboardUpFunc(keyup);
+	glutPassiveMotionFunc(mousemove);
+	glutMouseFunc(mouseclick);
+}
+
+void initGL() {
+	//enable depth test
+	glEnable(GL_DEPTH);
+
+	//load universe dimensions
+	glMatrixMode(GL_PROJECTION);
+	glViewport(0,0,dimsWindow[0],dimsWindow[1]);
+	glLoadIdentity();
+	gluPerspective(FOV,1,dimsWindow[2]/2,-dimsWindow[2]/2);
+	//glOrtho(-dimsWindow[0]/2,dimsWindow[0]/2,-dimsWindow[1]/2,dimsWindow[1]/2,dimsWindow[2]/2,-dimsWindow[2]/2);
+	glMatrixMode(GL_MODELVIEW);
+
+	//background color
+	glClearColor(0.2,0,0.1,1);
+
+	//stroke thickness
+	glLineWidth(2);
 }
 
 //program main
@@ -80,13 +161,22 @@ int main(int argc, char** argv) {
 	cout << "Computer Graphics final project: 3D top-down shooter" << endl;
 	cout << "Owen Gallagher, Brian Park" << endl;
 	
-	cout << "initGLUT()" << endl;
+	cout << "initGLUT()..." << endl;
 	initGLUT(argc,argv);
-	cout << "initGL()" << endl;
+	cout << "initGL()..." << endl;
 	initGL();
-	
-	World::display();
+
+	cout << "init World..." << endl;
+	World::loadOSSpeed(osSpeed);
 	cout << World::describe() << endl;
+
+	cout << "init person..." << endl;
+	person.location.set(0,0,0);
+
+	cout << "init camera..." << endl;
+	World::camera->location.set(0,0,0.8*dimsWindow[2]/2);
+	World::camera->subject.set(&(person.location));
+	World::placeCamera();
 	
 	glutMainLoop();
 	
