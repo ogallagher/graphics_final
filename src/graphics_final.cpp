@@ -14,6 +14,7 @@ moves, and slower when the player stands still.
 #include <iostream>
 #include <ctime>
 #include <cmath>
+#include <string>
 
 //apple vs windows glut
 #if defined(__APPLE__)

@@ -13,6 +13,7 @@ world.h
 
 //core headers
 #include <iostream>
+#include <string>
 
 //namespaces
 using namespace std;
@@ -30,7 +31,7 @@ public:
 	static string describe();
 };
 
-double World::speed = 1;
+double World::speed = 1*osSpeed;
 int World::dims[3] = {200,200,100};
 
 void World::display() {
