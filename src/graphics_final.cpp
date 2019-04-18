@@ -24,7 +24,7 @@ int osSpeed = 1;		//speed if Windows
 #define GL_SILENCE_DEPRECATION
 #include <GLUT/glut.h>
 
-#define osSpeed 15		//if Mac, override other osSpeed
+#define osSpeed 50		//if Mac, override other osSpeed
 
 #else
 
@@ -53,19 +53,19 @@ double t=0;
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//glMatrixMode(GL_MODELVIEW);
+	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
 	//TODO delete this (it's for testing the universe dimensions and camera setup)
-	glPushMatrix();
+	//glPushMatrix();
 	
-	glTranslatef(100*cos(t),100*sin(t),100*sin(0.7*t));
+	//glTranslatef(100*cos(t),100*sin(t),100*sin(0.7*t));
 	glRotatef(15*t,1,0,0);
 	glRotatef(12*t,0,1,0);
 	glRotatef(9*t,0,0,1);
 	glScalef(1,3,1);
-	glutWireCube(100);
-	glPopMatrix();
+	glutWireCube(1.0);
+	//glPopMatrix();
 
 	//person.display();
 
@@ -74,6 +74,11 @@ void display() {
 
 void reshape(int w, int h) {
 	cout << "GLUT::reshape()" << endl;
+	glViewport(0, 0, w, h);
+    glMatrixMode(GL_PROJECTION);
+    //glLoadIdentity();
+	//gluPerspective(FOV,(double)dimsWindow[0]/dimsWindow[1],0,20);
+    glMatrixMode(GL_MODELVIEW);
 	//implicity calls glutPostRedisplay()
 }
 
@@ -128,7 +133,7 @@ void mouseclick(int button, int status, int x, int y) {
 }
 
 void idle() {
-	t += 0.01*osSpeed;
+	t += 0.001*osSpeed;
 	glutPostRedisplay();
 }
 
@@ -156,14 +161,15 @@ void initGLUT(int argc, char**argv) {
 void initGL() {
 	//enable depth test
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH);
 
 	//load universe dimensions
 	glViewport(0,0,dimsWindow[0],dimsWindow[1]);
 	
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	//gluPerspective(FOV,1,dimsWindow[2]/2,-dimsWindow[2]/2);
-	glOrtho(-dimsWindow[0]/2,dimsWindow[0]/2,-dimsWindow[1]/2,dimsWindow[1]/2,dimsWindow[2]/2,-dimsWindow[2]/2);
+	//gluPerspective(FOV,(double)dimsWindow[0]/dimsWindow[1],0,20);
+	glOrtho(-5,5,-5,5,5,-5);
 	glMatrixMode(GL_MODELVIEW);
 
 	//background color
@@ -191,7 +197,7 @@ int main(int argc, char** argv) {
 	person.location.set(0,0,0);
 
 	cout << "init camera..." << endl;
-	World::camera->location.set(0,0,0.8*dimsWindow[2]/2);
+	World::camera->location.set(10,10,10);
 	World::camera->subject.set(&(person.location));
 	World::placeCamera();
 	
