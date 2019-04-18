@@ -48,14 +48,24 @@ int dimsWindow[] = {600,600,600};
 int dimsScreen[2];
 #define FOV 60
 Person person;
+double t=0;
 
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	//glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	//TODO delete this (it's for testing the universe dimensions and camera setup
+	//TODO delete this (it's for testing the universe dimensions and camera setup)
+	glPushMatrix();
+	
+	glTranslatef(100*cos(t),100*sin(t),100*sin(0.7*t));
+	glRotatef(15*t,1,0,0);
+	glRotatef(12*t,0,1,0);
+	glRotatef(9*t,0,0,1);
+	glScalef(1,3,1);
 	glutWireCube(100);
+	glPopMatrix();
 
 	//person.display();
 
@@ -117,6 +127,11 @@ void mouseclick(int button, int status, int x, int y) {
 	}
 }
 
+void idle() {
+	t += 0.01*osSpeed;
+	glutPostRedisplay();
+}
+
 void initGLUT(int argc, char**argv) {
 	//glut window
 	glutInit(&argc,argv);
@@ -135,18 +150,20 @@ void initGLUT(int argc, char**argv) {
 	glutKeyboardUpFunc(keyup);
 	glutPassiveMotionFunc(mousemove);
 	glutMouseFunc(mouseclick);
+	glutIdleFunc(idle);
 }
 
 void initGL() {
 	//enable depth test
-	glEnable(GL_DEPTH);
+	glEnable(GL_DEPTH_TEST);
 
 	//load universe dimensions
-	glMatrixMode(GL_PROJECTION);
 	glViewport(0,0,dimsWindow[0],dimsWindow[1]);
+	
+	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(FOV,1,dimsWindow[2]/2,-dimsWindow[2]/2);
-	//glOrtho(-dimsWindow[0]/2,dimsWindow[0]/2,-dimsWindow[1]/2,dimsWindow[1]/2,dimsWindow[2]/2,-dimsWindow[2]/2);
+	//gluPerspective(FOV,1,dimsWindow[2]/2,-dimsWindow[2]/2);
+	glOrtho(-dimsWindow[0]/2,dimsWindow[0]/2,-dimsWindow[1]/2,dimsWindow[1]/2,dimsWindow[2]/2,-dimsWindow[2]/2);
 	glMatrixMode(GL_MODELVIEW);
 
 	//background color
