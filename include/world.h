@@ -44,7 +44,7 @@ public:
 	static void loadOSSpeed(int);
 	static void display();
 	static string describe();
-	static void placeCamera(); //calls gluLookAt()
+	static void loadCamera(); //calls gluLookAt()
 
 	static Camera *camera;
 };

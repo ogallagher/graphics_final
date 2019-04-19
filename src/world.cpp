@@ -12,7 +12,7 @@ world.cpp
 #include "../include/camera.h"
 
 double World::speed = 1;
-int World::dims[3] = {200,200,100};
+int World::dims[3] = {200,10,200};
 int World::mouse[2] = {0,0};
 bool World::clicked = false;
 bool World::keyW = false;
@@ -26,7 +26,15 @@ void World::loadOSSpeed(int osSpeed) {
 }
 
 void World::display() {
-	cout << "World::display()" << endl;
+	loadCamera();
+
+	glPushMatrix();
+	
+	glScalef(World::dims[0],World::dims[1],World::dims[2]);
+	glColor3f(1,1,1);
+	glutWireCube(1.0);
+
+	glPopMatrix();
 }
 
 string World::describe() {
@@ -39,7 +47,7 @@ string World::describe() {
 	return description;
 }
 
-void World::placeCamera() {
+void World::loadCamera() {
 	gluLookAt(camera->location.x,camera->location.y,camera->location.z,
 			  camera->subject.x,camera->subject.y,camera->subject.z,
 			  0,1,0);

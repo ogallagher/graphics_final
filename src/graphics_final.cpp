@@ -23,6 +23,7 @@ TODO
 	- die method
 	- walking animation (for later)
 - world/app
+	- modify World::speed based on framerate
 	- idle method: update animations and motions
 	- cursor-world projection: draw a ray representing the current mouse position (for later)
 - research/questions
@@ -79,28 +80,27 @@ void display() {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	//TODO delete this (it's for testing the universe dimensions and camera setup)
-	//glPushMatrix();
-	
-	//glTranslatef(100*cos(t),100*sin(t),100*sin(0.7*t));
-	glRotatef(15*t,1,0,0);
-	glRotatef(12*t,0,1,0);
-	glRotatef(9*t,0,0,1);
-	glScalef(1,3,1);
-	glutWireCube(1.0);
-	//glPopMatrix();
+	World::display();
 
-	//person.display();
+	person.display();
 
 	glutSwapBuffers();
 }
 
 void reshape(int w, int h) {
 	cout << "GLUT::reshape()" << endl;
-	glViewport(0, 0, w, h);
+	
     glMatrixMode(GL_PROJECTION);
-    //glLoadIdentity();
-	//gluPerspective(FOV,(double)dimsWindow[0]/dimsWindow[1],0,20);
+    glLoadIdentity();
+	if (w<h) {
+		glViewport(0, h/2 - w/2, w, w);
+		gluPerspective(FOV,1,dimsWindow[2]/20,dimsWindow[2]);
+	}
+	else {
+		glViewport(0,0,w,h);
+		gluPerspective(FOV,(double)w/h,dimsWindow[2]/20,dimsWindow[2]);
+	}
+	
     glMatrixMode(GL_MODELVIEW);
 	//implicity calls glutPostRedisplay()
 }
@@ -156,8 +156,13 @@ void mouseclick(int button, int status, int x, int y) {
 }
 
 void idle() {
-	t += 0.001*osSpeed;
+	t += 0.001*World::speed;
+
+	World::camera->location.set(World::dims[0]/2,sin(t)*dimsWindow[1]/8 + dimsWindow[1]/4,-World::dims[2]/2);
+
 	glutPostRedisplay();
+
+	//TODO measure framerate and update World::speed
 }
 
 void initGLUT(int argc, char**argv) {
@@ -184,6 +189,8 @@ void initGLUT(int argc, char**argv) {
 void initGL() {
 	//enable depth test
 	glEnable(GL_DEPTH_TEST);
+
+	//enable something else with depth?
 	glEnable(GL_DEPTH);
 
 	//load universe dimensions
@@ -191,8 +198,7 @@ void initGL() {
 	
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	//gluPerspective(FOV,(double)dimsWindow[0]/dimsWindow[1],0,20);
-	glOrtho(-5,5,-5,5,5,-5);
+	gluPerspective(FOV,1,dimsWindow[2]/20,dimsWindow[2]);
 	glMatrixMode(GL_MODELVIEW);
 
 	//background color
@@ -201,6 +207,7 @@ void initGL() {
 	//stroke thickness
 	glLineWidth(2);
 }
+
 
 //program main
 int main(int argc, char** argv) {
@@ -220,9 +227,8 @@ int main(int argc, char** argv) {
 	person.location.set(0,0,0);
 
 	cout << "init camera..." << endl;
-	World::camera->location.set(10,10,10);
+	World::camera->location.set(World::dims[0]/2,dimsWindow[0]/2,-World::dims[2]/2);
 	World::camera->subject.set(&(person.location));
-	World::placeCamera();
 	
 	glutMainLoop();
 	

@@ -8,8 +8,8 @@ Computer Graphics
 
 #include "../include/person.h"
 
-int Person::dimsHead[3] = {25,25,25};
-int Person::dimsTorso[3] = {25,25,40};
+int Person::dimsHead[3] = {5,5,5};
+int Person::dimsTorso[3] = {5,10,5};
 
 void Person::move() {
 	ovector v(&velocity);
@@ -22,8 +22,8 @@ void Person::drawHead() {
 
 	glColor3f(colorHead[0],colorHead[1],colorHead[2]);
 
-	//glScalef(dimsHead[0],dimsHead[1],dimsHead[2]);
-	glutWireCube(100);
+	glScalef(dimsHead[0],dimsHead[1],dimsHead[2]);
+	glutSolidCube(1);
 
 	glPopMatrix();
 }
@@ -34,8 +34,6 @@ void Person::drawTorso() {
 }
 
 void Person::display() {
-	cout << "Person::display()" << endl;
-
 	glPushMatrix();
 
 	glRotatef(heading,0,1,0);
