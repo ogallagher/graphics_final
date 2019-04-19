@@ -52,6 +52,7 @@ public:
 protected:
 	//TODO draw parts of the body
 	void drawHead();
+	void drawTorso();
 };
 
 #endif

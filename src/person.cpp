@@ -28,6 +28,11 @@ void Person::drawHead() {
 	glPopMatrix();
 }
 
+//TODO draw torso
+void Person::drawTorso() {
+	
+}
+
 void Person::display() {
 	cout << "Person::display()" << endl;
 
@@ -38,6 +43,7 @@ void Person::display() {
 	
 	//TODO draw person
 	drawHead();
+	
 
 	glPopMatrix();
 }
