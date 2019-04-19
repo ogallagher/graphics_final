@@ -8,15 +8,15 @@ Submission for the 3D OpenGL final project.
 It's a top-down shooter with SuperHot-like mechanics, where time is faster when the player
 moves, and slower when the player stands still.
 
-TODO <framerate-adapt> modify World::speed based on framerate/idlerate
-+ measure idlerate every x amount of time
-	+ idlerate = idle/time
+TODO <framerate-adapt> modify World::speed based on framerate
++ measure framerate every x amount of time
+	+ framerate = display/time
 	+ x = 5000ms (reset counts on reshape(), which messes them up)
-- update World::speed so ideal idlerate remains y
-	- y =? 30ips 
-- idlerate measurements (initial window size, drawing world wirecube and player solidcube)
-	+ idlerateMac ~ 30 idle/second (ips)
-	- idlerateWin ~ ? idle/second
+- update World::speed so ideal framerate remains y
+	- y =? 60fps 
+- framerate measurements (initial window size, drawing world wirecube and player solidcube)
+	+ framerateMac ~ 61fps
+	- framerateWin ~ ?
 
 */
 
@@ -56,12 +56,13 @@ int dimsWindow[] = {600,600,600};
 int dimsScreen[2];
 #define FOV 60
 Person person;
-double t=0;
-int idleCount=0; //TODO remove some of these
+double t = 0;
+int idleCount = 0;
 chrono::high_resolution_clock::time_point atime;
 chrono::high_resolution_clock::time_point btime;
-int dtime=0; //ms
-int idleRateInterval=5000; //ms
+int dtime = 0;
+int fpsInterval = 5000;
+int fpsIdeal = 60;
 
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -74,6 +75,30 @@ void display() {
 	person.display();
 
 	glutSwapBuffers();
+	
+	//measure framerate and update World::speed
+	idleCount++;
+	btime = chrono::high_resolution_clock::now();
+	dtime += chrono::duration_cast<chrono::milliseconds>(btime - atime).count();
+	atime = btime;
+	
+	if (dtime >= fpsInterval) {
+		float fps = (float)idleCount*1000/dtime;
+		float dfps = (fps-fpsIdeal)/fpsIdeal;
+		float adfps = abs(dfps);
+		if (adfps > 0.05) {
+			if (adfps < 0.5) {
+				World::speed *= 1-dfps;
+				cout << "World::speed = " << World::speed << endl;
+			}
+			else {
+				cout << "fps measurement ignored: " << fps << endl;
+			}
+		}
+		
+		dtime = 0;
+		idleCount = 0;
+	}
 }
 
 void reshape(int w, int h) {
@@ -90,7 +115,7 @@ void reshape(int w, int h) {
 	
     glMatrixMode(GL_MODELVIEW);
 	
-	//reset ips measures
+	//reset fps measures
 	dtime = 0;
 	idleCount = 0;
 	atime = chrono::high_resolution_clock::now();
@@ -154,18 +179,6 @@ void idle() {
 	World::camera->location.set(World::dims[0]/2,sin(t)*dimsWindow[1]/8 + dimsWindow[1]/4,-World::dims[2]/2);
 
 	glutPostRedisplay();
-
-	//measure framerate and update World::speed
-	idleCount++;
-	btime = chrono::high_resolution_clock::now();
-	dtime += chrono::duration_cast<chrono::milliseconds>(btime - atime).count();
-	atime = btime;
-	
-	if (dtime >= idleRateInterval) {
-		cout << "idlerate = " << (float)idleCount*1000/dtime << endl;
-		dtime = 0;
-		idleCount = 0;
-	}
 }
 
 void initGLUT(int argc, char**argv) {
