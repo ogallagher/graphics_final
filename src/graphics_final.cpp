@@ -8,29 +8,15 @@ Submission for the 3D OpenGL final project.
 It's a top-down shooter with SuperHot-like mechanics, where time is faster when the player
 moves, and slower when the player stands still.
 
-TODO
-- enemy
-	- point at player method
-- player
-	- move for arrow keys
-	- score variable
-	- variables for shooting (ammo, reload time)
-- bullet class
-	- collision with: person, obstacle
-- obstacle class
-- person
-	- shoot method
-	- die method
-	- walking animation (for later)
-- world/app
-	- modify World::speed based on framerate
-	- idle method: update animations and motions
-	- cursor-world projection: draw a ray representing the current mouse position (for later)
-- research/questions
-	- how to use sound with opengl/glut (so we could have sound effects)
-	- how should we set up the environment?
-	- how should we spawn enemies?
-	- how should the enemies behave (how they follow the player and shoot)?
+TODO <framerate-adapt> modify World::speed based on framerate/idlerate
++ measure idlerate every x amount of time
+	+ idlerate = idle/time
+	+ x = 5000ms (reset counts on reshape(), which messes them up)
+- update World::speed so ideal idlerate remains y
+	- y =? 30ips 
+- idlerate measurements (initial window size, drawing world wirecube and player solidcube)
+	+ idlerateMac ~ 30 idle/second (ips)
+	- idlerateWin ~ ? idle/second
 
 */
 
@@ -38,21 +24,19 @@ TODO
 #include <iostream>
 #include <ctime>
 #include <cmath>
-#include <string>
+#include <string>	
+#include <chrono>
 
-int osSpeed = 1;		//speed if Windows
-
-//apple vs windows glut and opengl
 #if defined(__APPLE__)
 
-#define GL_SILENCE_DEPRECATION
+#define GL_SILENCE_DEPRECATION //apple glut and opengl
 #include <GLUT/glut.h>
-
-#define osSpeed 50		//if Mac, override other osSpeed
+#define osSpeed 50		//speed if Mac
 
 #else
 
-#include <GL/glut.h>
+#include <GL/glut.h> //windows glut and opengl
+#define osSpeed 1		//speed if Windows
 
 #endif
 
@@ -73,6 +57,11 @@ int dimsScreen[2];
 #define FOV 60
 Person person;
 double t=0;
+int idleCount=0; //TODO remove some of these
+chrono::high_resolution_clock::time_point atime;
+chrono::high_resolution_clock::time_point btime;
+int dtime=0; //ms
+int idleRateInterval=5000; //ms
 
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -88,8 +77,6 @@ void display() {
 }
 
 void reshape(int w, int h) {
-	cout << "GLUT::reshape()" << endl;
-	
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 	if (w<h) {
@@ -102,6 +89,12 @@ void reshape(int w, int h) {
 	}
 	
     glMatrixMode(GL_MODELVIEW);
+	
+	//reset ips measures
+	dtime = 0;
+	idleCount = 0;
+	atime = chrono::high_resolution_clock::now();
+	
 	//implicity calls glutPostRedisplay()
 }
 
@@ -162,7 +155,17 @@ void idle() {
 
 	glutPostRedisplay();
 
-	//TODO measure framerate and update World::speed
+	//measure framerate and update World::speed
+	idleCount++;
+	btime = chrono::high_resolution_clock::now();
+	dtime += chrono::duration_cast<chrono::milliseconds>(btime - atime).count();
+	atime = btime;
+	
+	if (dtime >= idleRateInterval) {
+		cout << "idlerate = " << (float)idleCount*1000/dtime << endl;
+		dtime = 0;
+		idleCount = 0;
+	}
 }
 
 void initGLUT(int argc, char**argv) {
@@ -230,6 +233,9 @@ int main(int argc, char** argv) {
 	World::camera->location.set(World::dims[0]/2,dimsWindow[0]/2,-World::dims[2]/2);
 	World::camera->subject.set(&(person.location));
 	
+	cout << "init framerate clock..." << endl;
+	atime = chrono::high_resolution_clock::now();
+	 	
 	glutMainLoop();
 	
 	exit(EXIT_SUCCESS);
