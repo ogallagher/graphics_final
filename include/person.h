@@ -28,6 +28,7 @@ class Person {
 public:
 	static int dimsHead[3];
 	static int dimsTorso[3];
+	static const int NECK_HEIGHT;
 
 	ovector location;
 	ovector velocity;
