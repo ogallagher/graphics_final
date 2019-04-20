@@ -20,15 +20,15 @@ void Person::move() {
 
 void Person::drawHead() {
 	glPushMatrix();
-	
+
 	//transforms
-	glTranslatef(0,(dimsTorso[1]+dimsHead[1])/2 + 1,0);
+	glTranslatef(0,(dimsTorso[1]+dimsHead[1])/2 + NECK_HEIGHT,0);
 	glScalef(dimsHead[0],dimsHead[1],dimsHead[2]);
 	
-	//set material
+	//material properties
 	glColor3f(colorHead[0],colorHead[1],colorHead[2]);
 	
-	//draw base shape
+	//base shape
 	glutSolidCube(1);
 
 	glPopMatrix();
@@ -36,7 +36,7 @@ void Person::drawHead() {
 
 void Person::drawTorso() {
 	glPushMatrix();
-
+	
 	//inherited transforms
 	glTranslatef(0,dimsTorso[1]/2,0);
 	
@@ -46,10 +46,10 @@ void Person::drawTorso() {
 	//local transforms
 	glScalef(dimsTorso[0],dimsTorso[1],dimsTorso[2]);
 	
-	//set material
+	//material properties
 	glColor3f(colorBody[0],colorBody[1],colorBody[2]);
 	
-	//draw base shape
+	//base shape
 	glutSolidCube(1);
 	
 	glPopMatrix();
