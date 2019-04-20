@@ -29,6 +29,7 @@ public:
 	static int dimsHead[3];
 	static int dimsTorso[3];
 	static const int NECK_HEIGHT;
+	static float speed;
 
 	ovector location;
 	ovector velocity;
@@ -48,6 +49,7 @@ public:
 		colorBody[2] = 0.25;
 	};
 	void move();
+	void keyControl();
 	void display();
 
 protected:

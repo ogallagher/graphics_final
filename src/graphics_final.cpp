@@ -175,7 +175,10 @@ void idle() {
 	t += 0.001*World::speed;
 
 	//test animations
-	World::camera->location.set(World::dims[0]/2,sin(t)*dimsWindow[1]/8 + dimsWindow[1]/4,-World::dims[2]/2);
+	World::camera->location.set(World::dims[0]/8,sin(t)*dimsWindow[1]/16 + dimsWindow[1]/4,World::dims[2]/2);
+	
+	person.keyControl();
+	person.move();
 	person.heading = 30*t;
 	
 	glutPostRedisplay();
@@ -243,7 +246,7 @@ int main(int argc, char** argv) {
 	person.location.set(0,0,0);
 
 	cout << "init camera..." << endl;
-	World::camera->location.set(World::dims[0]/2,dimsWindow[0]/2,-World::dims[2]/2);
+	World::camera->location.set(World::dims[0]/8,dimsWindow[0]/2,World::dims[2]/2);
 	World::camera->subject.set(&(person.location));
 	
 	cout << "init framerate clock..." << endl;
