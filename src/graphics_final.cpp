@@ -8,30 +8,11 @@ Submission for the 3D OpenGL final project.
 It's a top-down shooter with SuperHot-like mechanics, where time is faster when the player
 moves, and slower when the player stands still.
 
-TODO <master>
-- enemy
-	- point at player method
-- player
-	+ move for arrow keys
-	- score variable
-	- variables for shooting (ammo, reload time)
-- bullet class
-	- collision with: person, obstacle
-- obstacle class
-- person
-	- shoot method
-	- die method
-	- walking animation
-- world/app
-	+ modify World::speed based on framerate
-	- idle method: update animations and motions
-	+ track cursor in 2d
-	- cursor-world projection: draw a ray representing the current mouse position
-- research/questions
-	- how to use sound with opengl/glut (so we could have sound effects)
-	- how should we set up the environment?
-	- how should we spawn enemies?
-	- how should the enemies behave (how they follow the player and shoot)?
+TODO <cursor-ray> determine where the user is pointing
+- calculate ray
+- find intersection with ground plane
++ mark the intersection
+- mark left-click with a different color
 
 */
 
