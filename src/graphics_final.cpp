@@ -9,13 +9,13 @@ It's a top-down shooter with SuperHot-like mechanics, where time is faster when 
 moves, and slower when the player stands still.
 
 TODO <person-visuals>: draw person full body
-- torso
-	- rotates according to heading
-- head
++ torso
+	+ rotates according to heading
++ head
 - legs
 	- rotates according to velocity (cardinal directions)
 	- walking animation
-- color
++ color
 - material properties
 	- uses color
 	- uses ambient, diffuse, and specular light
@@ -178,7 +178,9 @@ void mouseclick(int button, int status, int x, int y) {
 void idle() {
 	t += 0.001*World::speed;
 
+	//test animations
 	World::camera->location.set(World::dims[0]/2,sin(t)*dimsWindow[1]/8 + dimsWindow[1]/4,-World::dims[2]/2);
+	person.heading = 30*t;
 
 	glutPostRedisplay();
 }
