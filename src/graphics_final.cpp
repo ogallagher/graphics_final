@@ -12,7 +12,6 @@ TODO <person-visuals>: draw person full body
 - torso
 	- rotates according to heading
 - head
-	- 
 - legs
 	- rotates according to velocity (cardinal directions)
 	- walking animation
@@ -27,21 +26,19 @@ TODO <person-visuals>: draw person full body
 #include <iostream>
 #include <ctime>
 #include <cmath>
-#include <string>
+#include <string>	
+#include <chrono>
 
-int osSpeed = 1;		//speed if Windows
-
-//apple vs windows glut and opengl
 #if defined(__APPLE__)
 
-#define GL_SILENCE_DEPRECATION
+#define GL_SILENCE_DEPRECATION //apple glut and opengl
 #include <GLUT/glut.h>
-
-#define osSpeed 50		//if Mac, override other osSpeed
+#define osSpeed 50		//speed if Mac
 
 #else
 
-#include <GL/glut.h>
+#include <GL/glut.h> //windows glut and opengl
+#define osSpeed 1		//speed if Windows
 
 #endif
 
@@ -61,7 +58,13 @@ int dimsWindow[] = {600,600,600};
 int dimsScreen[2];
 #define FOV 60
 Person person;
-double t=0;
+double t = 0;
+int idleCount = 0;
+chrono::high_resolution_clock::time_point atime;
+chrono::high_resolution_clock::time_point btime;
+int dtime = 0;
+int fpsInterval = 5000;
+int fpsIdeal = 60;
 
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -74,11 +77,33 @@ void display() {
 	person.display();
 
 	glutSwapBuffers();
+	
+	//measure framerate and update World::speed
+	idleCount++;
+	btime = chrono::high_resolution_clock::now();
+	dtime += chrono::duration_cast<chrono::milliseconds>(btime - atime).count();
+	atime = btime;
+	
+	if (dtime >= fpsInterval) {
+		float fps = (float)idleCount*1000/dtime;
+		float dfps = (fps-fpsIdeal)/fpsIdeal;
+		float adfps = abs(dfps);
+		if (adfps > 0.05) {
+			if (adfps < 0.5) {
+				World::speed *= 1-dfps;
+				cout << "World::speed = " << World::speed << endl;
+			}
+			else {
+				cout << "fps measurement ignored: " << fps << endl;
+			}
+		}
+		
+		dtime = 0;
+		idleCount = 0;
+	}
 }
 
 void reshape(int w, int h) {
-	cout << "GLUT::reshape()" << endl;
-	
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 	if (w<h) {
@@ -91,6 +116,12 @@ void reshape(int w, int h) {
 	}
 	
     glMatrixMode(GL_MODELVIEW);
+	
+	//reset fps measures
+	dtime = 0;
+	idleCount = 0;
+	atime = chrono::high_resolution_clock::now();
+	
 	//implicity calls glutPostRedisplay()
 }
 
@@ -150,8 +181,6 @@ void idle() {
 	World::camera->location.set(World::dims[0]/2,sin(t)*dimsWindow[1]/8 + dimsWindow[1]/4,-World::dims[2]/2);
 
 	glutPostRedisplay();
-
-	//TODO measure framerate and update World::speed
 }
 
 void initGLUT(int argc, char**argv) {
@@ -219,6 +248,9 @@ int main(int argc, char** argv) {
 	World::camera->location.set(World::dims[0]/2,dimsWindow[0]/2,-World::dims[2]/2);
 	World::camera->subject.set(&(person.location));
 	
+	cout << "init framerate clock..." << endl;
+	atime = chrono::high_resolution_clock::now();
+	 	
 	glutMainLoop();
 	
 	exit(EXIT_SUCCESS);
