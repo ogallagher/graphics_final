@@ -60,3 +60,8 @@ float ovector::mag() {
 void ovector::norm() {
 	div(mag());
 }
+
+std::ostream & operator <<(std::ostream &os, const ovector &ov) {
+	os << '[' << ov.x << ' ' << ov.y << ' ' << ov.z << ']';
+	return os;
+}

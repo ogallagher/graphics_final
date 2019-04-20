@@ -14,6 +14,7 @@ A 3D vector utility class.
 #define OVECTOR_H
 
 #include <cmath>
+#include <iostream>
 
 class ovector {
 public:
@@ -29,6 +30,8 @@ public:
 	void div(float);
 	float mag();
 	void norm();
+	
+	friend std::ostream & operator <<(std::ostream &, const ovector &);
 };
 
 #endif

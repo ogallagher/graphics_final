@@ -47,7 +47,7 @@ void Person::drawHead() {
 	//material properties
 	glColor3f(colorHead[0],colorHead[1],colorHead[2]);
 	
-	//base shape
+	//primitive
 	glutSolidCube(1);
 
 	glPopMatrix();
@@ -68,7 +68,7 @@ void Person::drawTorso() {
 	//material properties
 	glColor3f(colorBody[0],colorBody[1],colorBody[2]);
 	
-	//base shape
+	//primitive
 	glutSolidCube(1);
 	
 	glPopMatrix();

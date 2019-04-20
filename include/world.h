@@ -34,10 +34,14 @@ using namespace std;
 #endif
 
 class World {
+private:
+	static const int MOUSE_OFFSET_Y;
+	
 public:
+	static int dimsWindow[3];
 	static double speed; //determines time slow-down and speed-up in the game
 	static int dims[3]; //eastwest,northsouth,updown
-	static int mouse[2];
+	static float mouse[2];
 	static bool clicked;
 	static bool keyW, keyD, keyS, keyA;
 
@@ -45,6 +49,8 @@ public:
 	static void display();
 	static string describe();
 	static void loadCamera(); //calls gluLookAt()
+	static void updateMouse(int,int);
+	static void drawMouse();
 
 	static Camera *camera;
 };
