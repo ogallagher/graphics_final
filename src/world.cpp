@@ -94,13 +94,20 @@ void World::updateCursor() {
 	cursor.x *= cursor.w;
 	cursor.y *= cursor.w;
 	cursor.z *= cursor.w;
+	
+	//convert to normalized ray
+	cursor.sub(&(camera->location));
+	cursor.norm();
 }
 
 void World::drawCursor() {
-	ovector ray(&cursor);
-	ray.sub(&(camera->location));
-	ray.norm();
-	ray.mult(dimsWindow[2]/4);
+	//ray length
+	float d = -camera->location.y / cursor.y;
+		
+	//ground intersection point
+	ovector p(&cursor);
+	p.mult(d);
+	p.add(&(camera->location));
 	
 	glPushMatrix();
 	
@@ -111,9 +118,8 @@ void World::drawCursor() {
 		glColor3f(1,0,1);
 	}
 	
-	glTranslatef(camera->location.x,camera->location.y,camera->location.z);
-	glTranslatef(ray.x,ray.y,ray.z);
-	glutSolidSphere(2,5,5);
+	glTranslatef(p.x,p.y,p.z);
+	glutSolidCube(3);
 	
 	glPopMatrix();
 }

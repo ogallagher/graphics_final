@@ -44,8 +44,8 @@ public:
 	static int dimsWindow[3];
 	static double speed; //determines time slow-down and speed-up in the game
 	static int dims[3]; //eastwest,northsouth,updown
-	static float mouse[2];
-	static ovector cursor;
+	static float mouse[2]; //window coords: [-1,1]
+	static ovector cursor; //normalized ray camera-to-mouse
 	static bool clicked;
 	static bool keyW, keyD, keyS, keyA;
 

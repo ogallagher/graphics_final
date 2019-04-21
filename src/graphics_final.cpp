@@ -10,7 +10,7 @@ moves, and slower when the player stands still.
 
 TODO <cursor-ray> determine where the user is pointing
 + calculate ray
-- find intersection with ground plane
+? find intersection with ground plane
 + mark the intersection
 + mark left-click with a different color
 
