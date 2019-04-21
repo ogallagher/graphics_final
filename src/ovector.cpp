@@ -71,12 +71,12 @@ void ovector::norm() {
 	div(mag());
 }
 
-//TODO verify this math
 void ovector::applyMatrix(float m[16]) {
-	float a = x*m[0] + y*m[1] + z*m[2] + w*m[3];
-	float b = x*m[4] + y*m[5] + z*m[6] + w*m[7];
-	float c = x*m[8] + y*m[9] + z*m[10] + w*m[11];
-	float d = x*m[12] + y*m[13] + z*m[14] + w*m[15];
+	//column major
+	float a = x*m[0] + y*m[4] + z*m[8] + w*m[12];
+	float b = x*m[1] + y*m[5] + z*m[9] + w*m[13];
+	float c = x*m[2] + y*m[6] + z*m[10] + w*m[14];
+	float d = x*m[3] + y*m[7] + z*m[11] + w*m[15];
 	
 	set(a,b,c,d);
 }

@@ -9,10 +9,10 @@ It's a top-down shooter with SuperHot-like mechanics, where time is faster when 
 moves, and slower when the player stands still.
 
 TODO <cursor-ray> determine where the user is pointing
-- calculate ray
++ calculate ray
 - find intersection with ground plane
 + mark the intersection
-- mark left-click with a different color
++ mark left-click with a different color
 
 */
 
@@ -23,7 +23,7 @@ TODO <cursor-ray> determine where the user is pointing
 #include <string>	
 #include <chrono>
 
-#if defined(__APPLE__)
+#ifdef __APPLE__
 
 #define GL_SILENCE_DEPRECATION //apple glut and opengl
 #include <GLUT/glut.h>
@@ -61,11 +61,20 @@ int fpsIdeal = 60;
 
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+	//motion
+	t += 0.001*World::speed;
+	World::camera->location.set(World::dims[0]/8,sin(t)*World::dimsWindow[1]/16 + World::dimsWindow[1]/4,World::dims[2]/2);
+	person.keyControl();
+	person.move();
+	person.heading = 30*t;
 
+	//display
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	World::display();
 	person.display();
+	World::updateCursor();
 	World::drawCursor();
 	
 	glutSwapBuffers();
@@ -100,11 +109,11 @@ void reshape(int w, int h) {
     glLoadIdentity();
 	if (w<h) {
 		glViewport(0, h/2 - w/2, w, w);
-		gluPerspective(FOV,1,World::PROJECT_PLANE_OFFSET_Z,World::dimsWindow[2]);
+		gluPerspective(FOV,1,World::EYE_NEAR,World::dimsWindow[2]);
 	}
 	else {
 		glViewport(0,0,w,h);
-		gluPerspective(FOV,(double)w/h,World::PROJECT_PLANE_OFFSET_Z,World::dimsWindow[2]/2);
+		gluPerspective(FOV,(double)w/h,World::EYE_NEAR,World::dimsWindow[2]/2);
 	}
 	
     glMatrixMode(GL_MODELVIEW);
@@ -151,7 +160,6 @@ void keyup (unsigned char key, int x , int y) {
 void mouseclick(int button, int status, int x, int y) {
 	if (status == GLUT_DOWN) {
 		if (button == GLUT_LEFT_BUTTON) {
-			cout << "mouse.leftButton" << endl;
 			World::clicked = true;
 		}
 	}
@@ -163,16 +171,6 @@ void mouseclick(int button, int status, int x, int y) {
 }
 
 void idle() {
-	t += 0.001*World::speed;
-
-	//test animations
-	World::camera->location.set(World::dims[0]/8,sin(t)*World::dimsWindow[1]/16 + World::dimsWindow[1]/4,World::dims[2]/2);
-	World::updateCursor();
-	
-	person.keyControl();
-	person.move();
-	person.heading = 30*t;
-	
 	glutPostRedisplay();
 }
 
@@ -209,7 +207,7 @@ void initGL() {
 	
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(FOV,1,World::PROJECT_PLANE_OFFSET_Z,World::dimsWindow[2]/2);
+	gluPerspective(FOV,1,World::EYE_NEAR,World::dimsWindow[2]/2);
 	glMatrixMode(GL_MODELVIEW);
 
 	//background color
@@ -232,7 +230,6 @@ int main(int argc, char** argv) {
 
 	cout << "init World..." << endl;
 	World::loadOSSpeed(osSpeed);
-	World::loadPMatrix();
 	cout << World::describe() << endl;
 
 	cout << "init person..." << endl;
