@@ -18,11 +18,12 @@ A 3D vector utility class.
 
 class ovector {
 public:
-	float x,y,z;
+	float x,y,z,w;
 
-	ovector() {x=0;y=0;z=0;};
+	ovector() {x=0;y=0;z=0;w=0;};
 	ovector(ovector *);
 	void set(float,float,float);
+	void set(float,float,float,float);
 	void set(ovector *);
 	void add(ovector *);
 	void sub(ovector *);
@@ -30,6 +31,7 @@ public:
 	void div(float);
 	float mag();
 	void norm();
+	void applyMatrix(float [16]);
 	
 	friend std::ostream & operator <<(std::ostream &, const ovector &);
 };

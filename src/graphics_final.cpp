@@ -66,7 +66,7 @@ void display() {
 	glLoadIdentity();
 	World::display();
 	person.display();
-	World::drawMouse();
+	World::drawCursor();
 	
 	glutSwapBuffers();
 	
@@ -100,11 +100,11 @@ void reshape(int w, int h) {
     glLoadIdentity();
 	if (w<h) {
 		glViewport(0, h/2 - w/2, w, w);
-		gluPerspective(FOV,1,World::dimsWindow[2]/20,World::dimsWindow[2]);
+		gluPerspective(FOV,1,World::PROJECT_PLANE_OFFSET_Z,World::dimsWindow[2]);
 	}
 	else {
 		glViewport(0,0,w,h);
-		gluPerspective(FOV,(double)w/h,World::dimsWindow[2]/20,World::dimsWindow[2]);
+		gluPerspective(FOV,(double)w/h,World::PROJECT_PLANE_OFFSET_Z,World::dimsWindow[2]/2);
 	}
 	
     glMatrixMode(GL_MODELVIEW);
@@ -148,14 +148,6 @@ void keyup (unsigned char key, int x , int y) {
 	}
 }
 
-/*
-void mousemove(int x, int y) {
-	World::mouse[0] = x / (float)World::dimsWindow[0]; //0 = left, 1 = right
-	World::mouse[1] = 1 - (y / (float)World::dimsWindow[1]); //0 = top, 1 = bottom
-	cout << "World::mouse = [" << World::mouse[0] << ' ' << World::mouse[1] << "]\n";
-}
-*/
-
 void mouseclick(int button, int status, int x, int y) {
 	if (status == GLUT_DOWN) {
 		if (button == GLUT_LEFT_BUTTON) {
@@ -175,6 +167,7 @@ void idle() {
 
 	//test animations
 	World::camera->location.set(World::dims[0]/8,sin(t)*World::dimsWindow[1]/16 + World::dimsWindow[1]/4,World::dims[2]/2);
+	World::updateCursor();
 	
 	person.keyControl();
 	person.move();
@@ -216,7 +209,7 @@ void initGL() {
 	
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(FOV,1,World::dimsWindow[2]/20,World::dimsWindow[2]);
+	gluPerspective(FOV,1,World::PROJECT_PLANE_OFFSET_Z,World::dimsWindow[2]/2);
 	glMatrixMode(GL_MODELVIEW);
 
 	//background color
@@ -239,6 +232,7 @@ int main(int argc, char** argv) {
 
 	cout << "init World..." << endl;
 	World::loadOSSpeed(osSpeed);
+	World::loadPMatrix();
 	cout << World::describe() << endl;
 
 	cout << "init person..." << endl;
