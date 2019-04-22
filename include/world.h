@@ -36,6 +36,8 @@ using namespace std;
 class World {
 public:
 	static const int EYE_NEAR;
+	static const int CURSOR_HEIGHT;
+	
 	static float pmatrix[16]; //projection
 	static float mvmatrix[16]; //modelview
 	static float pmvmatrix[16]; //projection * modelview

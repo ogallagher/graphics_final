@@ -8,8 +8,8 @@ Submission for the 3D OpenGL final project.
 It's a top-down shooter with SuperHot-like mechanics, where time is faster when the player
 moves, and slower when the player stands still.
 
-TODO <person-controls> create common controls for all characters
-+ shoot() -> creates a bullet with appropriate location and velocity
+TODO <cursor-ray>
+= move cursor up to Person::dimsTorso[1] -> World::CURSOR_HEIGHT
 
 */
 
