@@ -8,30 +8,10 @@ Submission for the 3D OpenGL final project.
 It's a top-down shooter with SuperHot-like mechanics, where time is faster when the player
 moves, and slower when the player stands still.
 
-TODO <master>
-- enemy
-	- point at player method
-- player
-	+ move for arrow keys
-	- rotate upper body towards cursor
-	- score variable
-	- variables for shooting (ammo, reload time)
-- bullet class
-	- collision with: person, obstacle
-- obstacle class
-- person
-	- shoot method
-	- die method
-	- walking animation
-+ world/app
-	+ modify World::speed based on framerate
-	+ track cursor in 2d
-	+ cursor-world projection: draw a ray representing the current mouse position
-- research/questions
-	- how to use sound with opengl/glut (so we could have sound effects)
-	- how should we set up the environment?
-	- how should we spawn enemies?
-	- how should the enemies behave (how they follow the player and shoot)?
+TODO <player-controls> create controls for the user's avatar
+- move according to arrow keys
+- rotate upper body towards cursor
+- shoot on mouse click
 
 */
 
@@ -42,7 +22,7 @@ TODO <master>
 #include <string>	
 #include <chrono>
 
-#if defined(__APPLE__)
+#ifdef __APPLE__
 
 #define GL_SILENCE_DEPRECATION //apple glut and opengl
 #include <GLUT/glut.h>
@@ -80,12 +60,21 @@ int fpsIdeal = 60;
 
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+	//motion
+	t += 0.001*World::speed;
+	World::camera->location.set(World::dims[0]/8,sin(t)*World::dimsWindow[1]/16 + World::dimsWindow[1]/4,World::dims[2]/2);
+	person.keyControl();
+	person.move();
+	person.heading = 30*t;
 
+	//display
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	World::display();
 	person.display();
-	World::drawMouse();
+	World::updateCursor();
+	World::drawCursor();
 	
 	glutSwapBuffers();
 	
@@ -119,11 +108,11 @@ void reshape(int w, int h) {
     glLoadIdentity();
 	if (w<h) {
 		glViewport(0, h/2 - w/2, w, w);
-		gluPerspective(FOV,1,World::dimsWindow[2]/20,World::dimsWindow[2]);
+		gluPerspective(FOV,1,World::EYE_NEAR,World::dimsWindow[2]);
 	}
 	else {
 		glViewport(0,0,w,h);
-		gluPerspective(FOV,(double)w/h,World::dimsWindow[2]/20,World::dimsWindow[2]);
+		gluPerspective(FOV,(double)w/h,World::EYE_NEAR,World::dimsWindow[2]/2);
 	}
 	
     glMatrixMode(GL_MODELVIEW);
@@ -167,18 +156,9 @@ void keyup (unsigned char key, int x , int y) {
 	}
 }
 
-/*
-void mousemove(int x, int y) {
-	World::mouse[0] = x / (float)World::dimsWindow[0]; //0 = left, 1 = right
-	World::mouse[1] = 1 - (y / (float)World::dimsWindow[1]); //0 = top, 1 = bottom
-	cout << "World::mouse = [" << World::mouse[0] << ' ' << World::mouse[1] << "]\n";
-}
-*/
-
 void mouseclick(int button, int status, int x, int y) {
 	if (status == GLUT_DOWN) {
 		if (button == GLUT_LEFT_BUTTON) {
-			cout << "mouse.leftButton" << endl;
 			World::clicked = true;
 		}
 	}
@@ -190,15 +170,6 @@ void mouseclick(int button, int status, int x, int y) {
 }
 
 void idle() {
-	t += 0.001*World::speed;
-
-	//test animations
-	World::camera->location.set(World::dims[0]/8,sin(t)*World::dimsWindow[1]/16 + World::dimsWindow[1]/4,World::dims[2]/2);
-	
-	person.keyControl();
-	person.move();
-	person.heading = 30*t;
-	
 	glutPostRedisplay();
 }
 
@@ -235,7 +206,7 @@ void initGL() {
 	
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(FOV,1,World::dimsWindow[2]/20,World::dimsWindow[2]);
+	gluPerspective(FOV,1,World::EYE_NEAR,World::dimsWindow[2]/2);
 	glMatrixMode(GL_MODELVIEW);
 
 	//background color

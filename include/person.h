@@ -14,7 +14,7 @@ Superclass for all people in the game (player, enemies)
 #define PERSON_H
 
 //core headers
-#if defined(__APPLE__)
+#ifdef __APPLE__
 #define GL_SILENCE_DEPRECATION
 #include <GLUT/glut.h>
 #else
