@@ -8,13 +8,19 @@ bullet.cpp
 
 */
 
+//global headers
+#include <iostream>
+
+//local headers
 #include "../include/bullet.h"
 #include "../include/person.h"
 #include "../include/world.h"
 
+using namespace std;
+
 const int Bullet::HEIGHT = Person::dimsTorso[1];
 int Bullet::dims[3] = {1,1,2};
-float Bullet::speed = 1;
+float Bullet::speed = 0.1;
 
 void Bullet::display() {
 	glPushMatrix();
@@ -63,4 +69,9 @@ bool Bullet::collidePerson(Person *p) {
 bool Bullet::collideObstacle() {
 	//TODO collide with obstacles
 	return false;
+}
+
+ostream & operator <<(ostream &os, const Bullet &ob) {
+	os << "Bullet(l=" << ob.location << ",v=" << ob.velocity << ')';
+	return os;
 }
