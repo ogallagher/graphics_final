@@ -11,7 +11,7 @@ moves, and slower when the player stands still.
 TODO <player-controls> create controls for the user's avatar
 + move according to WASD keys
 + rotate upper body towards cursor
-- shoot on mouse click
+= shoot on mouse click
 
 */
 

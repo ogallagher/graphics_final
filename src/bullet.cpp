@@ -37,5 +37,5 @@ void Bullet::display() {
 void Bullet::move() {
 	ovector v(&velocity);
 	v.mult(World::speed);
-	
+	location.add(&v);
 }
