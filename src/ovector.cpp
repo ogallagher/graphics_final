@@ -57,14 +57,21 @@ void ovector::mult(float k) {
 }
 
 void ovector::div(float k) {
-	x /= k;
-	y /= k;
-	z /= k;
-	w /= k;
+	if (k != 0) {
+		x /= k;
+		y /= k;
+		z /= k;
+		w /= k;
+	}
 }
 
 float ovector::mag() {
-	return sqrtf(x*x + y*y + z*z + w*w); 
+	if (x==0 && y==0 && z==0 && w==0) {
+		return 0;
+	}
+	else {
+		return sqrtf(x*x + y*y + z*z + w*w); 
+	}
 }
 
 void ovector::norm() {

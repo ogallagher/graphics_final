@@ -9,8 +9,8 @@ It's a top-down shooter with SuperHot-like mechanics, where time is faster when 
 moves, and slower when the player stands still.
 
 TODO <player-controls> create controls for the user's avatar
-- move according to arrow keys
-- rotate upper body towards cursor
++ move according to WASD keys
++ rotate upper body towards cursor
 - shoot on mouse click
 
 */
@@ -38,7 +38,7 @@ TODO <player-controls> create controls for the user's avatar
 //local headers
 #include "../include/world.h"
 #include "../include/person.h"
-//#include "../include/player.h"
+#include "../include/player.h"
 #include "../include/enemy.h"
 #include "../include/camera.h"
 
@@ -49,7 +49,7 @@ using namespace std;
 #define GAME_NAME "Graphics Final"
 int dimsScreen[2];
 #define FOV 60
-Person person;
+Player player;
 double t = 0;
 int idleCount = 0;
 chrono::high_resolution_clock::time_point atime;
@@ -64,16 +64,16 @@ void display() {
 	//motion
 	t += 0.001*World::speed;
 	World::camera->location.set(World::dims[0]/8,sin(t)*World::dimsWindow[1]/16 + World::dimsWindow[1]/4,World::dims[2]/2);
-	person.keyControl();
-	person.move();
-	person.heading = 30*t;
+	player.keyControl();
+	player.mouseControl(); //this will point to a cursor 1 frame behind...
+	player.move();
 
 	//display
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	World::display();
-	person.display();
 	World::updateCursor();
+	player.display();
 	World::drawCursor();
 	
 	glutSwapBuffers();
@@ -231,12 +231,12 @@ int main(int argc, char** argv) {
 	World::loadOSSpeed(osSpeed);
 	cout << World::describe() << endl;
 
-	cout << "init person..." << endl;
-	person.location.set(0,0,0);
+	cout << "init player..." << endl;
+	player.location.set(0,0,0);
 
 	cout << "init camera..." << endl;
 	World::camera->location.set(World::dims[0]/8,World::dimsWindow[0]/2,World::dims[2]/2);
-	World::camera->subject.set(&(person.location));
+	World::camera->subject.set(&(player.location));
 	
 	cout << "init framerate clock..." << endl;
 	atime = chrono::high_resolution_clock::now();

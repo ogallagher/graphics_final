@@ -8,8 +8,6 @@ world.cpp
 
 */
 
-#include <iostream> //TODO delete
-
 #include "../include/world.h"
 #include "../include/camera.h"
 #include "../include/matrixutils.h"
@@ -18,6 +16,7 @@ int World::dimsWindow[3] = {600,600,600};
 double World::speed = 1;
 int World::dims[3] = {200,10,200};
 float World::mouse[2] = {0,0};
+ovector World::pointer;
 ovector World::cursor;
 bool World::clicked = false;
 bool World::keyW = false;
@@ -75,8 +74,8 @@ And from GLU:
 https://www.khronos.org/opengl/wiki/GluProject_and_gluUnProject_code
 */
 void World::updateCursor() {
-	//cursor in screen coordinates
-	cursor.set(mouse[0],mouse[1],-1,1);
+	//pointer in screen coordinates
+	pointer.set(mouse[0],mouse[1],-1,1);
 	
 	//update projection and modelview matrices
 	glGetFloatv(GL_PROJECTION_MATRIX,pmatrix);
@@ -86,39 +85,37 @@ void World::updateCursor() {
 	matrixutils::mult(pmatrix,mvmatrix,pmvmatrix);
 	matrixutils::invert(pmvmatrix,umatrix);
 	
-	//unproject 2d mouse to get 3d cursor
-	cursor.applyMatrix(umatrix);
+	//unproject 2d mouse to get 3d pointer
+	pointer.applyMatrix(umatrix);
 	
 	//perspective division
-	cursor.w = 1/cursor.w;
-	cursor.x *= cursor.w;
-	cursor.y *= cursor.w;
-	cursor.z *= cursor.w;
+	pointer.w = 1/pointer.w;
+	pointer.x *= pointer.w;
+	pointer.y *= pointer.w;
+	pointer.z *= pointer.w;
 	
 	//convert to normalized ray
-	cursor.sub(&(camera->location));
-	cursor.norm();
+	pointer.sub(&(camera->location));
+	pointer.norm();
+	
+	//ground intersection point
+	float d = -camera->location.y / pointer.y;
+	cursor.set(&pointer);
+	cursor.mult(d);
+	cursor.add(&(camera->location));
 }
 
 void World::drawCursor() {
-	//ray length
-	float d = -camera->location.y / cursor.y;
-		
-	//ground intersection point
-	ovector p(&cursor);
-	p.mult(d);
-	p.add(&(camera->location));
-	
 	glPushMatrix();
 	
 	if (clicked) {
 		glColor3f(1,0,0);
 	}
 	else {
-		glColor3f(1,0,1);
+		glColor3f(0,0,1);
 	}
 	
-	glTranslatef(p.x,p.y,p.z);
+	glTranslatef(cursor.x,cursor.y,cursor.z);
 	glutSolidCube(3);
 	
 	glPopMatrix();

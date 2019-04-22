@@ -49,7 +49,6 @@ public:
 		colorBody[2] = 0.25;
 	};
 	void move();
-	void keyControl();
 	void display();
 
 protected:
