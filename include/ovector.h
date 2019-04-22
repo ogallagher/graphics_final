@@ -31,6 +31,7 @@ public:
 	void div(float);
 	float mag();
 	void norm();
+	float headingY(); //heading around the y axis
 	void applyMatrix(float [16]);
 	
 	friend std::ostream & operator <<(std::ostream &, const ovector &);

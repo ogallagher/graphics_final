@@ -8,6 +8,10 @@ ovector.cpp
 
 */
 
+//core includes
+#include <cmath>
+
+//local includes
 #include "../include/ovector.h"
 
 ovector::ovector(ovector *other) {
@@ -76,6 +80,46 @@ float ovector::mag() {
 
 void ovector::norm() {
 	div(mag());
+}
+
+float ovector::headingY() {
+	float x = this->x;
+	float z = -this->z;
+	float h;
+	
+	if (x == 0) {
+		//the zero-denominator cases
+		if (z > 0) {
+			h = 90;
+		}
+		else {
+			h = -90;
+		}
+	}
+	else {
+		//most cases
+		h = abs(atan(z/x)) / 3.141593 * 180; //in degrees
+		
+		//quadrant correction
+		if (x > 0) {
+			if (z < 0) {
+				//q4
+				h = 360-h;
+			}
+		}
+		else {
+			if (z > 0) {
+				//q2
+				h = 180-h;
+			}
+			else {
+				//q3
+				h = 180+h;
+			}
+		}
+	}
+	
+	return h;
 }
 
 void ovector::applyMatrix(float m[16]) {

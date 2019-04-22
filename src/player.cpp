@@ -8,9 +8,6 @@ player.cpp
 
 */
 
-//core headers
-#include <cmath>
-
 //local headers
 #include "../include/player.h"
 #include "../include/world.h"
@@ -38,43 +35,7 @@ void Player::mouseControl() {
 	ovector gaze(&World::cursor);
 	gaze.sub(&location);
 	
-	float x = gaze.x;
-	float z = -gaze.z;
-	
-	if (x == 0) {
-		//the zero-denominator cases
-		if (z > 0) {
-			heading = 90;
-		}
-		else {
-			heading = -90;
-		}
-	}
-	else {
-		//most cases
-		heading = abs(atan(z/x)) / 3.141593 * 180; //in degrees
-		
-		//quadrant correction
-		if (x > 0) {
-			if (z > 0) {
-				//q1
-			}
-			else {
-				//q4
-				heading = 360-heading;
-			}
-		}
-		else {
-			if (z > 0) {
-				//q2
-				heading = 180-heading;
-			}
-			else {
-				//q3
-				heading = 180+heading;
-			}
-		}
-	}
+	heading = gaze.headingY();
 	
 	cout << "Player.heading = " << heading << endl;
 }
