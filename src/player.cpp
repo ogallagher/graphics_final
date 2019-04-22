@@ -36,6 +36,4 @@ void Player::mouseControl() {
 	gaze.sub(&location);
 	
 	heading = gaze.headingY();
-	
-	cout << "Player.heading = " << heading << endl;
 }

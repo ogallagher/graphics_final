@@ -13,8 +13,9 @@ bullet.h
 
 //local headers
 #include "../include/ovector.h"
+#include "../include/person.h"
 
-class Bullet {
+class Bullet {	
 public:
 	static const int HEIGHT;
 	
@@ -22,6 +23,7 @@ public:
 	static float speed;
 	
 	ovector location;
+	ovector past; //location from one frame ago
 	ovector velocity;
 	
 	Bullet(ovector *l, ovector *v) {
@@ -29,11 +31,17 @@ public:
 		location.y = HEIGHT;
 		location.z = l->z;
 		
+		past.set(&location);
+		
 		velocity.set(v);
+		
 	};
 	
 	void display();
 	void move();
+	bool collideBounds(); //returns true on collision
+	bool collidePerson(Person *p);
+	bool collideObstacle();
 };
 
 #endif
