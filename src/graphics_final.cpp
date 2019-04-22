@@ -13,20 +13,21 @@ TODO <master>
 	- point at player method
 - player
 	+ move for arrow keys
+	+ rotate upper body towards cursor
 	- score variable
 	- variables for shooting (ammo, reload time)
 - bullet class
 	- collision with: person, obstacle
+	+ collision with world bounds
 - obstacle class
 - person
-	- shoot method
+	+ shoot method
 	- die method
 	- walking animation
-- world/app
++ world/app
 	+ modify World::speed based on framerate
-	- idle method: update animations and motions
 	+ track cursor in 2d
-	- cursor-world projection: draw a ray representing the current mouse position
+	+ cursor-world projection: draw a ray representing the current mouse position
 - research/questions
 	- how to use sound with opengl/glut (so we could have sound effects)
 	- how should we set up the environment?
