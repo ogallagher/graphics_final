@@ -1,12 +1,19 @@
-# Project name to be determined
+# Name TBD
 Final Computer Graphics project. Written in C++ and uses OpenGL and GLUT graphics and I/O libraries.<br>
 By Owen Gallagher and Brian Park
 
-# Initial project ideas
-__Flight horizon__: A ship is flying infinitely forward and is dodging obstacles or shooting enemies or something like that.
+Our project is a top-down view 3d shooting game with mechanics inspired by the game SuperHot, where time moves faster when the player advances. Some key knowledge areas that we'll be tapping:
+- gluLookAt() and gluPerspective()
+- modification of the projection and modelview matrices
+- inverse projection to find the cursor location in 3d
+- maintaining aspect ratio on window resize
+- glut input callbacks for mouse and keyboard events
+- sound effects
+- compound transformations for constructing complex 3d objects out of primitives
+- alpha blending for atmospheric fog at distance
+- basic 3d collision detection by ¿line/prism intersection?
+- material properties
+- lighting
 
-__Globe trotter__: Like flight horizon, but on a small spherical planet instead of a flat plane. Rendering shadows probably won't be possible.
-
-__\*Gun fight\*__: Top-down shooter with a mechanic like Super Hot. Cursor aiming may be a challenge (draw a ray from the camera through the cursor's projection in front of it)
-
-__Tall jump__: Like Doodle Jump, rendered in 3D but the action mostly takes place in the xy plane.
+# Compilation
+It's compatible on both Windows and Mac OS. For Windows, the Visual Studio project is included, and the executable should be located at `bin/graphics_final.exe`. For Mac, the `compile_mac.sh` script will put the executable at `bin/graphics_final_mac`.
