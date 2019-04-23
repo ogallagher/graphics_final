@@ -17,7 +17,7 @@ Computer Graphics
 int Person::dimsHead[3] = {3,3,3};
 int Person::dimsTorso[3] = {5,10,3};
 const int Person::NECK_HEIGHT = 1;
-float Person::speed = 0.05;
+float Person::speed = 0.02;
 
 void Person::move() {
 	ovector v(&velocity);
