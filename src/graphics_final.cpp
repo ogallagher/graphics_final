@@ -42,8 +42,9 @@ TODO <master>
 #include <cmath>
 #include <string>	
 #include <chrono>
+#include <vector>
 
-#if defined(__APPLE__)
+#ifdef __APPLE__
 
 #define GL_SILENCE_DEPRECATION //apple glut and opengl
 #include <GLUT/glut.h>
@@ -59,9 +60,10 @@ TODO <master>
 //local headers
 #include "../include/world.h"
 #include "../include/person.h"
-//#include "../include/player.h"
+#include "../include/player.h"
 #include "../include/enemy.h"
 #include "../include/camera.h"
+#include "../include/bullet.h"
 
 //namespaces
 using namespace std;
@@ -70,7 +72,6 @@ using namespace std;
 #define GAME_NAME "Graphics Final"
 int dimsScreen[2];
 #define FOV 60
-Person person;
 double t = 0;
 int idleCount = 0;
 chrono::high_resolution_clock::time_point atime;
@@ -79,14 +80,40 @@ int dtime = 0;
 int fpsInterval = 5000;
 int fpsIdeal = 60;
 
+Player player;
+vector<Bullet> bullets;
+int bulletsLen = 0;
+Bullet *bullet = nullptr;
+
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+	
+	t += 0.001*World::speed;
+	World::camera->location.set(World::dims[0]/8,sin(t)*World::dimsUniverse[1]/16 + World::dimsUniverse[1]/4,World::dims[2]/2);
 	World::display();
-	person.display();
-	World::drawMouse();
+	
+	World::updateCursor();
+	World::drawCursor();
+	
+	player.keyControl();
+	player.mouseControl();
+	player.move();
+	player.display();
+	
+	for (unsigned int i=0; i<bulletsLen; i++) {
+		bullet = &bullets[i];
+		
+		if (bullet->collideBounds()) {
+			bullets.erase(bullets.begin()+i);
+			i--;
+			bulletsLen--;
+		}
+		else {
+			bullet->move();
+			bullet->display();
+		}
+	}
 	
 	glutSwapBuffers();
 	
@@ -116,15 +143,18 @@ void display() {
 }
 
 void reshape(int w, int h) {
+	World::dimsWindow[0] = w;
+	World::dimsWindow[1] = h;
+	
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 	if (w<h) {
 		glViewport(0, h/2 - w/2, w, w);
-		gluPerspective(FOV,1,World::dimsWindow[2]/20,World::dimsWindow[2]);
+		gluPerspective(FOV,1,World::EYE_NEAR,World::dimsUniverse[2]);
 	}
 	else {
 		glViewport(0,0,w,h);
-		gluPerspective(FOV,(double)w/h,World::dimsWindow[2]/20,World::dimsWindow[2]);
+		gluPerspective(FOV,(double)w/h,World::EYE_NEAR,World::dimsUniverse[2]/2);
 	}
 	
     glMatrixMode(GL_MODELVIEW);
@@ -168,19 +198,16 @@ void keyup (unsigned char key, int x , int y) {
 	}
 }
 
-/*
-void mousemove(int x, int y) {
-	World::mouse[0] = x / (float)World::dimsWindow[0]; //0 = left, 1 = right
-	World::mouse[1] = 1 - (y / (float)World::dimsWindow[1]); //0 = top, 1 = bottom
-	cout << "World::mouse = [" << World::mouse[0] << ' ' << World::mouse[1] << "]\n";
-}
-*/
-
 void mouseclick(int button, int status, int x, int y) {
 	if (status == GLUT_DOWN) {
 		if (button == GLUT_LEFT_BUTTON) {
-			cout << "mouse.leftButton" << endl;
 			World::clicked = true;
+			
+			//TODO player.shoot()
+			Bullet bullet = player.shoot();
+			bullets.push_back(bullet);
+			bulletsLen++;
+			cout << "Player shot: " << bullet << endl;
 		}
 	}
 	else if (status == GLUT_UP) {
@@ -191,15 +218,6 @@ void mouseclick(int button, int status, int x, int y) {
 }
 
 void idle() {
-	t += 0.001*World::speed;
-
-	//test animations
-	World::camera->location.set(World::dims[0]/8,sin(t)*World::dimsWindow[1]/16 + World::dimsWindow[1]/4,World::dims[2]/2);
-	
-	person.keyControl();
-	person.move();
-	person.heading = 30*t;
-	
 	glutPostRedisplay();
 }
 
@@ -236,7 +254,7 @@ void initGL() {
 	
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(FOV,1,World::dimsWindow[2]/20,World::dimsWindow[2]);
+	gluPerspective(FOV,1,World::EYE_NEAR,World::dimsUniverse[2]/2);
 	glMatrixMode(GL_MODELVIEW);
 
 	//background color
@@ -261,12 +279,12 @@ int main(int argc, char** argv) {
 	World::loadOSSpeed(osSpeed);
 	cout << World::describe() << endl;
 
-	cout << "init person..." << endl;
-	person.location.set(0,0,0);
+	cout << "init player..." << endl;
+	player.location.set(0,0,0);
 
 	cout << "init camera..." << endl;
-	World::camera->location.set(World::dims[0]/8,World::dimsWindow[0]/2,World::dims[2]/2);
-	World::camera->subject.set(&(person.location));
+	World::camera->location.set(World::dims[0]/8,World::dimsUniverse[0]/2,World::dims[2]/2);
+	World::camera->subject.set(&(player.location));
 	
 	cout << "init framerate clock..." << endl;
 	atime = chrono::high_resolution_clock::now();

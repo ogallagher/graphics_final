@@ -14,15 +14,17 @@ Superclass for all people in the game (player, enemies)
 #define PERSON_H
 
 //core headers
-#if defined(__APPLE__)
+#ifdef __APPLE__
 #define GL_SILENCE_DEPRECATION
 #include <GLUT/glut.h>
 #else
 #include <GL/glut.h>
 #endif
 
+//local headers
 #include "../include/world.h"
 #include "../include/ovector.h"
+#include "../include/bullet.h"
 
 class Person {
 public:
@@ -49,8 +51,8 @@ public:
 		colorBody[2] = 0.25;
 	};
 	void move();
-	void keyControl();
 	void display();
+	Bullet shoot();
 
 protected:
 	//TODO draw parts of the body

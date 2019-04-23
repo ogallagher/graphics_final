@@ -91,10 +91,13 @@
     <ClInclude Include="include\world.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\bullet.cpp" />
     <ClCompile Include="src\camera.cpp" />
     <ClCompile Include="src\graphics_final.cpp" />
+    <ClCompile Include="src\matrixutils.cpp" />
     <ClCompile Include="src\ovector.cpp" />
     <ClCompile Include="src\person.cpp" />
+    <ClCompile Include="src\player.cpp" />
     <ClCompile Include="src\world.cpp" />
   </ItemGroup>
   <ItemGroup>
