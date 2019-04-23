@@ -64,13 +64,20 @@ Bullet *bullet = nullptr;
 
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
 	
-	//motion
 	t += 0.001*World::speed;
 	World::camera->location.set(World::dims[0]/8,sin(t)*World::dimsWindow[1]/16 + World::dimsWindow[1]/4,World::dims[2]/2);
+	World::display();
+	
+	World::updateCursor();
+	World::drawCursor();
+	
 	player.keyControl();
-	player.mouseControl(); //this will point to a cursor 1 frame behind...
+	player.mouseControl();
 	player.move();
+	player.display();
+	
 	for (unsigned int i=0; i<bulletsLen; i++) {
 		bullet = &bullets[i];
 		
@@ -84,14 +91,6 @@ void display() {
 			bullet->display();
 		}
 	}
-
-	//display
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	World::display();
-	World::updateCursor();
-	player.display();
-	World::drawCursor();
 	
 	glutSwapBuffers();
 	
