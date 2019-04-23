@@ -52,7 +52,7 @@ public:
 	static bool clicked;
 	static bool keyW, keyD, keyS, keyA;
 
-	static void loadOSSpeed(int);
+	static void loadOSSpeed(float);
 	static void display();
 	static string describe();
 	static void loadCamera(); //calls gluLookAt()

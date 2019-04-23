@@ -22,7 +22,7 @@ float Person::speed = 1;
 void Person::move() {
 	ovector v(&velocity);
 	v.mult(World::speed);
-	location.add(&velocity);
+	location.add(&v);
 }
 
 Bullet Person::shoot() {

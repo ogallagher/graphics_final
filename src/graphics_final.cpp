@@ -10,7 +10,8 @@ moves, and slower when the player stands still.
 
 TODO <os-support>
 - win player keyboard control is too fast
-- win camera oscillation is too slow?
+- win camera oscillation is too fast
+- win bullet velocity is too 
 
 */
 

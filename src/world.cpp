@@ -31,7 +31,7 @@ const int World::CURSOR_HEIGHT = Person::dimsTorso[1];
 
 float World::pmatrix[16],World::mvmatrix[16],World::pmvmatrix[16],World::umatrix[16];
 
-void World::loadOSSpeed(int osSpeed) {
+void World::loadOSSpeed(float osSpeed) {
 	speed *= osSpeed;
 }
 
