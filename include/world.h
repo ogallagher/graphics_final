@@ -22,7 +22,7 @@ class Camera; //don't include camera.h here to avoid circular dependency
 //namespaces
 using namespace std;
 
-#if defined(__APPLE__)
+#ifdef __APPLE__
 
 #define GL_SILENCE_DEPRECATION //Mac opengl
 #include <GLUT/glut.h>
@@ -34,14 +34,21 @@ using namespace std;
 #endif
 
 class World {
-private:
-	static const int MOUSE_OFFSET_Y;
-	
 public:
+	static const int EYE_NEAR;
+	static const int CURSOR_HEIGHT;
+	
+	static float pmatrix[16]; //projection
+	static float mvmatrix[16]; //modelview
+	static float pmvmatrix[16]; //projection * modelview
+	static float umatrix[16]; //2d->3d unprojection
+	
 	static int dimsWindow[3];
 	static double speed; //determines time slow-down and speed-up in the game
 	static int dims[3]; //eastwest,northsouth,updown
-	static float mouse[2];
+	static float mouse[2]; //window coords: [-1,1]
+	static ovector pointer; //normalized ray camera-to-mouse
+	static ovector cursor; //intersection of pointer with ground plane
 	static bool clicked;
 	static bool keyW, keyD, keyS, keyA;
 
@@ -50,7 +57,8 @@ public:
 	static string describe();
 	static void loadCamera(); //calls gluLookAt()
 	static void updateMouse(int,int);
-	static void drawMouse();
+	static void updateCursor();
+	static void drawCursor();
 
 	static Camera *camera;
 };
