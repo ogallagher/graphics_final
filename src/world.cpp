@@ -102,7 +102,7 @@ void World::updateCursor() {
 	pointer.norm();
 	
 	//ground intersection point
-	float d = -camera->location.y / pointer.y;
+	float d = (CURSOR_HEIGHT - camera->location.y) / pointer.y;
 	cursor.set(&pointer);
 	cursor.mult(d);
 	cursor.add(&(camera->location));
