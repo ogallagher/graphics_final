@@ -13,7 +13,9 @@ world.cpp
 #include "../include/matrixutils.h"
 #include "../include/person.h"
 
-int World::dimsWindow[3] = {600,600,600};
+int World::dimsWindow[2] = {600,600};
+int World::dimsUniverse[3] = {dimsWindow[0],dimsWindow[1],600};
+
 double World::speed = 1;
 int World::dims[3] = {200,10,200};
 float World::mouse[2] = {0,0};
@@ -26,7 +28,7 @@ bool World::keyS = false;
 bool World::keyA = false;
 Camera *World::camera = new Camera();
 
-const int World::EYE_NEAR = World::dimsWindow[2]/20;
+const int World::EYE_NEAR = World::dimsUniverse[2]/20;
 const int World::CURSOR_HEIGHT = Person::dimsTorso[1];
 
 float World::pmatrix[16],World::mvmatrix[16],World::pmvmatrix[16],World::umatrix[16];

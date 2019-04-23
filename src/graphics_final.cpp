@@ -8,10 +8,8 @@ Submission for the 3D OpenGL final project.
 It's a top-down shooter with SuperHot-like mechanics, where time is faster when the player
 moves, and slower when the player stands still.
 
-TODO <os-support>
-- win player keyboard control is too fast
-- win camera oscillation is too fast
-- win bullet velocity is too 
+TODO <player-controls>
++ fix mouse and cursor for different window sizes
 
 */
 
@@ -69,7 +67,7 @@ void display() {
 	glLoadIdentity();
 	
 	t += 0.001*World::speed;
-	World::camera->location.set(World::dims[0]/8,sin(t)*World::dimsWindow[1]/16 + World::dimsWindow[1]/4,World::dims[2]/2);
+	World::camera->location.set(World::dims[0]/8,sin(t)*World::dimsUniverse[1]/16 + World::dimsUniverse[1]/4,World::dims[2]/2);
 	World::display();
 	
 	World::updateCursor();
@@ -122,15 +120,18 @@ void display() {
 }
 
 void reshape(int w, int h) {
+	World::dimsWindow[0] = w;
+	World::dimsWindow[1] = h;
+	
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 	if (w<h) {
 		glViewport(0, h/2 - w/2, w, w);
-		gluPerspective(FOV,1,World::EYE_NEAR,World::dimsWindow[2]);
+		gluPerspective(FOV,1,World::EYE_NEAR,World::dimsUniverse[2]);
 	}
 	else {
 		glViewport(0,0,w,h);
-		gluPerspective(FOV,(double)w/h,World::EYE_NEAR,World::dimsWindow[2]/2);
+		gluPerspective(FOV,(double)w/h,World::EYE_NEAR,World::dimsUniverse[2]/2);
 	}
 	
     glMatrixMode(GL_MODELVIEW);
@@ -230,7 +231,7 @@ void initGL() {
 	
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(FOV,1,World::EYE_NEAR,World::dimsWindow[2]/2);
+	gluPerspective(FOV,1,World::EYE_NEAR,World::dimsUniverse[2]/2);
 	glMatrixMode(GL_MODELVIEW);
 
 	//background color
@@ -259,7 +260,7 @@ int main(int argc, char** argv) {
 	player.location.set(0,0,0);
 
 	cout << "init camera..." << endl;
-	World::camera->location.set(World::dims[0]/8,World::dimsWindow[0]/2,World::dims[2]/2);
+	World::camera->location.set(World::dims[0]/8,World::dimsUniverse[0]/2,World::dims[2]/2);
 	World::camera->subject.set(&(player.location));
 	
 	cout << "init framerate clock..." << endl;
