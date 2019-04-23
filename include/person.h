@@ -21,8 +21,10 @@ Superclass for all people in the game (player, enemies)
 #include <GL/glut.h>
 #endif
 
+//local headers
 #include "../include/world.h"
 #include "../include/ovector.h"
+#include "../include/bullet.h"
 
 class Person {
 public:
@@ -50,6 +52,7 @@ public:
 	};
 	void move();
 	void display();
+	Bullet shoot();
 
 protected:
 	//TODO draw parts of the body

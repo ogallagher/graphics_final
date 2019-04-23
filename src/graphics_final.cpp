@@ -8,10 +8,9 @@ Submission for the 3D OpenGL final project.
 It's a top-down shooter with SuperHot-like mechanics, where time is faster when the player
 moves, and slower when the player stands still.
 
-TODO <player-controls> create controls for the user's avatar
-+ move according to WASD keys
-+ rotate upper body towards cursor
-= shoot on mouse click
+TODO <os-support>
+- win player keyboard control is too fast
+- win camera oscillation is too slow?
 
 */
 
@@ -21,6 +20,7 @@ TODO <player-controls> create controls for the user's avatar
 #include <cmath>
 #include <string>	
 #include <chrono>
+#include <vector>
 
 #ifdef __APPLE__
 
@@ -41,6 +41,7 @@ TODO <player-controls> create controls for the user's avatar
 #include "../include/player.h"
 #include "../include/enemy.h"
 #include "../include/camera.h"
+#include "../include/bullet.h"
 
 //namespaces
 using namespace std;
@@ -49,7 +50,6 @@ using namespace std;
 #define GAME_NAME "Graphics Final"
 int dimsScreen[2];
 #define FOV 60
-Player player;
 double t = 0;
 int idleCount = 0;
 chrono::high_resolution_clock::time_point atime;
@@ -58,23 +58,40 @@ int dtime = 0;
 int fpsInterval = 5000;
 int fpsIdeal = 60;
 
+Player player;
+vector<Bullet> bullets;
+int bulletsLen = 0;
+Bullet *bullet = nullptr;
+
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
 	
-	//motion
 	t += 0.001*World::speed;
 	World::camera->location.set(World::dims[0]/8,sin(t)*World::dimsWindow[1]/16 + World::dimsWindow[1]/4,World::dims[2]/2);
-	player.keyControl();
-	player.mouseControl(); //this will point to a cursor 1 frame behind...
-	player.move();
-
-	//display
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
 	World::display();
+	
 	World::updateCursor();
-	player.display();
 	World::drawCursor();
+	
+	player.keyControl();
+	player.mouseControl();
+	player.move();
+	player.display();
+	
+	for (unsigned int i=0; i<bulletsLen; i++) {
+		bullet = &bullets[i];
+		
+		if (bullet->collideBounds()) {
+			bullets.erase(bullets.begin()+i);
+			i--;
+			bulletsLen--;
+		}
+		else {
+			bullet->move();
+			bullet->display();
+		}
+	}
 	
 	glutSwapBuffers();
 	
@@ -160,6 +177,12 @@ void mouseclick(int button, int status, int x, int y) {
 	if (status == GLUT_DOWN) {
 		if (button == GLUT_LEFT_BUTTON) {
 			World::clicked = true;
+			
+			//TODO player.shoot()
+			Bullet bullet = player.shoot();
+			bullets.push_back(bullet);
+			bulletsLen++;
+			cout << "Player shot: " << bullet << endl;
 		}
 	}
 	else if (status == GLUT_UP) {

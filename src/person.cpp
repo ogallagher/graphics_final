@@ -6,8 +6,13 @@ Computer Graphics
 
 */
 
+//global headers
+#include <cmath>
+
+//local headers
 #include "../include/world.h"
 #include "../include/person.h"
+#include "../include/bullet.h"
 
 int Person::dimsHead[3] = {3,3,3};
 int Person::dimsTorso[3] = {5,10,3};
@@ -18,6 +23,20 @@ void Person::move() {
 	ovector v(&velocity);
 	v.mult(World::speed);
 	location.add(&velocity);
+}
+
+Bullet Person::shoot() {
+	float bh = heading/180*3.141593;
+	
+	ovector bl(cos(bh),0,-sin(bh));
+	ovector bv(&bl);
+	
+	bl.mult(dimsTorso[2]/2 + Bullet::dims[2]/2);
+	bl.add(&location);
+	
+	bv.mult(Bullet::speed);
+	
+	return Bullet(&bl,&bv);
 }
 
 void Person::drawHead() {

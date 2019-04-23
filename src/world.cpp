@@ -11,6 +11,7 @@ world.cpp
 #include "../include/world.h"
 #include "../include/camera.h"
 #include "../include/matrixutils.h"
+#include "../include/person.h"
 
 int World::dimsWindow[3] = {600,600,600};
 double World::speed = 1;
@@ -26,6 +27,8 @@ bool World::keyA = false;
 Camera *World::camera = new Camera();
 
 const int World::EYE_NEAR = World::dimsWindow[2]/20;
+const int World::CURSOR_HEIGHT = Person::dimsTorso[1];
+
 float World::pmatrix[16],World::mvmatrix[16],World::pmvmatrix[16],World::umatrix[16];
 
 void World::loadOSSpeed(int osSpeed) {
@@ -99,7 +102,7 @@ void World::updateCursor() {
 	pointer.norm();
 	
 	//ground intersection point
-	float d = -camera->location.y / pointer.y;
+	float d = (CURSOR_HEIGHT - camera->location.y) / pointer.y;
 	cursor.set(&pointer);
 	cursor.mult(d);
 	cursor.add(&(camera->location));

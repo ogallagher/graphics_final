@@ -22,6 +22,7 @@ public:
 
 	ovector() {x=0;y=0;z=0;w=0;};
 	ovector(ovector *);
+	ovector(float,float,float);
 	void set(float,float,float);
 	void set(float,float,float,float);
 	void set(ovector *);
