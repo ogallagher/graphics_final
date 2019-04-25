@@ -30,6 +30,8 @@ class Person {
 public:
 	static int dimsHead[3];
 	static int dimsTorso[3];
+	static int dimsArm[3];
+	static int dimsLeg[3];
 	static const int NECK_HEIGHT;
 	static float speed;
 
@@ -58,6 +60,12 @@ protected:
 	//TODO draw parts of the body
 	void drawHead();
 	void drawTorso();
+	void drawArmL();
+	void drawArmR();
+	void drawArms();
+	void drawLegL();
+	void drawLegR();
+	void drawLegs();
 };
 
 #endif

@@ -45,6 +45,7 @@ public:
 	
 	static int dimsWindow[2];
 	static int dimsUniverse[3];
+	static double t; //world clock
 	static double speed; //determines time slow-down and speed-up in the game
 	static int dims[3]; //eastwest,northsouth,updown
 	static float mouse[2]; //window coords: [-1,1]
@@ -56,6 +57,7 @@ public:
 	static void loadOSSpeed(float);
 	static void display();
 	static string describe();
+	static void tick();
 	static void loadCamera(); //calls gluLookAt()
 	static void updateMouse(int,int);
 	static void updateCursor();

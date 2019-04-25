@@ -10,8 +10,8 @@ moves, and slower when the player stands still.
 
 TODO <person-visuals>
 + (misc) create obstacle class
-- arms
-- legs
++ arms
++ legs
 - gun
 - animation
 
@@ -53,7 +53,6 @@ using namespace std;
 #define GAME_NAME "Graphics Final"
 int dimsScreen[2];
 #define FOV 60
-double t = 0;
 int idleCount = 0;
 chrono::high_resolution_clock::time_point atime;
 chrono::high_resolution_clock::time_point btime;
@@ -70,10 +69,10 @@ void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	
-	t += 0.001*World::speed;
-	World::camera->location.set(World::dims[0]/8,sin(t)*World::dimsUniverse[1]/16 + World::dimsUniverse[1]/4,World::dims[2]/2);
+	World::tick();
+	World::camera->location.set(World::dims[0]/8,World::dimsUniverse[1]/6,0.6*World::dims[2]);
+	World::camera->subject.set(&(player.location));
 	World::display();
-	
 	World::updateCursor();
 	World::drawCursor();
 	
