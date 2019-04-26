@@ -25,6 +25,10 @@ void Person::move() {
 	ovector v(&velocity);
 	v.mult(World::speed);
 	location.add(&v);
+	
+	if (velocity.mag() >= speed) {
+		headingLegs = v.headingY()+90;
+	}
 }
 
 Bullet Person::shoot() {
@@ -117,6 +121,7 @@ void Person::drawLegs() {
 	
 	glPushMatrix();
 
+	glRotatef(headingLegs,0,1,0); //rotate around spine
 	glTranslatef(0,-dimsTorso[1]/2,0); //align hip with bottom of torso
 	glRotatef(0,1,0,0); //rotate around hip
 	glTranslatef(0,-dimsLeg[1]/2,0); //hip is origin

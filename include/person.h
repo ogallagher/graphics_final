@@ -38,11 +38,13 @@ public:
 	ovector location;
 	ovector velocity;
 	float heading;
+	float headingLegs;
 	float colorHead[3];
 	float colorBody[3];
 
 	Person() {
 		heading = 0;
+		headingLegs = 0;
 
 		colorHead[0] = 1;//0.75;
 		colorHead[1] = 1;//0.75;
