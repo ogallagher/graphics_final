@@ -13,7 +13,7 @@ TODO <person-visuals>
 + arms
 + legs
 - gun
-- animation
++ animate legs
 
 */
 

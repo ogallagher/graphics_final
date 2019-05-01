@@ -99,8 +99,16 @@ void Person::drawArms() {
 void Person::drawLegL() {
 	glPushMatrix();
 	
+	glRotatef(headingLegs,0,1,0); //rotate around spine
+	glTranslatef(0,-dimsTorso[1]/2,0); //align hip with bottom of torso
+	if (velocity.mag() >= speed) {
+		glRotatef(-sin(World::t * 4) * 45,1,0,0); //rotate around hip
+	}
+	glTranslatef(0,-dimsLeg[1]/2,0); //hip is origin
+	
 	glTranslatef(-dimsTorso[0]/2 + dimsLeg[0]/2,0,0);
 	glScalef(dimsLeg[0],dimsLeg[1],dimsLeg[2]);
+	glRotatef(90,0,1,0); //flip hip rotation
 	glutSolidCube(1);
 	
 	glPopMatrix();
@@ -108,6 +116,13 @@ void Person::drawLegL() {
 
 void Person::drawLegR() {
 	glPushMatrix();
+	
+	glRotatef(headingLegs,0,1,0); //rotate around spine
+	glTranslatef(0,-dimsTorso[1]/2,0); //align hip with bottom of torso
+	if (velocity.mag() >= speed) {
+		glRotatef(sin(World::t * 4) * 45,1,0,0); //rotate around hip
+	}
+	glTranslatef(0,-dimsLeg[1]/2,0); //hip is origin
 	
 	glTranslatef(dimsTorso[0]/2 - dimsLeg[0]/2,0,0);
 	glScalef(dimsLeg[0],dimsLeg[1],dimsLeg[2]);
@@ -119,17 +134,8 @@ void Person::drawLegR() {
 void Person::drawLegs() {
 	glColor3f(colorHead[0],colorHead[1],colorHead[2]);
 	
-	glPushMatrix();
-
-	glRotatef(headingLegs,0,1,0); //rotate around spine
-	glTranslatef(0,-dimsTorso[1]/2,0); //align hip with bottom of torso
-	glRotatef(0,1,0,0); //rotate around hip
-	glTranslatef(0,-dimsLeg[1]/2,0); //hip is origin
-	
 	drawLegL();
-	drawLegR();
-	
-	glPopMatrix();
+	drawLegR();	
 }
 
 void Person::drawTorso() {

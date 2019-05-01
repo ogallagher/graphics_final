@@ -59,7 +59,6 @@ public:
 	Bullet shoot();
 
 protected:
-	//TODO draw parts of the body
 	void drawHead();
 	void drawTorso();
 	void drawArmL();
