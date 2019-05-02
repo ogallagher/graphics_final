@@ -30,17 +30,21 @@ class Person {
 public:
 	static int dimsHead[3];
 	static int dimsTorso[3];
+	static int dimsArm[3];
+	static int dimsLeg[3];
 	static const int NECK_HEIGHT;
 	static float speed;
 
 	ovector location;
 	ovector velocity;
 	float heading;
+	float headingLegs;
 	float colorHead[3];
 	float colorBody[3];
 
 	Person() {
 		heading = 0;
+		headingLegs = 0;
 
 		colorHead[0] = 1;//0.75;
 		colorHead[1] = 1;//0.75;
@@ -55,9 +59,14 @@ public:
 	Bullet shoot();
 
 protected:
-	//TODO draw parts of the body
 	void drawHead();
 	void drawTorso();
+	void drawArmL();
+	void drawArmR();
+	void drawArms();
+	void drawLegL();
+	void drawLegR();
+	void drawLegs();
 };
 
 #endif

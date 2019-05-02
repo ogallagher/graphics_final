@@ -8,31 +8,12 @@ Submission for the 3D OpenGL final project.
 It's a top-down shooter with SuperHot-like mechanics, where time is faster when the player
 moves, and slower when the player stands still.
 
-TODO <master>
-- enemy
-	- point at player method
-- player
-	+ move for arrow keys
-	+ rotate upper body towards cursor
-	- score variable
-	- variables for shooting (ammo, reload time)
-- bullet class
-	- collision with: person, obstacle
-	+ collision with world bounds
-- obstacle class
-- person
-	+ shoot method
-	- die method
-	- walking animation
-+ world/app
-	+ modify World::speed based on framerate
-	+ track cursor in 2d
-	+ cursor-world projection: draw a ray representing the current mouse position
-- research/questions
-	- how to use sound with opengl/glut (so we could have sound effects)
-	- how should we set up the environment?
-	- how should we spawn enemies?
-	- how should the enemies behave (how they follow the player and shoot)?
+TODO <person-visuals>
++ (misc) create obstacle class
++ arms
++ legs
+- gun
++ animate legs
 
 */
 
@@ -72,7 +53,6 @@ using namespace std;
 #define GAME_NAME "Graphics Final"
 int dimsScreen[2];
 #define FOV 60
-double t = 0;
 int idleCount = 0;
 chrono::high_resolution_clock::time_point atime;
 chrono::high_resolution_clock::time_point btime;
@@ -89,10 +69,10 @@ void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	
-	t += 0.001*World::speed;
-	World::camera->location.set(World::dims[0]/8,sin(t)*World::dimsUniverse[1]/16 + World::dimsUniverse[1]/4,World::dims[2]/2);
+	World::tick();
+	World::camera->location.set(World::dims[0]/8,World::dimsUniverse[1]/6,0.6*World::dims[2]);
+	World::camera->subject.set(&(player.location));
 	World::display();
-	
 	World::updateCursor();
 	World::drawCursor();
 	

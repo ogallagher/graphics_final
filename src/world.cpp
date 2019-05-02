@@ -15,7 +15,7 @@ world.cpp
 
 int World::dimsWindow[2] = {600,600};
 int World::dimsUniverse[3] = {dimsWindow[0],dimsWindow[1],600};
-
+double World::t = 0;
 double World::speed = 1;
 int World::dims[3] = {200,10,200};
 float World::mouse[2] = {0,0};
@@ -57,6 +57,10 @@ string World::describe() {
 						+ to_string(speed);
 	
 	return description;
+}
+
+void World::tick() {
+	t += 0.001*speed;
 }
 
 void World::loadCamera() {
