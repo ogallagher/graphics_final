@@ -1,4 +1,4 @@
-# Name TBD
+# Minuteman
 Final Computer Graphics project. Written in C++ and uses OpenGL and GLUT graphics and I/O libraries.<br>
 By Owen Gallagher and Brian Park
 
