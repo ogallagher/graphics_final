@@ -8,7 +8,13 @@ camera.cpp
 
 */
 
+#include "../include/world.h"
+#include "../include/ovector.h"
 #include "../include/camera.h"
+
+const int Camera::X_TO_TARGET = 100;
+const int Camera::HEIGHT = 100;
+const int Camera::Z_TO_TARGET = 100;
 
 void Camera::move() {
 	ovector v(&destination);
@@ -16,4 +22,20 @@ void Camera::move() {
 	v.mult(easing*World::speed);
 
 	location.add(&v);
+}
+
+void Camera::follow(ovector *target) {
+	//keep a certain distance
+	int xd = target->x-location.x;
+	if (xd > X_TO_TARGET) {
+		destination.x = target->x - X_TO_TARGET;
+	}
+	else if (xd < -X_TO_TARGET) {
+		destination.x = target->x + X_TO_TARGET;
+	}
+	destination.y = HEIGHT;
+	destination.z = target->z + Z_TO_TARGET;
+	
+	//look at target
+	subject.set(target);
 }

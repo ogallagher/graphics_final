@@ -8,12 +8,10 @@ Submission for the 3D OpenGL final project.
 It's a top-down shooter with SuperHot-like mechanics, where time is faster when the player
 moves, and slower when the player stands still.
 
-TODO <person-visuals>
-+ (misc) create obstacle class
-+ arms
-+ legs
-- gun
-+ animate legs
+TODO <camera>
++ camera.location.y is constant
+- camera.location.z follows player.z by an offset
+- camera.location.x follows player.x within a tether distance
 
 */
 
@@ -70,8 +68,8 @@ void display() {
 	glLoadIdentity();
 	
 	World::tick();
-	World::camera->location.set(World::dims[0]/8,World::dimsUniverse[1]/6,0.6*World::dims[2]);
-	World::camera->subject.set(&(player.location));
+	World::camera->follow(&(player.location));
+	World::camera->move();
 	World::display();
 	World::updateCursor();
 	World::drawCursor();
@@ -263,8 +261,8 @@ int main(int argc, char** argv) {
 	player.location.set(0,0,0);
 
 	cout << "init camera..." << endl;
-	World::camera->location.set(World::dims[0]/8,World::dimsUniverse[0]/2,World::dims[2]/2);
-	World::camera->subject.set(&(player.location));
+	//World::camera->location.set(World::dims[0]/8,World::dimsUniverse[0]/2,World::dims[2]/2);
+	//World::camera->subject.set(&(player.location));
 	
 	cout << "init framerate clock..." << endl;
 	atime = chrono::high_resolution_clock::now();
