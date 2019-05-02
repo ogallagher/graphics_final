@@ -8,10 +8,7 @@ Submission for the 3D OpenGL final project.
 It's a top-down shooter with SuperHot-like mechanics, where time is faster when the player
 moves, and slower when the player stands still.
 
-TODO <camera>
-+ camera.location.y is constant
-- camera.location.z follows player.z by an offset
-- camera.location.x follows player.x within a tether distance
+TODO <master>
 
 */
 

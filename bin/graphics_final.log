@@ -1,11 +1,9 @@
-﻿Build started 5/2/2019 1:23:50 PM.
+﻿Build started 5/2/2019 1:30:11 PM.
      1>Project "C:\Users\gallaoj16\Documents\graphics_final\graphics_final.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /nologo /W1 /WX- /O2 /Oy- /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"bin\\" /Fd"bin\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt src\bullet.cpp src\graphics_final.cpp src\person.cpp src\player.cpp src\world.cpp
-         bullet.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /nologo /W1 /WX- /O2 /Oy- /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"bin\\" /Fd"bin\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt src\camera.cpp src\graphics_final.cpp src\world.cpp
+         camera.cpp
          graphics_final.cpp
-         person.cpp
-         player.cpp
          world.cpp
          Generating Code...
        Link:
@@ -22,4 +20,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:03.86
+Time Elapsed 00:00:02.01
