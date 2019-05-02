@@ -36,6 +36,9 @@
     <ClInclude Include="include\obstacle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\bullet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\graphics_final.cpp">

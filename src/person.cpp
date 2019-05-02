@@ -18,8 +18,9 @@ int Person::dimsHead[3] = {2,2,2};
 int Person::dimsTorso[3] = {3,5,3};
 int Person::dimsArm[3] = {1,5,1};
 int Person::dimsLeg[3] = {1,4,1};
-const int Person::NECK_HEIGHT = 1;
 float Person::speed = 0.02;
+const int Person::NECK_HEIGHT = 1;
+const int Person::INFLUENCE_RADIUS = dimsTorso[0] + dimsArm[1];
 
 void Person::move() {
 	ovector v(&velocity);
@@ -171,4 +172,43 @@ void Person::display() {
 	drawTorso();
 
 	glPopMatrix();
+}
+
+bool Person::collideObstacle(Obstacle *obstacle) {
+	//difference between locations
+	ovector d(&(obstacle->location));
+	d.sub(&location);
+
+	//initial distance check
+	if (d.mag() < INFLUENCE_RADIUS) {
+		//subtract dimensions around each object
+		int dx = abs(d.x) - (dimsTorso[0] + dimsArm[0] + obstacle->dims[0])/2;
+		int dz = abs(d.z) - (dimsTorso[2] + dimsArm[1] + obstacle->dims[2])/2;
+	
+		if (dx < 0 && dz < 0) {
+			//is touching obstacle somewhere; push person outside of obstacle
+			if (d.x > 0) {
+				location.x -= dx;
+			}
+			else {
+				location.x += dx;
+			}
+		
+			if (d.z > 0) {
+				location.z -= dz;
+			}
+			else {
+				location.z += dz;
+			}
+
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	else {
+		//not close enough to obstacle for any collision to occur
+		return false;
+	}
 }

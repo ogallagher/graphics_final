@@ -25,6 +25,7 @@ Superclass for all people in the game (player, enemies)
 #include "../include/world.h"
 #include "../include/ovector.h"
 #include "../include/bullet.h"
+#include "../include/obstacle.h"
 
 class Person {
 public:
@@ -34,6 +35,7 @@ public:
 	static int dimsLeg[3];
 	static const int NECK_HEIGHT;
 	static float speed;
+	static const int INFLUENCE_RADIUS;
 
 	ovector location;
 	ovector velocity;
@@ -54,9 +56,12 @@ public:
 		colorBody[1] = 0.25;
 		colorBody[2] = 0.25;
 	};
+
 	void move();
 	void display();
 	Bullet shoot();
+
+	bool collideObstacle(Obstacle *); //returns true on collision
 
 protected:
 	void drawHead();

@@ -8,7 +8,13 @@ Submission for the 3D OpenGL final project.
 It's a top-down shooter with SuperHot-like mechanics, where time is faster when the player
 moves, and slower when the player stands still.
 
-TODO <master>
+TODO <collision>
+- Person collision (prism to prism, easy)
+	- person to person
+	? person to obstacle
+- Bullet collision (line to prism, difficult)
+	- bullet to obstacle
+	- bullet to person
 
 */
 
@@ -74,6 +80,7 @@ void display() {
 	player.keyControl();
 	player.mouseControl();
 	player.move();
+	//TODO test player.collideObstacle(&obstacle);
 	player.display();
 	
 	for (unsigned int i=0; i<bulletsLen; i++) {
@@ -178,11 +185,8 @@ void mouseclick(int button, int status, int x, int y) {
 		if (button == GLUT_LEFT_BUTTON) {
 			World::clicked = true;
 			
-			//TODO player.shoot()
-			Bullet bullet = player.shoot();
-			bullets.push_back(bullet);
+			bullets.push_back(player.shoot());
 			bulletsLen++;
-			cout << "Player shot: " << bullet << endl;
 		}
 	}
 	else if (status == GLUT_UP) {

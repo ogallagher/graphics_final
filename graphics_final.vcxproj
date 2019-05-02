@@ -83,6 +83,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\bullet.h" />
     <ClInclude Include="include\camera.h" />
     <ClInclude Include="include\enemy.h" />
     <ClInclude Include="include\obstacle.h" />
