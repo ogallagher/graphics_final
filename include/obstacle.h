@@ -16,11 +16,14 @@ They are placed randomly.
 class Obstacle {
 public:
 	static float color[3];
+	static const int HEIGHT;
 	
 	ovector location;
 	int dims[3];
+	std::string description;
 	
-	Obstacle(int, int, int, int, int); //x,y,width,height,depth
+	Obstacle(int, int, int, int); //x,y,width,depth
 	
 	void display();
+	std::string toString();
 };

@@ -40,6 +40,7 @@ TODO <master>
 #include "../include/enemy.h"
 #include "../include/camera.h"
 #include "../include/bullet.h"
+#include "../include/obstacle.h"
 
 //namespaces
 using namespace std;
@@ -59,6 +60,8 @@ Player player;
 vector<Bullet> bullets;
 int bulletsLen = 0;
 Bullet *bullet = nullptr;
+
+//vector<Obstacle> obstacles;
 
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -125,11 +128,11 @@ void reshape(int w, int h) {
     glLoadIdentity();
 	if (w<h) {
 		glViewport(0, h/2 - w/2, w, w);
-		gluPerspective(FOV,1,World::EYE_NEAR,World::dimsUniverse[2]);
+		gluPerspective(FOV,1,World::EYE_NEAR,World::dimsFOV[2]);
 	}
 	else {
 		glViewport(0,0,w,h);
-		gluPerspective(FOV,(double)w/h,World::EYE_NEAR,World::dimsUniverse[2]/2);
+		gluPerspective(FOV,(double)w/h,World::EYE_NEAR,World::dimsFOV[2]/2);
 	}
 	
     glMatrixMode(GL_MODELVIEW);
@@ -229,7 +232,7 @@ void initGL() {
 	
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(FOV,1,World::EYE_NEAR,World::dimsUniverse[2]/2);
+	gluPerspective(FOV,1,World::EYE_NEAR,World::dimsFOV[2]/2);
 	glMatrixMode(GL_MODELVIEW);
 
 	//background color
@@ -252,14 +255,11 @@ int main(int argc, char** argv) {
 
 	cout << "init World..." << endl;
 	World::loadOSSpeed(osSpeed);
+	World::obstacles.push_back(Obstacle(0,0,World::dims[0],5));
 	cout << World::describe() << endl;
 
 	cout << "init player..." << endl;
 	player.location.set(0,0,0);
-
-	cout << "init camera..." << endl;
-	//World::camera->location.set(World::dims[0]/8,World::dimsUniverse[0]/2,World::dims[2]/2);
-	//World::camera->subject.set(&(player.location));
 	
 	cout << "init framerate clock..." << endl;
 	atime = chrono::high_resolution_clock::now();
