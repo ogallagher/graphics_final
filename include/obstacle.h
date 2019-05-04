@@ -11,6 +11,9 @@ They are placed randomly.
 
 */
 
+#ifndef OBSTACLE_H
+#define OBSTACLE_H
+
 #include "../include/ovector.h"
 
 class Obstacle {
@@ -27,3 +30,5 @@ public:
 	void display();
 	std::string toString();
 };
+
+#endif
