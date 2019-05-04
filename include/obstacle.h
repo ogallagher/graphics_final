@@ -28,7 +28,7 @@ public:
 	Obstacle(int, int, int, int); //x,y,width,depth
 	
 	void display();
-	std::string toString();
+	std::string describe();
 };
 
 #endif

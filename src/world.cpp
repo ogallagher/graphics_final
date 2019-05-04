@@ -8,6 +8,10 @@ world.cpp
 
 */
 
+//core headers
+#include <vector>
+
+//local headers
 #include "../include/world.h"
 #include "../include/camera.h"
 #include "../include/matrixutils.h"
@@ -39,18 +43,28 @@ void World::loadOSSpeed(float osSpeed) {
 	speed *= osSpeed;
 }
 
+void World::loadObstacles() {
+	int numObstacles = 5;
+	for (int i=0; i<numObstacles; i++) {
+		obstacles.push_back(Obstacle(World::dims[0]/numObstacles*i,World::dims[2]/numObstacles*i,10,10));
+	}
+}
+
 void World::display() {
 	loadCamera();
 
 	glPushMatrix();
+	
+	vector<Obstacle>::iterator oit;
+	for (oit=obstacles.begin(); oit!=obstacles.end(); oit++) {
+		oit->display();
+	}
 	
 	glScalef(dims[0],dims[1],dims[2]);
 	glColor3f(1,1,1);
 	glutWireCube(1.0);
 
 	glPopMatrix();
-
-	obstacles[0].display();
 }
 
 string World::describe() {
@@ -58,7 +72,14 @@ string World::describe() {
 						+ to_string(dims[0]) + "," 
 						+ to_string(dims[1]) + ","
 						+ to_string(dims[2]) + "] speed="
-						+ to_string(speed) + "\n" + obstacles[0].toString();
+						+ to_string(speed) + "\nobstacles=[";
+	
+	vector<Obstacle>::iterator oit;
+	for (oit=obstacles.begin(); oit!=obstacles.end(); oit++) {
+		description += oit->describe() + ",";
+	}
+	description += "]";
+	
 	return description;
 }
 

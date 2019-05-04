@@ -55,7 +55,7 @@ void Obstacle::display() {
 	glPopMatrix();
 }
 
-string Obstacle::toString() {
+string Obstacle::describe() {
 	string description = "obstacle[x = " + to_string(location.x)
 						+ " y = " + to_string(location.y)
 						+ " z = " + to_string(location.x)

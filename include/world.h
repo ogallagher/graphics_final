@@ -58,6 +58,7 @@ public:
 	static vector<Obstacle> obstacles;
 
 	static void loadOSSpeed(float);
+	static void loadObstacles();
 	static void display();
 	static string describe();
 	static void tick();

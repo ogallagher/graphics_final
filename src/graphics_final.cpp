@@ -259,7 +259,7 @@ int main(int argc, char** argv) {
 
 	cout << "init World..." << endl;
 	World::loadOSSpeed(osSpeed);
-	World::obstacles.push_back(Obstacle(0,0,World::dims[0],5));
+	World::loadObstacles();
 	cout << World::describe() << endl;
 
 	cout << "init player..." << endl;
