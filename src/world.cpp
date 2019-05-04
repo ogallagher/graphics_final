@@ -12,9 +12,10 @@ world.cpp
 #include "../include/camera.h"
 #include "../include/matrixutils.h"
 #include "../include/person.h"
+#include "../include/obstacle.h"
 
 int World::dimsWindow[2] = {600,600};
-int World::dimsUniverse[3] = {dimsWindow[0],dimsWindow[1],600};
+int World::dimsFOV[3] = {dimsWindow[0],dimsWindow[1],600};
 double World::t = 0;
 double World::speed = 1;
 int World::dims[3] = {200,10,200};
@@ -27,8 +28,9 @@ bool World::keyD = false;
 bool World::keyS = false;
 bool World::keyA = false;
 Camera *World::camera = new Camera();
+vector<Obstacle> World::obstacles;
 
-const int World::EYE_NEAR = World::dimsUniverse[2]/20;
+const int World::EYE_NEAR = World::dimsFOV[2]/20;
 const int World::CURSOR_HEIGHT = Person::dimsTorso[1];
 
 float World::pmatrix[16],World::mvmatrix[16],World::pmvmatrix[16],World::umatrix[16];
@@ -42,11 +44,13 @@ void World::display() {
 
 	glPushMatrix();
 	
-	glScalef(World::dims[0],World::dims[1],World::dims[2]);
+	glScalef(dims[0],dims[1],dims[2]);
 	glColor3f(1,1,1);
 	glutWireCube(1.0);
 
 	glPopMatrix();
+
+	obstacles[0].display();
 }
 
 string World::describe() {
@@ -54,8 +58,7 @@ string World::describe() {
 						+ to_string(dims[0]) + "," 
 						+ to_string(dims[1]) + ","
 						+ to_string(dims[2]) + "] speed="
-						+ to_string(speed);
-	
+						+ to_string(speed) + "\n" + obstacles[0].toString();
 	return description;
 }
 

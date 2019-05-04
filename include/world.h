@@ -14,10 +14,12 @@ world.h
 //core headers
 #include <iostream>
 #include <string>
+#include <vector>
 
 //local headers
 #include "ovector.h"
 class Camera; //don't include camera.h here to avoid circular dependency
+class Obstacle; //don't include obstacle.h here to avoid circular dependency
 
 //namespaces
 using namespace std;
@@ -44,7 +46,7 @@ public:
 	static float umatrix[16]; //2d->3d unprojection
 	
 	static int dimsWindow[2];
-	static int dimsUniverse[3];
+	static int dimsFOV[3];
 	static double t; //world clock
 	static double speed; //determines time slow-down and speed-up in the game
 	static int dims[3]; //eastwest,northsouth,updown
@@ -53,6 +55,7 @@ public:
 	static ovector cursor; //intersection of pointer with ground plane
 	static bool clicked;
 	static bool keyW, keyD, keyS, keyA;
+	static vector<Obstacle> obstacles;
 
 	static void loadOSSpeed(float);
 	static void display();

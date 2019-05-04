@@ -143,7 +143,7 @@ void Person::drawTorso() {
 	glPushMatrix();
 	
 	//inherited transforms
-	glTranslatef(0,dimsTorso[1]/2 + dimsLeg[1]/2,0);
+	glTranslatef(0,dimsLeg[1] + dimsTorso[1]/2,0);
 	
 	//draw children
 	drawLegs();
