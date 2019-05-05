@@ -8,16 +8,14 @@ Submission for the 3D OpenGL final project.
 It's a top-down shooter with SuperHot-like mechanics, where time is faster when the player
 moves, and slower when the player stands still.
 
-TODO <enemy>
-+ basic movement (look at and follow player)
-- die when shot
-- shoot at player
-- advanced movement
-	- check closest object in fov
-	- if player, approach player
-	- if obstacle, partially hide for x time
-= generate at random positions
-+ add ovector::angleY(ovector*)
+TODO <material-properties>
+- opengl setup
+- obstacle
+- person
+	- enemy
+	- player
+- ground
+- fog
 
 */
 
