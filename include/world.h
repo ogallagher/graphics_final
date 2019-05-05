@@ -27,6 +27,7 @@ world.h
 //local headers
 #include "ovector.h"
 class Camera; //don't here to avoid circular dependency
+class Light;
 class Bullet;
 class Obstacle;
 class Person;
@@ -61,18 +62,20 @@ public:
 	static bool keyW, keyD, keyS, keyA;
 	
 	static Camera *camera;
+	static Light *light;
 	
 	static vector<Bullet> bullets;
 	static vector<Obstacle> obstacles;
 	static vector<Enemy> enemies;
 
 	static void loadOSSpeed(float);
+	static void loadCamera(); //calls gluLookAt()
+	static void loadLight(int lightId); //calls glLightfv()
 	static void loadObstacles();
 	static void loadEnemies();
-	static void display();
+	static void display(); //renders camera, lighting, obstacles, enemies
 	static string describe();
 	static void tick();
-	static void loadCamera(); //calls gluLookAt()
 	static void updateMouse(int,int);
 	static void updateCursor();
 	static void drawCursor();

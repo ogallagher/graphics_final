@@ -18,6 +18,7 @@ world.cpp
 #include "../include/matrixutils.h"
 #include "../include/enemy.h"
 #include "../include/obstacle.h"
+#include "../include/light.h"
 
 int World::dimsWindow[2] = {600,600};
 int World::dimsFOV[3] = {600,600,600};
@@ -33,6 +34,7 @@ bool World::keyD = false;
 bool World::keyS = false;
 bool World::keyA = false;
 Camera *World::camera = new Camera();
+Light *World::light = new Light();
 random_device World::randomCore;
 uniform_real_distribution<float> World::randomizer(0.0,1.0);
 
@@ -47,6 +49,24 @@ float World::pmatrix[16],World::mvmatrix[16],World::pmvmatrix[16],World::umatrix
 
 void World::loadOSSpeed(float osSpeed) {
 	speed *= osSpeed;
+}
+
+void World::loadCamera() {
+	gluLookAt(camera->location.x,camera->location.y,camera->location.z,
+			  camera->subject.x,camera->subject.y,camera->subject.z,
+			  0,1,0);
+}
+
+void World::loadLight(int lightId) {
+	float position[3] = {
+		light->location.x,
+		light->location.y,
+		light->location.z
+	};
+	glLightfv(lightId , GL_POSITION , position);
+	glLightfv(lightId , GL_AMBIENT , light->material.ambient);
+	glLightfv(lightId , GL_DIFFUSE , light->material.diffuse);
+	glLightfv(lightId , GL_SPECULAR , light->material.specular);
 }
 
 void World::loadObstacles() {
@@ -67,6 +87,7 @@ void World::loadEnemies() {
 
 void World::display() {
 	loadCamera();
+	loadLight(GL_LIGHT0);
 
 	glPushMatrix();
 	
@@ -105,12 +126,6 @@ string World::describe() {
 
 void World::tick() {
 	t += 0.001*speed;
-}
-
-void World::loadCamera() {
-	gluLookAt(camera->location.x,camera->location.y,camera->location.z,
-			  camera->subject.x,camera->subject.y,camera->subject.z,
-			  0,1,0);
 }
 
 void World::updateMouse(int x, int y) {

@@ -9,8 +9,8 @@ It's a top-down shooter with SuperHot-like mechanics, where time is faster when 
 moves, and slower when the player stands still.
 
 TODO <material-properties>
-= opengl setup
-- world light
++ opengl setup
+= world light
 - obstacle
 - person
 	- enemy
@@ -45,6 +45,7 @@ TODO <material-properties>
 #include "../include/camera.h"
 #include "../include/bullet.h"
 #include "../include/obstacle.h"
+#include "../include/light.h"
 
 //namespaces
 using namespace std;
@@ -73,6 +74,7 @@ void display() {
 	World::tick();
 	World::camera->follow(&(player.location));
 	World::camera->move();
+	World::light->move();
 	World::display();
 	World::updateCursor();
 	World::drawCursor();
@@ -253,8 +255,11 @@ void initGL() {
 
 	//stroke thickness
 	glLineWidth(2);
+	
+	//lighting
+    glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
 }
-
 
 //program main
 int main(int argc, char** argv) {
@@ -270,6 +275,7 @@ int main(int argc, char** argv) {
 	World::loadOSSpeed(osSpeed);
 	World::loadObstacles();
 	World::loadEnemies();
+	World::light->loadTarget(&(player.location));
 	cout << World::describe() << endl;
 	
 	cout << "init enemies" << endl;

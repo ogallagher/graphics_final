@@ -15,10 +15,6 @@ Class to represent OpenGL material properties.
 
 class Material {
 private:
-	float ambient[4];
-	float diffuse[4];
-	float specular[4];
-	
 	float color[3];
 	float alpha;
 	float amb,dif,spec;
@@ -26,6 +22,10 @@ private:
 	void update();
 	
 public:
+	float ambient[4];
+	float diffuse[4];
+	float specular[4];
+	
 	Material();
 	void setColor(float r, float g, float b);
 	void setAlpha(float a);
