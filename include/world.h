@@ -36,6 +36,10 @@ class Enemy;
 using namespace std;
 
 class World {
+protected:
+	static random_device randomCore;
+	static uniform_real_distribution<float> randomizer;
+	
 public:
 	static const int EYE_NEAR;
 	static const int CURSOR_HEIGHT;
@@ -57,7 +61,6 @@ public:
 	static bool keyW, keyD, keyS, keyA;
 	
 	static Camera *camera;
-	static random_device randomizer;
 	
 	static vector<Bullet> bullets;
 	static vector<Obstacle> obstacles;
@@ -73,6 +76,7 @@ public:
 	static void updateMouse(int,int);
 	static void updateCursor();
 	static void drawCursor();
+	static float getRandom(); //returns random float in range [0,1)
 };
 
 #endif

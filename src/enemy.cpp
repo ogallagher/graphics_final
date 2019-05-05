@@ -38,12 +38,12 @@ void Enemy::followControl() {
 	//look at player
 	ovector gaze(&(player->location));
 	gaze.sub(&location);
-	
 	heading = gaze.headingY();
 	
-	//TODO movement
 	if (standing) {
 		if (stand == 0) { //change destination
+			//TODO complicate with hiding
+			
 			destination.set(&(player->location));
 			standing = false;
 		}
@@ -55,7 +55,7 @@ void Enemy::followControl() {
 		ovector v(&destination);
 		v.sub(&location);
 	
-		if (v.mag() < Person::dimsTorso[0]+Person::dimsArm[1]) { //arrive
+		if (v.mag() < Person::dimsTorso[0]/2 + Person::dimsArm[1]) { //arrive
 			stay();
 		}
 		else { //move

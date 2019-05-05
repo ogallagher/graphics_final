@@ -10,6 +10,7 @@ world.cpp
 
 //core headers
 #include <vector>
+#include <random>
 
 //local headers
 #include "../include/world.h"
@@ -32,6 +33,8 @@ bool World::keyD = false;
 bool World::keyS = false;
 bool World::keyA = false;
 Camera *World::camera = new Camera();
+random_device World::randomCore;
+uniform_real_distribution<float> World::randomizer(0.0,1.0);
 
 vector<Bullet> World::bullets;
 vector<Obstacle> World::obstacles;
@@ -169,4 +172,8 @@ void World::drawCursor() {
 	glutSolidCube(3);
 	
 	glPopMatrix();
+}
+
+float World::getRandom() {
+	return randomizer(randomCore);
 }

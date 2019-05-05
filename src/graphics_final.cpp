@@ -13,10 +13,11 @@ TODO <enemy>
 - die when shot
 - shoot at player
 - advanced movement
-	= check closest object in fov
+	- check closest object in fov
 	- if player, approach player
 	- if obstacle, partially hide for x time
 = generate at random positions
++ add ovector::angleY(ovector*)
 
 */
 
