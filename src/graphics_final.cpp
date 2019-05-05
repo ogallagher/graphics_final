@@ -8,14 +8,14 @@ Submission for the 3D OpenGL final project.
 It's a top-down shooter with SuperHot-like mechanics, where time is faster when the player
 moves, and slower when the player stands still.
 
-TODO <collision>
-+ Person collision (prism to prism, easy)
-	+ person to person
-	+ person to obstacle
-= Bullet collision (line to prism, difficult)
-	+ bullet to obstacle (basic)
-	+ bullet to person (basic)
-	- bullet to person (advanced)
+TODO <enemy>
+- basic movement (look at and follow player)
+- die when shot
+- shoot at player
+- advanced movement
+	- check closest object in fov
+	- if player, approach player
+	- if obstacle, partially hide for x time
 
 */
 
