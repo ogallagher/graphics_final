@@ -20,6 +20,7 @@ bullet.h
 
 class Person; //don't include to avoid circular dependency
 class Obstacle;
+class Enemy;
 
 class Bullet {	
 public:
@@ -50,6 +51,7 @@ public:
 	void move();
 	bool collideBounds(); //returns true on collision
 	bool collidePeople(std::vector<Person> *);
+	bool collidePeople(std::vector<Enemy> *);
 	bool collideObstacles(std::vector<Obstacle> *);
 	bool collidePerson(Person *);
 	bool collideObstacle(Obstacle *);

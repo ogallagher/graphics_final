@@ -9,13 +9,14 @@ It's a top-down shooter with SuperHot-like mechanics, where time is faster when 
 moves, and slower when the player stands still.
 
 TODO <enemy>
-- basic movement (look at and follow player)
++ basic movement (look at and follow player)
 - die when shot
 - shoot at player
 - advanced movement
-	- check closest object in fov
+	= check closest object in fov
 	- if player, approach player
 	- if obstacle, partially hide for x time
+= generate at random positions
 
 */
 
@@ -67,7 +68,7 @@ Player player;
 int bulletsLen = 0;
 vector<Bullet>::iterator bit;
 vector<Obstacle>::iterator oit;
-vector<Person>::iterator eit;
+vector<Enemy>::iterator eit;
 
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -84,8 +85,17 @@ void display() {
 	player.mouseControl();
 	player.move();
 	player.collideObstacles(&World::obstacles);
-	player.collidePeople(&World::enemies);
 	player.display();
+	
+	for (eit=World::enemies.begin(); eit!=World::enemies.end(); eit++) {
+		eit->followControl();
+		eit->shootControl();
+		eit->move();
+		if (eit->collideObstacles(&World::obstacles)) {
+			eit->stay();
+		}
+		eit->display();
+	}
 	
 	for (bit=World::bullets.begin(); bit!=World::bullets.end(); /*conditional increment*/) {
 		bit->move();
@@ -102,8 +112,6 @@ void display() {
 			bit++;
 		}
 	}
-	
-	glutSwapBuffers();
 	
 	//measure framerate and update World::speed
 	idleCount++;
@@ -128,6 +136,8 @@ void display() {
 		dtime = 0;
 		idleCount = 0;
 	}
+	
+	glutSwapBuffers();
 }
 
 void reshape(int w, int h) {
@@ -243,7 +253,7 @@ void initGL() {
 	glMatrixMode(GL_MODELVIEW);
 
 	//background color
-	glClearColor(0.2,0,0.1,1);
+	glClearColor(0.0,0.1,0.1,1);
 
 	//stroke thickness
 	glLineWidth(2);
@@ -255,21 +265,24 @@ int main(int argc, char** argv) {
 	cout << "Computer Graphics final project: 3D top-down shooter" << endl;
 	cout << "Owen Gallagher, Brian Park" << endl;
 	
-	cout << "initGLUT()..." << endl;
+	cout << "init glut" << endl;
 	initGLUT(argc,argv);
-	cout << "initGL()..." << endl;
+	cout << "init opengl" << endl;
 	initGL();
 
-	cout << "init World..." << endl;
+	cout << "init world" << endl;
 	World::loadOSSpeed(osSpeed);
 	World::loadObstacles();
 	World::loadEnemies();
 	cout << World::describe() << endl;
+	
+	cout << "init enemies" << endl;
+	Enemy::loadPlayer(&player);
 
-	cout << "init player..." << endl;
+	cout << "init player" << endl;
 	player.location.set(0,0,0);
 	
-	cout << "init framerate clock..." << endl;
+	cout << "init framerate clock" << endl;
 	atime = chrono::high_resolution_clock::now();
 	 	
 	glutMainLoop();

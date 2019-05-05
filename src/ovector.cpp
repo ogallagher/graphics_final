@@ -128,6 +128,17 @@ float ovector::headingY() {
 	return h;
 }
 
+float ovector::angleY(ovector *other) {
+	float d = abs(headingY() - other->headingY());
+	
+	if (d > 180) { //return acute angle
+		return 360-d;
+	}
+	else {
+		return d;
+	}
+}
+
 void ovector::applyMatrix(float m[16]) {
 	//column major
 	float a = x*m[0] + y*m[4] + z*m[8] + w*m[12];

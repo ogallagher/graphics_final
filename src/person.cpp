@@ -15,6 +15,7 @@ Computer Graphics
 #include "../include/world.h"
 #include "../include/person.h"
 #include "../include/bullet.h"
+#include "../include/enemy.h"
 
 int Person::dimsHead[3] = {2,2,2};
 int Person::dimsTorso[3] = {3,5,3};
@@ -104,7 +105,7 @@ void Person::drawLegL() {
 	
 	glRotatef(headingLegs,0,1,0); //rotate around spine
 	glTranslatef(0,-dimsTorso[1]/2,0); //align hip with bottom of torso
-	if (velocity.mag() >= speed) {
+	if (velocity.mag() >= speed*0.9) {
 		glRotatef(-sin(World::t * 4) * 45,1,0,0); //rotate around hip
 	}
 	glTranslatef(0,-dimsLeg[1]/2,0); //hip is origin
@@ -122,7 +123,7 @@ void Person::drawLegR() {
 	
 	glRotatef(headingLegs,0,1,0); //rotate around spine
 	glTranslatef(0,-dimsTorso[1]/2,0); //align hip with bottom of torso
-	if (velocity.mag() >= speed) {
+	if (velocity.mag() >= speed*0.9) {
 		glRotatef(sin(World::t * 4) * 45,1,0,0); //rotate around hip
 	}
 	glTranslatef(0,-dimsLeg[1]/2,0); //hip is origin
@@ -176,10 +177,16 @@ void Person::display() {
 	glPopMatrix();
 }
 
-void Person::collideObstacles(vector<Obstacle> *obstacles) {
-	for (vector<Obstacle>::iterator oit=obstacles->begin(); oit!=obstacles->end(); oit++) {
-		collideObstacle(&(*oit));
+bool Person::collideObstacles(vector<Obstacle> *obstacles) {
+	bool collided = false;
+	
+	for (vector<Obstacle>::iterator oit=obstacles->begin(); oit!=obstacles->end() && !collided; oit++) {
+		if (collideObstacle(&(*oit))) {
+			collided = true;
+		}
 	}
+	
+	return collided;
 }
 
 bool Person::collideObstacle(Obstacle *obstacle) {
@@ -225,10 +232,28 @@ bool Person::collideObstacle(Obstacle *obstacle) {
 	}
 }
 
-void Person::collidePeople(vector<Person> *people) {
-	for (vector<Person>::iterator pit=people->begin(); pit!=people->end(); pit++) {
-		collidePerson(&(*pit));
+bool Person::collidePeople(vector<Person> *people) {
+	bool collided = false;
+	
+	for (vector<Person>::iterator pit=people->begin(); pit!=people->end() && !collided; pit++) {
+		if (collidePerson(&(*pit))) {
+			collided = true;
+		}
 	}
+	
+	return collided;
+}
+
+bool Person::collidePeople(vector<Enemy> *enemies) {
+	bool collided = false;
+	
+	for (vector<Enemy>::iterator eit=enemies->begin(); eit!=enemies->end() && !collided; eit++) {
+		if (collidePerson(static_cast<Person*>(&(*eit)))) {
+			collided = true;
+		}
+	}
+	
+	return collided;
 }
 
 bool Person::collidePerson(Person *person) {

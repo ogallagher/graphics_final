@@ -15,7 +15,7 @@ world.cpp
 #include "../include/world.h"
 #include "../include/camera.h"
 #include "../include/matrixutils.h"
-#include "../include/person.h"
+#include "../include/enemy.h"
 #include "../include/obstacle.h"
 
 int World::dimsWindow[2] = {600,600};
@@ -35,7 +35,7 @@ Camera *World::camera = new Camera();
 
 vector<Bullet> World::bullets;
 vector<Obstacle> World::obstacles;
-vector<Person> World::enemies;
+vector<Enemy> World::enemies;
 
 const int World::EYE_NEAR = World::dimsFOV[2]/20;
 const int World::CURSOR_HEIGHT = Person::dimsTorso[1];
@@ -56,7 +56,7 @@ void World::loadObstacles() {
 void World::loadEnemies() {
 	int numEnemies = 1;
 	for (int i=0; i<numEnemies; i++) {
-		Person e;
+		Enemy e;
 		e.location.set(-World::dims[0]*0.4,0,-World::dims[2]/2*0.4);
 		enemies.push_back(e);
 	}
@@ -72,7 +72,7 @@ void World::display() {
 		oit->display();
 	}
 	
-	vector<Person>::iterator eit;
+	vector<Enemy>::iterator eit;
 	for (eit=enemies.begin(); eit!=enemies.end(); eit++) {
 		eit->display();
 	}

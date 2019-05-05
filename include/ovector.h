@@ -30,10 +30,11 @@ public:
 	void sub(ovector *);
 	void mult(float);
 	void div(float);
-	float mag();
-	void norm();
-	float headingY(); //heading around the y axis
-	void applyMatrix(float [16]);
+	float mag(); //return length of vector
+	void norm(); //normalize to magnitude of 1
+	float headingY(); //heading around the y axis in degrees, 0-360
+	float angleY(ovector *); //angle between two vectors in degrees
+	void applyMatrix(float [16]); //left-multiply a 4x4 matrix
 	
 	friend std::ostream & operator <<(std::ostream &, const ovector &);
 };

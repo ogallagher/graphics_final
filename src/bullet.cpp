@@ -15,6 +15,7 @@ bullet.cpp
 //local headers
 #include "../include/bullet.h"
 #include "../include/person.h"
+#include "../include/enemy.h"
 #include "../include/obstacle.h"
 #include "../include/world.h"
 
@@ -67,6 +68,16 @@ bool Bullet::collidePeople(vector<Person> *people) {
 	
 	for (vector<Person>::iterator pit=people->begin(); pit!=people->end() && !collided; pit++) {
 		collided = collidePerson(&(*pit));
+	}
+	
+	return collided;
+}
+
+bool Bullet::collidePeople(vector<Enemy> *enemies) {
+	bool collided = false;
+	
+	for (vector<Enemy>::iterator eit=enemies->begin(); eit!=enemies->end() && !collided; eit++) {
+		collided = collidePerson(static_cast<Person*>(&(*eit)));
 	}
 	
 	return collided;

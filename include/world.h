@@ -15,27 +15,25 @@ world.h
 #include <iostream>
 #include <string>
 #include <vector>
+#include <random>
+
+#ifdef __APPLE__
+#define GL_SILENCE_DEPRECATION //Mac opengl
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h> //Windows opengl
+#endif
 
 //local headers
 #include "ovector.h"
-class Camera; //don't include camera.h here to avoid circular dependency
+class Camera; //don't here to avoid circular dependency
 class Bullet;
 class Obstacle;
 class Person;
+class Enemy;
 
 //namespaces
 using namespace std;
-
-#ifdef __APPLE__
-
-#define GL_SILENCE_DEPRECATION //Mac opengl
-#include <GLUT/glut.h>
-
-#else
-
-#include <GL/glut.h> //Windows opengl
-
-#endif
 
 class World {
 public:
@@ -58,9 +56,12 @@ public:
 	static bool clicked;
 	static bool keyW, keyD, keyS, keyA;
 	
+	static Camera *camera;
+	static random_device randomizer;
+	
 	static vector<Bullet> bullets;
 	static vector<Obstacle> obstacles;
-	static vector<Person> enemies;
+	static vector<Enemy> enemies;
 
 	static void loadOSSpeed(float);
 	static void loadObstacles();
@@ -72,8 +73,6 @@ public:
 	static void updateMouse(int,int);
 	static void updateCursor();
 	static void drawCursor();
-
-	static Camera *camera;
 };
 
 #endif

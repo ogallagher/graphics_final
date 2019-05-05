@@ -29,6 +29,8 @@ Superclass for all people in the game (player, enemies)
 #include "../include/bullet.h"
 #include "../include/obstacle.h"
 
+class Enemy; //don't include to prevent circular dependency
+
 class Person {
 public:
 	static int dimsHead[3];
@@ -63,8 +65,9 @@ public:
 	void display();
 	Bullet shoot();
 
-	void collideObstacles(vector<Obstacle> *);
-	void collidePeople(vector<Person> *);
+	bool collideObstacles(vector<Obstacle> *);
+	bool collidePeople(vector<Person> *);
+	bool collidePeople(vector<Enemy> *);
 	bool collideObstacle(Obstacle *);
 	bool collidePerson(Person *);
 
