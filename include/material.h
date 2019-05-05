@@ -26,15 +26,7 @@ private:
 	void update();
 	
 public:
-	Material() {
-		color[3] = {0,0,0}
-		alpha = 1;
-		amb=1;
-		dif=1;
-		spec=1;
-		
-		update(); //updates opengl values
-	}
+	Material();
 	void setColor(float r, float g, float b);
 	void setAlpha(float a);
 	void setADS(float a, float d, float s);

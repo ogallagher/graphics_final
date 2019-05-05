@@ -15,7 +15,7 @@ Class to represent an OpenGL light and its properties.
 
 //local includes
 #include "../include/ovector.h"
-#include "../include/matieral.h"
+#include "../include/material.h"
 
 class Light {
 public:

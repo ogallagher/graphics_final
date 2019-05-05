@@ -19,5 +19,5 @@ void Light::loadTarget(ovector *target) {
 }
 
 void Light::move() {
-	location.set(&target);
+	location.set(target);
 }

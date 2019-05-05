@@ -12,24 +12,46 @@ material.cpp
 #include "../include/material.h"
 
 void Material::update() {
-	ambient[4] = {amb*color[0],dif*color[1],spec*color[2],alpha};
-	diffuse[4] = {amb*color[0],dif*color[1],spec*color[2],alpha};
-	specular[4] = {amb*color[0],dif*color[1],spec*color[2],alpha};
+	ambient[0]=amb*color[0];
+	ambient[1]=amb*color[1];
+	ambient[2]=amb*color[2];
+	ambient[3]=alpha;
+	
+	diffuse[0]=dif*color[0];
+	diffuse[1]=dif*color[1];
+	diffuse[2]=dif*color[2];
+	diffuse[3]=alpha;
+	
+	specular[0]=spec*color[0];
+	specular[1]=spec*color[1];
+	specular[2]=spec*color[2];
+	specular[3]=alpha;
 }
 
-void setColor(float r, float g, float b) {
+Material::Material() {
+	color[0] = 0;
+	color[1] = 0;
+	color[2] = 0;
+	alpha = 1;
+	amb=1;
+	dif=1;
+	spec=1;
+	update(); //updates opengl values
+}
+
+void Material::setColor(float r, float g, float b) {
 	color[0] = r;
 	color[1] = g;
 	color[2] = b;
 	update();
 }
 
-void setAlpha(float a) {
+void Material::setAlpha(float a) {
 	alpha = a;
 	update();
 }
 
-void setADS(float a, float d, float s) {
+void Material::setADS(float a, float d, float s) {
 	amb = a;
 	dif = d;
 	spec = s;
