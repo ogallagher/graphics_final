@@ -53,7 +53,7 @@ void World::loadOSSpeed(float osSpeed) {
 
 void World::loadCamera() {
 	gluLookAt(camera->location.x,camera->location.y,camera->location.z,
-			  camera->subject.x,camera->subject.y,camera->subject.z,
+			  camera->target->x,camera->target->y,camera->target->z,
 			  0,1,0);
 }
 

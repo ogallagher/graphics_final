@@ -7,7 +7,6 @@ Computer Graphics
 */
 
 //global headers
-#include <iostream> //TODO delete this
 #include <cmath>
 #include <vector>
 

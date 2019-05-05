@@ -72,7 +72,6 @@ void display() {
 	glLoadIdentity();
 	
 	World::tick();
-	World::camera->follow(&(player.location));
 	World::camera->move();
 	World::light->move();
 	World::display();
@@ -275,7 +274,11 @@ int main(int argc, char** argv) {
 	World::loadOSSpeed(osSpeed);
 	World::loadObstacles();
 	World::loadEnemies();
-	World::light->loadTarget(&(player.location));
+	World::camera->loadTarget(&(player.location));
+	Light *light = World::light;
+	light->loadTarget(&(player.location));
+	light->material.setColor(1,1,1); //white light
+	light->material.setADS(0.9,0.7,0.85);
 	cout << World::describe() << endl;
 	
 	cout << "init enemies" << endl;

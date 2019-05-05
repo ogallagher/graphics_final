@@ -17,14 +17,6 @@ const int Camera::HEIGHT = 100;
 const int Camera::Z_TO_TARGET = 100;
 
 void Camera::move() {
-	ovector v(&destination);
-	v.sub(&location);
-	v.mult(easing*World::speed);
-
-	location.add(&v);
-}
-
-void Camera::follow(ovector *target) {
 	//keep a certain distance
 	int xd = target->x-location.x;
 	if (xd > X_TO_TARGET) {
@@ -36,6 +28,13 @@ void Camera::follow(ovector *target) {
 	destination.y = HEIGHT;
 	destination.z = target->z + Z_TO_TARGET;
 	
-	//look at target
-	subject.set(target);
+	ovector v(&destination);
+	v.sub(&location);
+	v.mult(easing*World::speed);
+
+	location.add(&v);
+}
+
+void Camera::loadTarget(ovector *t) {
+	target = t;
 }

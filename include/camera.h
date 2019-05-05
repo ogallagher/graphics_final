@@ -23,13 +23,13 @@ public:
 	ovector location;
 	ovector destination;
 	float easing;
-	ovector subject;
+	ovector *target;
 
 	Camera() {
 		easing = 0.0005;
 	};
 	void move();
-	void follow(ovector *);
+	void loadTarget(ovector *);
 };
 
 #endif
