@@ -9,7 +9,8 @@ It's a top-down shooter with SuperHot-like mechanics, where time is faster when 
 moves, and slower when the player stands still.
 
 TODO <material-properties>
-- opengl setup
+= opengl setup
+- world light
 - obstacle
 - person
 	- enemy
@@ -28,16 +29,12 @@ TODO <material-properties>
 #include <vector>
 
 #ifdef __APPLE__
-
 #define GL_SILENCE_DEPRECATION //apple glut and opengl
 #include <GLUT/glut.h>
 #define osSpeed 50		//speed if Mac
-
 #else
-
 #include <GL/glut.h> //windows glut and opengl
 #define osSpeed 1		//speed if Windows
-
 #endif
 
 //local headers

@@ -36,7 +36,7 @@ class Enemy;
 using namespace std;
 
 class World {
-protected:
+private:
 	static random_device randomCore;
 	static uniform_real_distribution<float> randomizer;
 	
