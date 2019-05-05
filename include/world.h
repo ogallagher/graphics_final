@@ -19,7 +19,9 @@ world.h
 //local headers
 #include "ovector.h"
 class Camera; //don't include camera.h here to avoid circular dependency
-class Obstacle; //don't include obstacle.h here to avoid circular dependency
+class Bullet;
+class Obstacle;
+class Person;
 
 //namespaces
 using namespace std;
@@ -55,10 +57,14 @@ public:
 	static ovector cursor; //intersection of pointer with ground plane
 	static bool clicked;
 	static bool keyW, keyD, keyS, keyA;
+	
+	static vector<Bullet> bullets;
 	static vector<Obstacle> obstacles;
+	static vector<Person> enemies;
 
 	static void loadOSSpeed(float);
 	static void loadObstacles();
+	static void loadEnemies();
 	static void display();
 	static string describe();
 	static void tick();

@@ -21,6 +21,8 @@ Superclass for all people in the game (player, enemies)
 #include <GL/glut.h>
 #endif
 
+#include <vector>
+
 //local headers
 #include "../include/world.h"
 #include "../include/ovector.h"
@@ -61,7 +63,10 @@ public:
 	void display();
 	Bullet shoot();
 
-	bool collideObstacle(Obstacle *); //returns true on collision
+	void collideObstacles(vector<Obstacle> *);
+	void collidePeople(vector<Person> *);
+	bool collideObstacle(Obstacle *);
+	bool collidePerson(Person *);
 
 protected:
 	void drawHead();

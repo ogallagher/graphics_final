@@ -20,6 +20,7 @@ class Obstacle {
 public:
 	static float color[3];
 	static const int HEIGHT;
+	static const int INFLUENCE_RADIUS;
 	
 	ovector location;
 	int dims[3];

@@ -13,15 +13,18 @@ bullet.h
 
 //global headers
 #include <iostream>
+#include <vector>
 
 //local headers
 #include "../include/ovector.h"
 
 class Person; //don't include to avoid circular dependency
+class Obstacle;
 
 class Bullet {	
 public:
 	static const int HEIGHT;
+	static const int INFLUENCE_RADIUS;
 	
 	static int dims[3];
 	static float speed;
@@ -46,8 +49,10 @@ public:
 	void display();
 	void move();
 	bool collideBounds(); //returns true on collision
-	bool collidePerson(Person *p);
-	bool collideObstacle();
+	bool collidePeople(std::vector<Person> *);
+	bool collideObstacles(std::vector<Obstacle> *);
+	bool collidePerson(Person *);
+	bool collideObstacle(Obstacle *);
 	
 	friend std::ostream & operator <<(std::ostream &, const Bullet &);
 };

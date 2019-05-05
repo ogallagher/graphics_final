@@ -19,10 +19,10 @@ world.cpp
 #include "../include/obstacle.h"
 
 int World::dimsWindow[2] = {600,600};
-int World::dimsFOV[3] = {dimsWindow[0],dimsWindow[1],600};
+int World::dimsFOV[3] = {600,600,600};
+int World::dims[3] = {200,10,200};
 double World::t = 0;
 double World::speed = 1;
-int World::dims[3] = {200,10,200};
 float World::mouse[2] = {0,0};
 ovector World::pointer;
 ovector World::cursor;
@@ -32,7 +32,10 @@ bool World::keyD = false;
 bool World::keyS = false;
 bool World::keyA = false;
 Camera *World::camera = new Camera();
+
+vector<Bullet> World::bullets;
 vector<Obstacle> World::obstacles;
+vector<Person> World::enemies;
 
 const int World::EYE_NEAR = World::dimsFOV[2]/20;
 const int World::CURSOR_HEIGHT = Person::dimsTorso[1];
@@ -50,6 +53,15 @@ void World::loadObstacles() {
 	}
 }
 
+void World::loadEnemies() {
+	int numEnemies = 1;
+	for (int i=0; i<numEnemies; i++) {
+		Person e;
+		e.location.set(-World::dims[0]*0.4,0,-World::dims[2]/2*0.4);
+		enemies.push_back(e);
+	}
+}
+
 void World::display() {
 	loadCamera();
 
@@ -58,6 +70,11 @@ void World::display() {
 	vector<Obstacle>::iterator oit;
 	for (oit=obstacles.begin(); oit!=obstacles.end(); oit++) {
 		oit->display();
+	}
+	
+	vector<Person>::iterator eit;
+	for (eit=enemies.begin(); eit!=enemies.end(); eit++) {
+		eit->display();
 	}
 	
 	glScalef(dims[0],dims[1],dims[2]);

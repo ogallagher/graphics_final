@@ -9,9 +9,9 @@ It's a top-down shooter with SuperHot-like mechanics, where time is faster when 
 moves, and slower when the player stands still.
 
 TODO <collision>
-- Person collision (prism to prism, easy)
-	- person to person
-	? person to obstacle
++ Person collision (prism to prism, easy)
+	+ person to person
+	+ person to obstacle
 - Bullet collision (line to prism, difficult)
 	- bullet to obstacle
 	- bullet to person
@@ -63,11 +63,10 @@ int fpsInterval = 5000;
 int fpsIdeal = 60;
 
 Player player;
-vector<Bullet> bullets;
 int bulletsLen = 0;
-Bullet *bullet = nullptr;
-
-//vector<Obstacle> obstacles;
+vector<Bullet>::iterator bit;
+vector<Obstacle>::iterator oit;
+vector<Person>::iterator eit;
 
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -83,20 +82,20 @@ void display() {
 	player.keyControl();
 	player.mouseControl();
 	player.move();
-	//TODO test player.collideObstacle(&obstacle);
+	player.collideObstacles(&World::obstacles);
+	player.collidePeople(&World::enemies);
 	player.display();
 	
-	for (unsigned int i=0; i<bulletsLen; i++) {
-		bullet = &bullets[i];
+	for (bit=World::bullets.begin(); bit!=World::bullets.end(); /*conditional increment*/) {
+		bit->move();
 		
-		if (bullet->collideBounds()) {
-			bullets.erase(bullets.begin()+i);
-			i--;
+		if (bit->collideBounds() || bit->collideObstacles(&World::obstacles)) {
+			bit = World::bullets.erase(bit);
 			bulletsLen--;
 		}
 		else {
-			bullet->move();
-			bullet->display();
+			bit->display();
+			bit++;
 		}
 	}
 	
@@ -188,7 +187,7 @@ void mouseclick(int button, int status, int x, int y) {
 		if (button == GLUT_LEFT_BUTTON) {
 			World::clicked = true;
 			
-			bullets.push_back(player.shoot());
+			World::bullets.push_back(player.shoot());
 			bulletsLen++;
 		}
 	}
@@ -260,6 +259,7 @@ int main(int argc, char** argv) {
 	cout << "init World..." << endl;
 	World::loadOSSpeed(osSpeed);
 	World::loadObstacles();
+	World::loadEnemies();
 	cout << World::describe() << endl;
 
 	cout << "init player..." << endl;

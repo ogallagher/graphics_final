@@ -7,7 +7,9 @@ Computer Graphics
 */
 
 //global headers
+#include <iostream> //TODO delete this
 #include <cmath>
+#include <vector>
 
 //local headers
 #include "../include/world.h"
@@ -20,7 +22,7 @@ int Person::dimsArm[3] = {1,5,1};
 int Person::dimsLeg[3] = {1,4,1};
 float Person::speed = 0.02;
 const int Person::NECK_HEIGHT = 1;
-const int Person::INFLUENCE_RADIUS = dimsTorso[0] + dimsArm[1];
+const int Person::INFLUENCE_RADIUS = (dimsTorso[0] + dimsArm[1])*3;
 
 void Person::move() {
 	ovector v(&velocity);
@@ -174,31 +176,90 @@ void Person::display() {
 	glPopMatrix();
 }
 
+void Person::collideObstacles(vector<Obstacle> *obstacles) {
+	for (vector<Obstacle>::iterator oit=obstacles->begin(); oit!=obstacles->end(); oit++) {
+		collideObstacle(&(*oit));
+	}
+}
+
 bool Person::collideObstacle(Obstacle *obstacle) {
 	//difference between locations
 	ovector d(&(obstacle->location));
+	d.y = 0;
 	d.sub(&location);
 
 	//initial distance check
-	if (d.mag() < INFLUENCE_RADIUS) {
+	if (d.mag() < INFLUENCE_RADIUS + Obstacle::INFLUENCE_RADIUS) {		
 		//subtract dimensions around each object
-		int dx = abs(d.x) - (dimsTorso[0] + dimsArm[0] + obstacle->dims[0])/2;
+		int dx = abs(d.x) - (dimsTorso[0] + dimsArm[1] + obstacle->dims[0])/2;
 		int dz = abs(d.z) - (dimsTorso[2] + dimsArm[1] + obstacle->dims[2])/2;
 	
 		if (dx < 0 && dz < 0) {
 			//is touching obstacle somewhere; push person outside of obstacle
-			if (d.x > 0) {
-				location.x -= dx;
+			if (dx > dz) {
+				if (d.x > 0) {
+					location.x += dx;
+				}
+				else {
+					location.x -= dx;
+				}
 			}
 			else {
-				location.x += dx;
+				if (d.z > 0) {
+					location.z += dz;
+				}
+				else {
+					location.z -= dz;
+				}
 			}
-		
-			if (d.z > 0) {
-				location.z -= dz;
+
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	else {
+		//not close enough to obstacle for any collision to occur
+		return false;
+	}
+}
+
+void Person::collidePeople(vector<Person> *people) {
+	for (vector<Person>::iterator pit=people->begin(); pit!=people->end(); pit++) {
+		collidePerson(&(*pit));
+	}
+}
+
+bool Person::collidePerson(Person *person) {
+	//difference between locations
+	ovector d(&(person->location));
+	d.y = 0;
+	d.sub(&location);
+
+	//initial distance check
+	if (d.mag() < INFLUENCE_RADIUS+INFLUENCE_RADIUS) {		
+		//subtract dimensions around each object
+		int dx = abs(d.x) - (dimsTorso[0] + dimsArm[1]);
+		int dz = abs(d.z) - (dimsTorso[2] + dimsArm[1]);
+	
+		if (dx < 0 && dz < 0) {
+			//is touching obstacle somewhere; push person outside of obstacle
+			if (dx > dz) {
+				if (d.x > 0) {
+					location.x += dx;
+				}
+				else {
+					location.x -= dx;
+				}
 			}
 			else {
-				location.z += dz;
+				if (d.z > 0) {
+					location.z += dz;
+				}
+				else {
+					location.z -= dz;
+				}
 			}
 
 			return true;
