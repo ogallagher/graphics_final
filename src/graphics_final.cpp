@@ -12,9 +12,10 @@ TODO <collision>
 + Person collision (prism to prism, easy)
 	+ person to person
 	+ person to obstacle
-- Bullet collision (line to prism, difficult)
-	- bullet to obstacle
-	- bullet to person
+= Bullet collision (line to prism, difficult)
+	+ bullet to obstacle (basic)
+	+ bullet to person (basic)
+	- bullet to person (advanced)
 
 */
 
