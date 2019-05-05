@@ -89,7 +89,10 @@ void display() {
 	for (bit=World::bullets.begin(); bit!=World::bullets.end(); /*conditional increment*/) {
 		bit->move();
 		
-		if (bit->collideBounds() || bit->collideObstacles(&World::obstacles)) {
+		if (bit->collideBounds() || 
+			bit->collideObstacles(&World::obstacles) || 
+			bit->collidePeople(&World::enemies) || 
+			bit->collidePerson(&player)) {
 			bit = World::bullets.erase(bit);
 			bulletsLen--;
 		}
