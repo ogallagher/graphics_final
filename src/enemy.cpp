@@ -8,8 +8,6 @@ enemy.cpp
 
 */
 
-#include <iostream> //TODO delete
-
 //local includes
 #include "../include/enemy.h"
 #include "../include/world.h"
@@ -63,7 +61,6 @@ void Enemy::followControl() {
 			velocity.set(&v);
 		}
 	}
-	//std::cout << "standing time: " << stand << endl;
 }
 
 void Enemy::shootControl() {
@@ -85,4 +82,8 @@ void Enemy::stay() {
 	velocity.mult(0);
 	stand = standTime;
 	standing = true;
+}
+
+void Enemy::die() {
+	//TODO player.score++; remove self from World::enemies
 }

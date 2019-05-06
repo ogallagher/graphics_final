@@ -44,3 +44,8 @@ Bullet Player::shoot() {
 	bullet.good = true;
 	return bullet;
 }
+
+void Player::die() {
+	//TODO end game
+	cout << "GAME OVER" << endl;
+}

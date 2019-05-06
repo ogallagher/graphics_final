@@ -34,6 +34,7 @@ public:
 	void shootControl();
 	Bullet shoot(); //extend Person::shoot()
 	void stay();
+	void die();
 };
 
 #endif

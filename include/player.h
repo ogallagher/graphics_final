@@ -25,6 +25,7 @@ public:
 	void keyControl(); //move with WASD
 	void mouseControl(); //look at cursor
 	Bullet shoot(); //extend Person::shoot()
+	void die();
 };
 
 #endif
