@@ -8,7 +8,8 @@ Submission for the 3D OpenGL final project.
 It's a top-down shooter with SuperHot-like mechanics, where time is faster when the player
 moves, and slower when the player stands still.
 
-TODO <master>
+TODO <collision>
+- fix bullet-person collision
 
 */
 

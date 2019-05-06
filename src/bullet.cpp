@@ -112,7 +112,26 @@ bool Bullet::collidePerson(Person *person) {
 		int od = Person::dimsTorso[2]/2;
 		if (d.x > ow) { //now=1,8,7
 			if (c.x < ow) { //past=2,3,4,5,6
-				return false; //TODO corner cases
+				if (d.z > od) { //now=1
+					if (c.z > od) { //past=2,3
+						return false; //miss top rl
+					}
+					else { //past=4,5,6
+						return true; //hit top left
+					}
+				}
+				else if (d.z < -od) { //now=7
+					if (c.z < -od) { //past=5,6
+						return false; //miss bottom rl
+					}
+					else { //past=2,3,4
+						return true; //hit bottom left
+					}
+				}
+				else { //now=8
+					//TODO from right
+					return false;
+				}
 			}
 			else { //both=1,7,8
 				return false;
@@ -120,7 +139,26 @@ bool Bullet::collidePerson(Person *person) {
 		}
 		else if (d.x < -ow) { //now=3,4,5
 			if (c.x > -ow) { //past=1,2,6,7,8
-				return false; //TODO corner cases
+				if (d.z > od) { //now=3
+					if (c.z > od) { //past=1,2
+						return false; //miss top lr
+					}
+					else { //past=6,7,8
+						return true; //hit top right
+					}
+				}
+				else if (d.z < -od) { //now=5
+					if (c.z < -od) { //past=6,7
+						return false; //miss bottom lr
+					}
+					else { //past=1,2,8
+						return true; //hit bottom right
+					}
+				}
+				else { //now=4
+					//TODO from left
+					return false;
+				}
 			}
 			else { //both=3,4,5
 				return false;
@@ -128,10 +166,12 @@ bool Bullet::collidePerson(Person *person) {
 		}
 		else { //now=2,0,6
 			if (d.z > ow) { //now=6
-				return false; //TODO corner cases
+				//TODO from top
+				return false;
 			}
 			else if (d.z < -ow) { //now=2
-				return false; //TODO corner cases
+				//TODO from bottom
+				return false;
 			}
 			else { //now=0
 				return true;
