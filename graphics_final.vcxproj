@@ -91,6 +91,9 @@
     <ClInclude Include="include\bullet.h" />
     <ClInclude Include="include\camera.h" />
     <ClInclude Include="include\enemy.h" />
+    <ClInclude Include="include\light.h" />
+    <ClInclude Include="include\material.h" />
+    <ClInclude Include="include\matrixutils.h" />
     <ClInclude Include="include\obstacle.h" />
     <ClInclude Include="include\ovector.h" />
     <ClInclude Include="include\person.h" />
@@ -100,7 +103,10 @@
   <ItemGroup>
     <ClCompile Include="src\bullet.cpp" />
     <ClCompile Include="src\camera.cpp" />
+    <ClCompile Include="src\enemy.cpp" />
     <ClCompile Include="src\graphics_final.cpp" />
+    <ClCompile Include="src\light.cpp" />
+    <ClCompile Include="src\material.cpp" />
     <ClCompile Include="src\matrixutils.cpp" />
     <ClCompile Include="src\obstacle.cpp" />
     <ClCompile Include="src\ovector.cpp" />
