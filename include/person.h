@@ -54,10 +54,10 @@ public:
 		headingLegs = 0;
 		
 		materialHead.setColor(1,1,1);
-		materialHead.setADS(1,0,0);
+		materialHead.setADS(0.25,1,1);
 		
 		materialBody.setColor(0.25,0.25,0.25);
-		materialBody.setADS(1,0,0);
+		materialBody.setADS(0.25,1,0.5);
 	};
 
 	void move();

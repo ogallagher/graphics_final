@@ -64,6 +64,7 @@ void World::loadLight(int lightId) {
 		light->location.y,
 		light->location.z
 	};
+	
 	glLightfv(lightId , GL_POSITION , position);
 	glLightfv(lightId , GL_AMBIENT , light->material.ambient);
 	glLightfv(lightId , GL_DIFFUSE , light->material.diffuse);
@@ -97,20 +98,13 @@ void World::loadEnemies() {
 
 void World::display() {
 	loadCamera();
-	loadLight(GL_LIGHT0);	
+	loadLight(GL_LIGHT0);
 	
-	loadMaterial(&Obstacle::material);
+	World::loadMaterial(&Obstacle::material);
 	vector<Obstacle>::iterator oit;
 	for (oit=obstacles.begin(); oit!=obstacles.end(); oit++) {
 		oit->display();
 	}
-	
-	/*
-	vector<Enemy>::iterator eit;
-	for (eit=enemies.begin(); eit!=enemies.end(); eit++) {
-		eit->display();
-	}
-	*/
 	
 	glPushMatrix();
 	
