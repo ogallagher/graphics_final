@@ -298,3 +298,7 @@ bool Person::collidePerson(Person *person) {
 		return false;
 	}
 }
+
+void Person::die() {
+	cout << "killed" << endl;
+}

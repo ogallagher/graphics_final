@@ -23,7 +23,7 @@ public:
 	
 	int reload; //time currently spent reloading
 	int standTime; //max time to spend standing
-	int stand; //time currently spent standing
+	float stand; //time currently spent standing
 	bool standing; //is currently standing (initially false)
 	ovector destination; //current movement target (often player->location)
 	

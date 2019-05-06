@@ -69,6 +69,7 @@ public:
 	bool collidePeople(vector<Enemy> *);
 	bool collideObstacle(Obstacle *);
 	bool collidePerson(Person *);
+	void die();
 
 protected:
 	void drawHead();
