@@ -81,6 +81,7 @@ bool Bullet::collidePeople(vector<Enemy> *enemies) {
 		collided = collidePerson(static_cast<Person*>(&(*eit)));
 		if(collided) {
 			eit->die();
+			eit->score();
 		}
 	}
 	

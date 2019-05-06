@@ -85,5 +85,6 @@ void Enemy::stay() {
 }
 
 void Enemy::die() {
-	//TODO player.score++; remove self from World::enemies
+	//TODO remove self from World::enemies
+	player->score++;
 }
