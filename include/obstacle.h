@@ -15,10 +15,11 @@ They are placed randomly.
 #define OBSTACLE_H
 
 #include "../include/ovector.h"
+#include "../include/material.h"
 
 class Obstacle {
 public:
-	static float color[3];
+	static Material material;
 	static const int HEIGHT;
 	static const int INFLUENCE_RADIUS;
 	

@@ -21,8 +21,9 @@ obstacle.cpp
 #include "../include/obstacle.h"
 #include "../include/world.h"
 #include "../include/person.h"
+#include "../include/material.h"
 
-float Obstacle::color[3] = {0.8,0.8,0.8};
+Material Obstacle::material;
 const int Obstacle::HEIGHT = Person::dimsTorso[1] * 4;
 const int Obstacle::INFLUENCE_RADIUS = World::dimsFOV[0]/8;
 
@@ -53,8 +54,7 @@ void Obstacle::display() {
 	glTranslatef(location.x,location.y,location.z);
 	glScalef(dims[0],dims[1],dims[2]);
 	
-	//material
-	glColor3f(color[0],color[1],color[2]);
+	//Obstacle::material handled in World::display()
 	
 	//primitive
 	glutSolidCube(1);

@@ -17,6 +17,7 @@ bullet.h
 
 //local headers
 #include "../include/ovector.h"
+#include "../include/material.h"
 
 class Person; //don't include to avoid circular dependency
 class Obstacle;
@@ -29,6 +30,7 @@ public:
 	
 	static int dims[3];
 	static float speed;
+	static Material material;
 	
 	ovector location;
 	ovector past; //location from one frame ago

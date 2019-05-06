@@ -20,9 +20,7 @@ const int Enemy::RELOAD_TIME = 50;
 const int Enemy::FOV = 30;
 
 Enemy::Enemy() {
-	colorBody[0] = 0.5;
-	colorBody[1] = 0;
-	colorBody[2] = 0;
+	materialBody.setColor(0.5,0,0);
 	
 	reload = RELOAD_TIME;
 	standTime = 500;

@@ -10,11 +10,12 @@ moves, and slower when the player stands still.
 
 TODO <material-properties>
 + opengl setup
-= world light
-- obstacle
-- person
-	- enemy
-	- player
++ world light
++ obstacle
++ person
+	+ enemy
+	+ player
++ bullet
 - ground
 - fog
 
@@ -46,12 +47,13 @@ TODO <material-properties>
 #include "../include/bullet.h"
 #include "../include/obstacle.h"
 #include "../include/light.h"
+#include "../include/material.h"
 
 //namespaces
 using namespace std;
 
 //application variables
-#define GAME_NAME "Graphics Final"
+#define GAME_NAME "Minuteman"
 int dimsScreen[2];
 #define FOV 60
 int idleCount = 0;
@@ -84,6 +86,7 @@ void display() {
 	player.collideObstacles(&World::obstacles);
 	player.display();
 	
+	//TODO do it here, or in World?
 	for (eit=World::enemies.begin(); eit!=World::enemies.end(); eit++) {
 		eit->followControl();
 		eit->shootControl();
@@ -94,6 +97,7 @@ void display() {
 		eit->display();
 	}
 	
+	World::loadMaterial(&Bullet::material);
 	for (bit=World::bullets.begin(); bit!=World::bullets.end(); /*conditional increment*/) {
 		bit->move();
 		
@@ -286,6 +290,10 @@ int main(int argc, char** argv) {
 
 	cout << "init player" << endl;
 	player.location.set(0,0,0);
+	
+	cout << "init bullets" << endl;
+	Bullet::material.setColor(0,1,0);
+	Bullet::material.setADS(1,0,0);
 	
 	cout << "init framerate clock" << endl;
 	atime = chrono::high_resolution_clock::now();

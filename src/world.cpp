@@ -19,6 +19,7 @@ world.cpp
 #include "../include/enemy.h"
 #include "../include/obstacle.h"
 #include "../include/light.h"
+#include "../include/material.h"
 
 int World::dimsWindow[2] = {600,600};
 int World::dimsFOV[3] = {600,600,600};
@@ -69,7 +70,16 @@ void World::loadLight(int lightId) {
 	glLightfv(lightId , GL_SPECULAR , light->material.specular);
 }
 
+void World::loadMaterial(Material *material) {
+	glMaterialfv(GL_FRONT, GL_AMBIENT, material->ambient);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, material->diffuse);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, material->specular);
+}
+
 void World::loadObstacles() {
+	Obstacle::material.setColor(0.5,0.5,0.5);
+	Obstacle::material.setADS(0.5,0.7,0.7);
+	
 	int numObstacles = 5;
 	for (int i=0; i<numObstacles; i++) {
 		obstacles.push_back(Obstacle(World::dims[0]/numObstacles*i,World::dims[2]/numObstacles*i,10,10));
@@ -87,19 +97,22 @@ void World::loadEnemies() {
 
 void World::display() {
 	loadCamera();
-	loadLight(GL_LIGHT0);
-
-	glPushMatrix();
+	loadLight(GL_LIGHT0);	
 	
+	loadMaterial(&Obstacle::material);
 	vector<Obstacle>::iterator oit;
 	for (oit=obstacles.begin(); oit!=obstacles.end(); oit++) {
 		oit->display();
 	}
 	
+	/*
 	vector<Enemy>::iterator eit;
 	for (eit=enemies.begin(); eit!=enemies.end(); eit++) {
 		eit->display();
 	}
+	*/
+	
+	glPushMatrix();
 	
 	glScalef(dims[0],dims[1],dims[2]);
 	glColor3f(1,1,1);

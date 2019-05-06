@@ -32,6 +32,7 @@ class Bullet;
 class Obstacle;
 class Person;
 class Enemy;
+class Material;
 
 //namespaces
 using namespace std;
@@ -71,6 +72,7 @@ public:
 	static void loadOSSpeed(float);
 	static void loadCamera(); //calls gluLookAt()
 	static void loadLight(int lightId); //calls glLightfv()
+	static void loadMaterial(Material *); //calls glMaterialfv
 	static void loadObstacles();
 	static void loadEnemies();
 	static void display(); //renders camera, lighting, obstacles, enemies

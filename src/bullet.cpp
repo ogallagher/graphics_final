@@ -18,11 +18,13 @@ bullet.cpp
 #include "../include/enemy.h"
 #include "../include/obstacle.h"
 #include "../include/world.h"
+#include "../include/material.h"
 
 using namespace std;
 
 int Bullet::dims[3] = {1,1,2};
 float Bullet::speed = 0.1;
+Material Bullet::material;
 
 const int Bullet::HEIGHT = Person::dimsTorso[1];
 const int Bullet::INFLUENCE_RADIUS = dims[2]*4;
@@ -34,8 +36,7 @@ void Bullet::display() {
 	glTranslatef(location.x,location.y,location.z);
 	glRotatef(velocity.headingY()+90,0,1,0);
 	
-	//material properties
-	glColor3f(0,1,0);
+	//material properties handled by caller
 	
 	//primitive
 	glBegin(GL_LINES);

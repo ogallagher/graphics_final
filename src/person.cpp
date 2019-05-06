@@ -56,7 +56,7 @@ void Person::drawHead() {
 	glScalef(dimsHead[0],dimsHead[1],dimsHead[2]);
 	
 	//material properties
-	glColor3f(colorHead[0],colorHead[1],colorHead[2]);
+	World::loadMaterial(&materialHead);
 	
 	//primitive
 	glutSolidCube(1);
@@ -85,7 +85,8 @@ void Person::drawArmR() {
 }
 
 void Person::drawArms() {
-	glColor3f(colorHead[0],colorHead[1],colorHead[2]);
+	//material properties
+	World::loadMaterial(&materialHead);
 	
 	glPushMatrix();
 	
@@ -135,7 +136,7 @@ void Person::drawLegR() {
 }
 
 void Person::drawLegs() {
-	glColor3f(colorHead[0],colorHead[1],colorHead[2]);
+	World::loadMaterial(&materialHead);
 	
 	drawLegL();
 	drawLegR();	
@@ -158,7 +159,7 @@ void Person::drawTorso() {
 	glScalef(dimsTorso[0],dimsTorso[1],dimsTorso[2]);
 	
 	//material properties
-	glColor3f(colorBody[0],colorBody[1],colorBody[2]);
+	World::loadMaterial(&materialBody);
 	
 	//primitive
 	glutSolidCube(1);

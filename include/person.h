@@ -28,6 +28,7 @@ Superclass for all people in the game (player, enemies)
 #include "../include/ovector.h"
 #include "../include/bullet.h"
 #include "../include/obstacle.h"
+#include "../include/material.h"
 
 class Enemy; //don't include to prevent circular dependency
 
@@ -45,20 +46,18 @@ public:
 	ovector velocity;
 	float heading;
 	float headingLegs;
-	float colorHead[3];
-	float colorBody[3];
+	Material materialHead;
+	Material materialBody;
 
 	Person() {
 		heading = 0;
 		headingLegs = 0;
-
-		colorHead[0] = 1;//0.75;
-		colorHead[1] = 1;//0.75;
-		colorHead[2] = 1;//0.75;
-
-		colorBody[0] = 0.25;
-		colorBody[1] = 0.25;
-		colorBody[2] = 0.25;
+		
+		materialHead.setColor(1,1,1);
+		materialHead.setADS(1,0,0);
+		
+		materialBody.setColor(0.25,0.25,0.25);
+		materialBody.setADS(1,0,0);
 	};
 
 	void move();
