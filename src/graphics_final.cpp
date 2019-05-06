@@ -9,7 +9,7 @@ It's a top-down shooter with SuperHot-like mechanics, where time is faster when 
 moves, and slower when the player stands still.
 
 TODO <collision>
-- fix bullet-person collision
++ fix bullet-person collision
 
 */
 

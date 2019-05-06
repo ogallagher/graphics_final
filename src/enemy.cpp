@@ -14,6 +14,7 @@ enemy.cpp
 #include "../include/enemy.h"
 #include "../include/world.h"
 #include "../include/player.h"
+#include "../include/bullet.h"
 
 Player *Enemy::player;
 const int Enemy::RELOAD_TIME = 50;
@@ -46,7 +47,7 @@ void Enemy::followControl() {
 			standing = false;
 		}
 		else { //stand
-			stand-=World::speed*(0.02);
+			stand -= World::speed*(0.02);
 		}
 	}
 	else {
@@ -72,6 +73,12 @@ void Enemy::shootControl() {
 	else { //reload
 		reload--;
 	}
+}
+
+Bullet Enemy::shoot() {
+	Bullet bullet = Person::shoot();
+	bullet.good = false;
+	return bullet;
 }
 
 void Enemy::stay() {

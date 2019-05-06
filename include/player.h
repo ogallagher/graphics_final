@@ -18,11 +18,13 @@ Controls:
 #define PLAYER_H
 
 #include "../include/person.h"
+#include "../include/bullet.h"
 
 class Player : public Person {
 public:
 	void keyControl(); //move with WASD
 	void mouseControl(); //look at cursor
+	Bullet shoot(); //extend Person::shoot()
 };
 
 #endif

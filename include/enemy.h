@@ -14,6 +14,7 @@ enemy.h
 //local includes
 #include "../include/person.h"
 #include "../include/player.h"
+#include "../include/bullet.h"
 
 class Enemy : public Person {
 public:
@@ -31,6 +32,7 @@ public:
 	static void loadPlayer(Player *);
 	void followControl();
 	void shootControl();
+	Bullet shoot(); //extend Person::shoot()
 	void stay();
 };
 

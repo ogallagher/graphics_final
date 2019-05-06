@@ -11,6 +11,7 @@ player.cpp
 //local headers
 #include "../include/player.h"
 #include "../include/world.h"
+#include "../include/bullet.h"
 
 void Player::keyControl() {
 	ovector keycontrol;
@@ -36,4 +37,10 @@ void Player::mouseControl() {
 	gaze.sub(&location);
 	
 	heading = gaze.headingY();
+}
+
+Bullet Player::shoot() {
+	Bullet bullet = Person::shoot();
+	bullet.good = true;
+	return bullet;
 }

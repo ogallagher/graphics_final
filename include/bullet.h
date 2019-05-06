@@ -35,6 +35,7 @@ public:
 	ovector location;
 	ovector past; //location from one frame ago
 	ovector velocity;
+	bool good;
 	
 	Bullet() {};
 	Bullet(ovector *l, ovector *v) {

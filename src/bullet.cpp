@@ -133,7 +133,15 @@ bool Bullet::collidePerson(Person *person) {
 				}
 				else { //now=8
 					//TODO from right
-					return false;
+					if (c.z > od) { //past=2,3
+						return false;
+					}
+					else if (c.z < -od) { //past=5,6
+						return false;
+					}
+					else { //past=4
+						return true; //hit left from right
+					} 
 				}
 			}
 			else { //both=1,7,8
@@ -160,7 +168,15 @@ bool Bullet::collidePerson(Person *person) {
 				}
 				else { //now=4
 					//TODO from left
-					return false;
+					if (c.z > od) { //past=1,2
+						return false;
+					}
+					else if (c.z < -od) { //past=6,7
+						return false;
+					}
+					else { //past=8
+						return true; //hit right from left
+					}
 				}
 			}
 			else { //both=3,4,5
@@ -168,13 +184,39 @@ bool Bullet::collidePerson(Person *person) {
 			}
 		}
 		else { //now=2,0,6
-			if (d.z > ow) { //now=6
-				//TODO from top
-				return false;
+			if (d.z > od) { //now=2
+				if (c.z > od) { //past=1,3
+					return false;
+				}
+				else {
+					//TODO from bottom
+					if (c.x > ow) { //past=4,5
+						return false;
+					}
+					else if (c.x < -ow) { //past=7,8
+						return false;
+					}
+					else { //past=6
+						return true; //hit top from bottom
+					}
+				}
 			}
-			else if (d.z < -ow) { //now=2
-				//TODO from bottom
-				return false;
+			else if (d.z < -od) { //now=6
+				if (c.z < -od) { //past=5,7
+					return false;
+				}
+				else {
+					//TODO from top
+					if (c.x > ow) { //past=3,4
+						return false;
+					}
+					else if (c.x < -ow) { //past=1,8
+						return false;
+					}
+					else { //past=2
+						return true; //hit bottom from top
+					}
+				}
 			}
 			else { //now=0
 				return true;
