@@ -39,14 +39,14 @@ void Enemy::followControl() {
 	heading = gaze.headingY();
 	
 	if (standing) {
-		if (stand == 0) { //change destination
+		if (stand < 0) { //change destination
 			//TODO complicate with hiding
 			
 			destination.set(&(player->location));
 			standing = false;
 		}
 		else { //stand
-			stand--;
+			stand-=World::speed*(0.02);
 		}
 	}
 	else {
@@ -62,6 +62,7 @@ void Enemy::followControl() {
 			velocity.set(&v);
 		}
 	}
+	//std::cout << "standing time: " << stand << endl;
 }
 
 void Enemy::shootControl() {
