@@ -32,6 +32,7 @@ public:
 	void followControl();
 	void shootControl();
 	void stay();
+	void playerScore();
 };
 
 #endif

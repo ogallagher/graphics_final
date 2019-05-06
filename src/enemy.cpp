@@ -79,3 +79,8 @@ void Enemy::stay() {
 	stand = standTime;
 	standing = true;
 }
+
+void Enemy::playerScore() {
+	Enemy::player->score++;
+	//std::cout << "Player score: " << Enemy::player->score << endl;
+}

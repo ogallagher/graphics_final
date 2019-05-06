@@ -1,8 +1,10 @@
-﻿Build started 5/6/2019 5:01:12 PM.
+﻿Build started 5/6/2019 7:19:28 PM.
      1>Project "C:\Users\parkbj16\Documents\graphics_final\graphics_final.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /nologo /W1 /WX- /O2 /Oy- /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"bin\\" /Fd"bin\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt src\enemy.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /nologo /W1 /WX- /O2 /Oy- /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"bin\\" /Fd"bin\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt src\enemy.cpp src\player.cpp
          enemy.cpp
+         player.cpp
+         Generating Code...
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\parkbj16\Documents\graphics_final\bin\graphics_final.exe" /NOLOGO glew32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:\Users\parkbj16\Documents\graphics_final\bin\graphics_final.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\parkbj16\Documents\graphics_final\bin\graphics_final.lib" /MACHINE:X86 /SAFESEH bin\bullet.obj
          bin\camera.obj
@@ -21,4 +23,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.17
+Time Elapsed 00:00:01.84
