@@ -13,7 +13,7 @@ light.cpp
 #include "../include/ovector.h"
 #include "../include/obstacle.h"
 
-const int Light::HEIGHT = 30;
+const int Light::HEIGHT = 40;
 
 void Light::loadTarget(ovector *target) {
 	this->target = target;

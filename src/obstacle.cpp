@@ -54,7 +54,7 @@ void Obstacle::display() {
 	glTranslatef(location.x,location.y,location.z);
 	glScalef(dims[0],dims[1],dims[2]);
 	
-	//Obstacle::material handled in World::display()
+	//material properties handled by caller
 	
 	//primitive
 	glutSolidCube(1);
