@@ -8,16 +8,7 @@ Submission for the 3D OpenGL final project.
 It's a top-down shooter with SuperHot-like mechanics, where time is faster when the player
 moves, and slower when the player stands still.
 
-TODO <material-properties>
-+ opengl setup
-+ world light
-+ obstacle
-+ person
-	+ enemy
-	+ player
-+ bullet
-- ground
-- fog
+TODO <master>
 
 */
 
@@ -86,7 +77,6 @@ void display() {
 	player.collideObstacles(&World::obstacles);
 	player.display();
 	
-	//TODO do it here, or in World?
 	for (eit=World::enemies.begin(); eit!=World::enemies.end(); eit++) {
 		eit->followControl();
 		eit->shootControl();
@@ -262,10 +252,12 @@ void initGL() {
 	//lighting
     glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
+	glEnable(GL_NORMALIZE);
 }
 
 //program main
 int main(int argc, char** argv) {
+	cout << "<<" << GAME_NAME << ">>" << endl;
 	cout << "Computer Graphics final project: 3D top-down shooter" << endl;
 	cout << "Owen Gallagher, Brian Park" << endl;
 	
