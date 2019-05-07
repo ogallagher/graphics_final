@@ -115,14 +115,6 @@ void World::display() {
 	
 	World::loadMaterial(&Obstacle::material);
 	
-	// // render the bottom wall
-	// glBegin(GL_POLYGON);
-	// 	glVertex3f(-dims[0],0,-dims[0]);
-	// 	glVertex3f(-dims[0],0,dims[0]);
-	// 	glVertex3f(dims[0],0,dims[0]);
-	// 	glVertex3f(dims[0],0,-dims[0]);
-	// glEnd();
-	
 	glPushMatrix();
 	
 	glScalef(dims[0],dims[1],dims[2]);

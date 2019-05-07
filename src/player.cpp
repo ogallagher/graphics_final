@@ -56,7 +56,6 @@ Bullet Player::shoot() {
 }
 
 bool Player::die() {
-	//TODO end game
 	cout << "GAME OVER" << endl;
 	cout << "Final Score: " << score << endl;
 	exit(0);

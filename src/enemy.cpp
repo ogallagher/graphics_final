@@ -47,8 +47,6 @@ void Enemy::followControl() {
 	
 	if (standing) {
 		if (stand < 0) { //change destination
-			//TODO complicate with hiding
-			
 			destination.set(&(player->location));
 			standing = false;
 		}
