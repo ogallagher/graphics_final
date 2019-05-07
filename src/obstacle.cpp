@@ -24,6 +24,7 @@ obstacle.cpp
 #include "../include/material.h"
 
 Material Obstacle::material;
+const int Obstacle::DIM_MIN = 10;
 const int Obstacle::HEIGHT = Person::dimsTorso[1] * 4;
 const int Obstacle::INFLUENCE_RADIUS = World::dimsFOV[0]/8;
 

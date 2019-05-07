@@ -20,6 +20,7 @@ They are placed randomly.
 class Obstacle {
 public:
 	static Material material;
+	static const int DIM_MIN;
 	static const int HEIGHT;
 	static const int INFLUENCE_RADIUS;
 	

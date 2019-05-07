@@ -33,6 +33,7 @@ class Obstacle;
 class Person;
 class Enemy;
 class Material;
+class Room;
 
 //namespaces
 using namespace std;
@@ -45,6 +46,8 @@ private:
 public:
 	static const int EYE_NEAR;
 	static const int CURSOR_HEIGHT;
+	static const int ROOMS_RENDERED;
+	static const int ROOMS_ALL;
 	
 	static float pmatrix[16]; //projection
 	static float mvmatrix[16]; //modelview
@@ -55,7 +58,7 @@ public:
 	static int dimsFOV[3];
 	static double t; //world clock
 	static double speed; //determines time slow-down and speed-up in the game
-	static int dims[3]; //eastwest,northsouth,updown
+	static int dims[3]; //eastwest,northsouth,updown (of a single room)
 	static float mouse[2]; //window coords: [-1,1]
 	static ovector pointer; //normalized ray camera-to-mouse
 	static ovector cursor; //intersection of pointer with ground plane
@@ -65,6 +68,7 @@ public:
 	static Camera *camera;
 	static Light *light;
 	
+	static Room[ROOMS_ALL][ROOMS_ALL] rooms;
 	static vector<Bullet> bullets;
 	static vector<Obstacle> obstacles;
 	static vector<Enemy> enemies;
@@ -73,8 +77,7 @@ public:
 	static void loadCamera(); //calls gluLookAt()
 	static void loadLight(int lightId); //calls glLightfv()
 	static void loadMaterial(Material *); //calls glMaterialfv
-	static void loadObstacles();
-	static void loadEnemies();
+	static void loadRoom(int, int);
 	static void display(); //renders camera, lighting, obstacles, enemies
 	static string describe();
 	static void tick();

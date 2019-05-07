@@ -20,6 +20,7 @@ world.cpp
 #include "../include/obstacle.h"
 #include "../include/light.h"
 #include "../include/material.h"
+#include "../include/room.h"
 
 int World::dimsWindow[2] = {600,600};
 int World::dimsFOV[3] = {600,600,600};
@@ -45,6 +46,8 @@ vector<Enemy> World::enemies;
 
 const int World::EYE_NEAR = World::dimsFOV[2]/20;
 const int World::CURSOR_HEIGHT = Person::dimsTorso[1];
+const int World::ROOMS_RENDERED = 4; //render 4x4 square at a time
+const int World::ROOMS_ALL = 7; //keep at most a 7x7 grid in memory before discarding
 
 float World::pmatrix[16],World::mvmatrix[16],World::pmvmatrix[16],World::umatrix[16];
 
@@ -77,17 +80,21 @@ void World::loadMaterial(Material *material) {
 	glMaterialfv(GL_FRONT, GL_SPECULAR, material->specular);
 }
 
-void World::loadObstacles() {
-	Obstacle::material.setColor(0.5,0.5,0.5);
-	Obstacle::material.setADS(0.5,0.7,0.7);
+void World::loadRoom(int rx, int ry) {
+	rooms[ry % ROOMS_ALL][rx % ROOMS_ALL](rx,ry);
 	
-	int numObstacles = 5;
-	for (int i=0; i<numObstacles; i++) {
-		obstacles.push_back(Obstacle(World::dims[0]/numObstacles*i,World::dims[2]/numObstacles*i,10,10));
+	for (int i=0; i<Room::WALLS; i++) {
+		
+		Obstacle wall(x,y,w,d);
+		//obstacles.push_back(Obstacle(World::dims[0]/numObstacles*i,World::dims[2]/numObstacles*i,10,10));
 	}
-}
-
-void World::loadEnemies() {
+	for (int i=0; i<Room::PILLARS; i++) {
+		Obstacle pillar(x,y,Obstacle::DIM_MIN,Obstacle::DIM_MIN);
+	}
+	for (int i=0; i<Room::BARRIERS; i++) {
+		Obstacle barrier(x,y,w,d);
+	}
+	
 	int numEnemies = 1;
 	for (int i=0; i<numEnemies; i++) {
 		Enemy e;

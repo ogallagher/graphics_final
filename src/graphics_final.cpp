@@ -8,11 +8,18 @@ Submission for the 3D OpenGL final project.
 It's a top-down shooter with SuperHot-like mechanics, where time is faster when the player
 moves, and slower when the player stands still.
 
-TODO <enemy>
-+ know when hit
-+ know when hit by good bullet
-+ increment player::score accordingly
-+ deletes itself
+TODO <world>: implement rooms
++ create room class
+= store obstacles in rooms
+= store enemies in rooms
++ store rooms 2d array in world
+- generate new rooms
+- generate new obstacles in room
+	- walls
+	- pillars
+	- barriers
+- generate new enemies in room
+- destroy extra rooms
 
 */
 
@@ -79,16 +86,6 @@ void display() {
 	player.move();
 	player.collideObstacles(&World::obstacles);
 	player.display();
-	
-	for (eit=World::enemies.begin(); eit!=World::enemies.end(); eit++) {
-		eit->followControl();
-		eit->shootControl();
-		eit->move();
-		if (eit->collideObstacles(&World::obstacles)) {
-			eit->stay();
-		}
-		eit->display();
-	}
 	
 	World::loadMaterial(&Bullet::material);
 	for (bit=World::bullets.begin(); bit!=World::bullets.end(); /*conditional increment*/) {
@@ -269,14 +266,17 @@ int main(int argc, char** argv) {
 
 	cout << "init world" << endl;
 	World::loadOSSpeed(osSpeed);
-	World::loadObstacles();
-	World::loadEnemies();
+	World::loadRoom(0,0);
 	World::camera->loadTarget(&(player.location));
 	Light *light = World::light;
 	light->loadTarget(&(player.location));
 	light->material.setColor(1,1,1); //white light
 	light->material.setADS(0.9,0.7,0.85);
 	cout << World::describe() << endl;
+	
+	cout << "init obstacles" << endl;
+	Obstacle::material.setColor(0.5,0.5,0.5);
+	Obstacle::material.setADS(0.5,0.7,0.7);
 	
 	cout << "init enemies" << endl;
 	Enemy::loadPlayer(&player);
