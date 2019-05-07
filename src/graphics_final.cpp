@@ -10,16 +10,17 @@ moves, and slower when the player stands still.
 
 TODO <world>: implement rooms
 + create room class
-= store obstacles in rooms
-= store enemies in rooms
++ store obstacles in rooms
++ store enemies in rooms
 + store rooms 2d array in world
-- generate new rooms
++ generate new rooms
 - generate new obstacles in room
-	- walls
+	+ walls
 	- pillars
 	- barriers
-- generate new enemies in room
++ generate new enemies in room
 - destroy extra rooms
+- generate new rooms dynamically
 
 */
 
@@ -91,7 +92,7 @@ void display() {
 	for (bit=World::bullets.begin(); bit!=World::bullets.end(); /*conditional increment*/) {
 		bit->move();
 		
-		if (bit->collideBounds() || 
+		if (bit->collideBounds() ||
 			bit->collideObstacles(&World::obstacles) || 
 			bit->collidePeople(&World::enemies) || 
 			bit->collidePerson(&player)) {
@@ -266,12 +267,12 @@ int main(int argc, char** argv) {
 
 	cout << "init world" << endl;
 	World::loadOSSpeed(osSpeed);
-	World::loadRoom(0,0);
 	World::camera->loadTarget(&(player.location));
 	Light *light = World::light;
 	light->loadTarget(&(player.location));
 	light->material.setColor(1,1,1); //white light
 	light->material.setADS(0.9,0.7,0.85);
+	World::init();
 	cout << World::describe() << endl;
 	
 	cout << "init obstacles" << endl;

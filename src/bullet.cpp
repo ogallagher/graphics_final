@@ -281,10 +281,10 @@ bool Bullet::collideObstacle(Obstacle *obstacle) {
 			}
 		}
 		else { //now=2,0,6
-			if (d.z > ow) { //now=6
+			if (d.z > od) { //now=6
 				return false; //TODO corner cases
 			}
-			else if (d.z < -ow) { //now=2
+			else if (d.z < -od) { //now=2
 				return false; //TODO corner cases
 			}
 			else { //now=0

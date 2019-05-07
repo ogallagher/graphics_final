@@ -26,7 +26,6 @@ public:
 	
 	ovector location;
 	int dims[3];
-	std::string description;
 	
 	Obstacle(int, int, int, int); //x,y,width,depth
 	

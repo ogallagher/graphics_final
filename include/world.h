@@ -68,11 +68,12 @@ public:
 	static Camera *camera;
 	static Light *light;
 	
-	static Room[ROOMS_ALL][ROOMS_ALL] rooms;
+	static Room **rooms;
 	static vector<Bullet> bullets;
 	static vector<Obstacle> obstacles;
 	static vector<Enemy> enemies;
 
+	static void init();
 	static void loadOSSpeed(float);
 	static void loadCamera(); //calls gluLookAt()
 	static void loadLight(int lightId); //calls glLightfv()

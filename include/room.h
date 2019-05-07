@@ -32,21 +32,29 @@ public:
 	static const int PILLAR_DIM_MAX;
 	static const int BARRIERS;
 	
+	bool ghost;
+	
 	vector<Obstacle *> obstacles;
 	vector<Enemy *> enemies;
 	
 	int index[2];
 	int location[2];
 	
+	Room() {
+		ghost = true;
+	};
 	Room(int ix, int iy) {
+		ghost = false;
+		
 		index[0] = ix;
 		index[1] = iy;
 		
 		location[0] = ix * DIM_MAX;
-		location[1] = iy * ;
+		location[1] = iy * DIM_MAX;
 	};
 	
-	void update();
+	void display();
+	void destroy();
 };
 
 #endif
