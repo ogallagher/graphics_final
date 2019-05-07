@@ -60,12 +60,6 @@ void World::init() {
 		rooms[y] = new Room[ROOMS_ALL];
 		
 		for (int x=0; x<ROOMS_ALL; x++) {
-			Room room(x,y);
-			room.ghost = true;
-			
-			//empty room
-			rooms[y][x] = room;
-			
 			//generate room
 			loadRoom(x,y);
 		}
@@ -102,37 +96,32 @@ void World::loadMaterial(Material *material) {
 }
 
 void World::loadRoom(int rx, int ry) {
-	//destroy existent room
+	//make sure room is within array range
 	int ix = roomIndex(rx);
 	int iy = roomIndex(ry);
-	Room *roomOld = &(rooms[iy][ix]);
-	if (!roomOld->ghost) {
-		printf("room %d %d to be destroyed\n",ix,iy);
-		roomOld->destroy();
-	}
 	
-	//create new room
-	Room room(rx,ry);
-	int ox,oy,x,y,w,d;
+	//modify room in array
+	Room *room = &(rooms[iy][ix]);
+	room->id[0] = ix;
+	room->id[1] = iy;
 	
-	ox = rx * Room::DIM_MAX;
-	oy = ry * Room::DIM_MAX;
+	int x,y,w,d;
 	
-	w = (Room::WALL_DIM_MAX - Obstacle::DIM_MIN) * getRandom() + Obstacle::DIM_MIN;
+	w = (Room::WALL_DIM_MAX-Obstacle::DIM_MIN) * getRandom() + Obstacle::DIM_MIN;
 	d = Obstacle::DIM_MIN;
-	x = ox;
-	y = oy - dims[0]/2 - Obstacle::DIM_MIN/2;
-	Obstacle *wallN = new Obstacle(x,y,w,d);
+	x = 0;
+	y = -dims[0]/2 - Obstacle::DIM_MIN/2;
+	Obstacle *wallN = new Obstacle(&(room->rx),&(room->ry),x,y,w,d);
 	obstacles.push_back(*wallN);
-	room.obstacles.push_back(wallN);
+	room->obstacles.push_back(wallN);
 	
 	d = Room::WALL_DIM_MAX * getRandom() + Obstacle::DIM_MIN;
 	w = Obstacle::DIM_MIN;
-	x = ox + dims[0]/2 + Obstacle::DIM_MIN/2;
-	y = oy + Obstacle::DIM_MIN;
-	Obstacle *wallE = new Obstacle(x,y,w,d);
+	x = dims[0]/2 + Obstacle::DIM_MIN/2;
+	y = Obstacle::DIM_MIN;
+	Obstacle *wallE = new Obstacle(&(room->rx),&(room->ry),x,y,w,d);
 	obstacles.push_back(*wallE);
-	room.obstacles.push_back(wallE);
+	room->obstacles.push_back(wallE);
 	
 	/*
 	for (int i=0; i<Room::PILLARS; i++) {
@@ -149,16 +138,14 @@ void World::loadRoom(int rx, int ry) {
 	}
 	w = dims[0];
 	for (int i=0; i<numEnemies; i++) {
-		x = ox - w/2 + w*getRandom();
-		y = oy - w/2 + w*getRandom();
+		x = w*getRandom() - w/2;
+		y = w*getRandom() - w/2;
 		
-		Enemy *enemy = new Enemy();
+		Enemy *enemy = new Enemy(&(room->rx),&(room->ry));
 		enemy->location.set(x,0,y);
 		enemies.push_back(*enemy);
-		room.enemies.push_back(enemy);
+		room->enemies.push_back(enemy);
 	}
-	
-	rooms[iy][ix] = room;
 }
 
 void World::display() {
@@ -168,15 +155,16 @@ void World::display() {
 	int dist = ROOMS_RENDERED/2;
 	for (int y=Player::roomY-dist; y<=Player::roomY+dist; y++) {
 		for (int x=Player::roomX-dist; x<=Player::roomY+dist; x++) {
-			rooms[roomIndex(y)][roomIndex(x)].display();
+			rooms[roomIndex(y)][roomIndex(x)].display(x,y);
 		}
 	}
 	
 	glPushMatrix();
-	
+	/*
 	glScalef(dims[0],dims[1],dims[2]);
 	glColor3f(1,1,1);
 	glutWireCube(1.0);
+	*/
 
 	glPopMatrix();
 }

@@ -16,6 +16,7 @@ Computer Graphics
 #include "../include/bullet.h"
 #include "../include/enemy.h"
 
+unsigned int Person::nextId = 0;
 int Person::dimsHead[3] = {2,2,2};
 int Person::dimsTorso[3] = {3,5,3};
 int Person::dimsArm[3] = {1,5,1};
@@ -42,6 +43,8 @@ Bullet Person::shoot() {
 	
 	bl.mult(dimsTorso[2] + Bullet::dims[2]/2);
 	bl.add(&location);
+	bl.x += *rx;
+	bl.z += *ry;
 	
 	bv.mult(Bullet::speed);
 	
@@ -170,7 +173,7 @@ void Person::drawTorso() {
 void Person::display() {
 	glPushMatrix();
 
-	glTranslatef(location.x,location.y,location.z);
+	glTranslatef(*rx + location.x,location.y,*ry + location.z);
 	
 	drawTorso();
 
@@ -192,8 +195,12 @@ bool Person::collideObstacles(vector<Obstacle> *obstacles) {
 bool Person::collideObstacle(Obstacle *obstacle) {
 	//difference between locations
 	ovector d(&(obstacle->location));
-	d.y = 0;
+	d.x += *(obstacle->rx);
+	d.z += *(obstacle->ry);
 	d.sub(&location);
+	d.x -= *rx;
+	d.z -= *ry;
+	d.y = 0;
 
 	//initial distance check
 	if (d.mag() < INFLUENCE_RADIUS + Obstacle::INFLUENCE_RADIUS) {		
@@ -230,18 +237,6 @@ bool Person::collideObstacle(Obstacle *obstacle) {
 		//not close enough to obstacle for any collision to occur
 		return false;
 	}
-}
-
-bool Person::collidePeople(vector<Person> *people) {
-	bool collided = false;
-	
-	for (vector<Person>::iterator pit=people->begin(); pit!=people->end() && !collided; pit++) {
-		if (collidePerson(&(*pit))) {
-			collided = true;
-		}
-	}
-	
-	return collided;
 }
 
 bool Person::collidePeople(vector<Enemy> *enemies) {

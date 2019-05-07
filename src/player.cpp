@@ -21,12 +21,19 @@ double Player::reload = 0;
 int Player::roomX = 0;
 int Player::roomY = 0;
 
+Player::Player() {
+	id = nextId++;
+}
+
 void Player::move() {
 	Person::move();
 	
 	int rd = World::dims[0];
 	roomX = floor((location.x + rd/2) / rd);
 	roomY = floor((location.z + rd/2) / rd);
+	cout << roomX << " " << roomY << "="
+		 << World::roomIndex(roomX) << " " << World::roomIndex(roomY)
+	     << endl;
 }
 
 void Player::keyControl() {

@@ -65,23 +65,13 @@ bool Bullet::collideBounds() {
 	}
 }
 
-bool Bullet::collidePeople(vector<Person> *people) {
-	bool collided = false;
-	
-	for (vector<Person>::iterator pit=people->begin(); pit!=people->end() && !collided; pit++) {
-		collided = collidePerson(&(*pit));
-	}
-	
-	return collided;
-}
-
-bool Bullet::collidePeople(vector<Enemy> *enemies) {
+bool Bullet::collideEnemies(vector<Enemy> *enemies) {
 	bool collided = false;
 	
 	for (vector<Enemy>::iterator eit=enemies->begin(); eit!=enemies->end() && !collided; eit++) {
 		collided = collidePerson(static_cast<Person*>(&(*eit)));
 		if(collided) {
-			eit->die(good,Player::roomX,Player::roomY);
+			eit->die(good);
 		}
 	}
 	
@@ -91,12 +81,16 @@ bool Bullet::collidePeople(vector<Enemy> *enemies) {
 bool Bullet::collidePerson(Person *person) {
 	//check influence radius
 	ovector d(&(person->location));
+	d.x += *(person->rx);
+	d.z += *(person->ry);
 	d.sub(&location);
 	d.y = 0;
 	
 	if (d.mag() < INFLUENCE_RADIUS + Person::INFLUENCE_RADIUS) {
 		//location of previous frame
 		ovector c(&(person->location));
+		d.x += *(person->rx);
+		d.z += *(person->ry);
 		c.sub(&past);
 		c.y = 0;
 		
@@ -242,12 +236,16 @@ bool Bullet::collideObstacles(vector<Obstacle> *obstacles) {
 bool Bullet::collideObstacle(Obstacle *obstacle) {
 	//check influence radius
 	ovector d(&(obstacle->location));
+	d.x += *(obstacle->rx);
+	d.z += *(obstacle->ry);
 	d.sub(&location);
 	d.y = 0;
 	
 	if (d.mag() < INFLUENCE_RADIUS + Obstacle::INFLUENCE_RADIUS) {
 		//location of previous frame
 		ovector c(&(obstacle->location));
+		c.x += *(obstacle->rx);
+		c.z += *(obstacle->ry);
 		c.sub(&past);
 		c.y = 0;
 		

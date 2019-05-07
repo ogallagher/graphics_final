@@ -47,14 +47,12 @@ public:
 		past.set(&location);
 		
 		velocity.set(v);
-		
 	};
 	
 	void display();
 	void move();
 	bool collideBounds(); //returns true on collision
-	bool collidePeople(std::vector<Person> *);
-	bool collidePeople(std::vector<Enemy> *);
+	bool collideEnemies(std::vector<Enemy> *);
 	bool collideObstacles(std::vector<Obstacle> *);
 	bool collidePerson(Person *);
 	bool collideObstacle(Obstacle *);

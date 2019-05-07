@@ -29,8 +29,10 @@ const int Obstacle::DIM_MIN = 10;
 const int Obstacle::HEIGHT = Person::dimsTorso[1] * 4;
 const int Obstacle::INFLUENCE_RADIUS = World::dimsFOV[0]/8;
 
-Obstacle::Obstacle(int x, int z, int w, int d) {
+Obstacle::Obstacle(int *rx, int *ry, int x, int z, int w, int d) {
 	id = nextId++;
+	this->rx = rx;
+	this->ry = ry;
 	
 	location.x = x;
 	location.z = z;
@@ -55,7 +57,7 @@ void Obstacle::display() {
 	glPushMatrix();
 
 	//transforms
-	glTranslatef(location.x,location.y,location.z);
+	glTranslatef(*rx + location.x,location.y,*ry + location.z);
 	glScalef(dims[0],dims[1],dims[2]);
 	
 	//material properties handled by caller
@@ -67,24 +69,10 @@ void Obstacle::display() {
 }
 
 string Obstacle::describe() {
-	string description = "obstacle[x=" + to_string(location.x)
+	string description = "obstacle" + to_string(id) + "[x=" + to_string(location.x)
 						+ " y=" + to_string(location.y)
 						+ " z=" + to_string(location.x)
 						+ " dims=" + to_string(dims[0])
 						+ " " + to_string(dims[1]) + " " + to_string(dims[2]) + "]";
 	return description;
-}
-
-void Obstacle::destroy() {
-	vector<Obstacle>::iterator a = World::obstacles.begin();
-	vector<Obstacle>::iterator b = World::obstacles.end();
-	
-	bool found = false;
-	while (a != b && !found) {
-		if (a->id == id) {
-			World::obstacles.erase(a);
-			found = true;
-		}	
-		a++;
-	}
 }

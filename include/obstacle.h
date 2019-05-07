@@ -29,12 +29,13 @@ public:
 	unsigned int id;
 	ovector location;
 	int dims[3];
+	int *rx; //pointers to room locations
+	int *ry;
 	
-	Obstacle(int, int, int, int); //x,z,width,depth
+	Obstacle(int *rx, int *ry, int x, int z, int w, int d); //x,z,width,depth
 	
 	void display();
 	std::string describe();
-	void destroy();
 };
 
 #endif

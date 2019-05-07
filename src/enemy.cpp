@@ -20,12 +20,11 @@ enemy.cpp
 
 using namespace std;
 
-unsigned int Enemy::nextId = 0;
 Player *Enemy::player;
 const int Enemy::RELOAD_TIME = 50;
 const int Enemy::FOV = 30;
 
-Enemy::Enemy() {
+Enemy::Enemy(int *rx, int *ry) {
 	id = nextId++;
 	
 	materialBody.setColor(0.5,0,0);
@@ -34,6 +33,9 @@ Enemy::Enemy() {
 	standTime = 500;
 	stand = 0;
 	standing = false;
+	
+	this->rx = rx;
+	this->ry = ry;
 }
 
 void Enemy::loadPlayer(Player *player) {
@@ -43,7 +45,11 @@ void Enemy::loadPlayer(Player *player) {
 void Enemy::followControl() {
 	//look at player
 	ovector gaze(&(player->location));
+	gaze.x += *(player->rx);
+	gaze.z += *(player->ry);
 	gaze.sub(&location);
+	gaze.x -= *rx;
+	gaze.z -= *ry;
 	heading = gaze.headingY();
 	
 	if (standing) {
@@ -51,6 +57,8 @@ void Enemy::followControl() {
 			//TODO complicate with hiding
 			
 			destination.set(&(player->location));
+			destination.x += *(player->rx);
+			destination.z += *(player->ry);
 			standing = false;
 		}
 		else { //stand
@@ -60,6 +68,8 @@ void Enemy::followControl() {
 	else {
 		ovector v(&destination);
 		v.sub(&location);
+		v.x -= *rx;
+		v.z -= *ry;
 	
 		if (v.mag() < Person::dimsTorso[0]/2 + Person::dimsArm[1]) { //arrive
 			stay();
@@ -93,25 +103,9 @@ void Enemy::stay() {
 	standing = true;
 }
 
-void Enemy::die(bool goodBullet, int rx, int ry) {
+void Enemy::die(bool goodBullet) {
 	if (goodBullet) {
 		player->score++;
-		
-		//delete from room
-		if (rx != -1 && ry != -1) {
-			Room *room = &(World::rooms[ry][rx]);
-			vector<Enemy *>::iterator ra = room->enemies.begin();
-			vector<Enemy *>::iterator rb = room->enemies.end();
-		
-			bool found = false;
-			while (ra != rb && !found) {
-				if ((*ra)->id == id) {
-					room->enemies.erase(ra);
-					found = true;
-				}
-				ra++;
-			}
-		}
 	}
 	
 	vector<Enemy>::iterator a = World::enemies.begin();

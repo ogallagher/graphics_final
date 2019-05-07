@@ -29,7 +29,8 @@ public:
 
 	static int score; //current player score based on enemy kills
 	static double reload; //time currently spent reloading
-
+	
+	Player();
 	void move(); //extends Person::move()
 	void keyControl(); //move with WASD
 	void mouseControl(); //look at cursor

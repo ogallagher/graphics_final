@@ -98,7 +98,7 @@ void display() {
 		
 		if (bit->collideBounds() ||
 			bit->collideObstacles(&World::obstacles) || 
-			bit->collidePeople(&World::enemies) || 
+			bit->collideEnemies(&World::enemies) || 
 			bit->collidePerson(&player)) {
 			bit = World::bullets.erase(bit);
 		}
