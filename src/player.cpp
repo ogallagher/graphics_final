@@ -12,10 +12,46 @@ player.cpp
 #include "../include/player.h"
 #include "../include/world.h"
 #include "../include/bullet.h"
+#include "../include/room.h"
 
 int Player::score = 0;
 const double Player::RELOAD_TIME = 50;
 double Player::reload = 0;
+
+int Player::roomX = 0;
+int Player::roomY = 0;
+int Player::worldX = 0;
+int Player::worldY = 0;
+
+void Player::move() {
+	Person::move();
+	
+	int newX = location.x/Room::DIM_MAX;
+	int newY = location.z/Room::DIM_MAX;
+	
+	if (newX != roomX) {
+		int x = 0;
+		int a = World::ROOMS_ALL;
+		if (newX < roomX) {
+			x = a;
+		}
+		
+		for (int y=0; y<=a; y++) {
+			World::loadRoom(x,y);
+		}
+	}
+	else if (newY != roomY) {
+		int y = 0;
+		int a = World::ROOMS_ALL;
+		if (newY < roomY) {
+			y = a;
+		}
+		
+		for (int x=0; x<=a; x++) {
+			World::loadRoom(x,y);
+		}
+	}
+}
 
 void Player::keyControl() {
 	ovector keycontrol;

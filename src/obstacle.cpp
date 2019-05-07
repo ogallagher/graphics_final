@@ -23,12 +23,15 @@ obstacle.cpp
 #include "../include/person.h"
 #include "../include/material.h"
 
+unsigned int Obstacle::nextId = 0;
 Material Obstacle::material;
 const int Obstacle::DIM_MIN = 10;
 const int Obstacle::HEIGHT = Person::dimsTorso[1] * 4;
 const int Obstacle::INFLUENCE_RADIUS = World::dimsFOV[0]/8;
 
 Obstacle::Obstacle(int x, int z, int w, int d) {
+	id = nextId++;
+	
 	location.x = x;
 	location.z = z;
 	location.y = HEIGHT/2;
@@ -70,4 +73,18 @@ string Obstacle::describe() {
 						+ " dims=" + to_string(dims[0])
 						+ " " + to_string(dims[1]) + " " + to_string(dims[2]) + "]";
 	return description;
+}
+
+void Obstacle::destroy() {
+	vector<Obstacle>::iterator a = World::obstacles.begin();
+	vector<Obstacle>::iterator b = World::obstacles.end();
+	
+	bool found = false;
+	while (a != b && !found) {
+		if (a->id == id) {
+			World::obstacles.erase(a);
+			found = true;
+		}	
+		a++;
+	}
 }

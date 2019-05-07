@@ -47,14 +47,15 @@ vector<Enemy> World::enemies;
 
 const int World::EYE_NEAR = World::dimsFOV[2]/20;
 const int World::CURSOR_HEIGHT = Person::dimsTorso[1];
-const int World::ROOMS_RENDERED = 4; //render 4x4 square at a time
-const int World::ROOMS_ALL = 3; //keep at most a 7x7 grid in memory before discarding
+const int World::ROOMS_RENDERED = 3; //render 3x3 square at a time
+const int World::ROOMS_ALL = 7; //keep at most a 7x7 grid in memory before discarding
 
 float World::pmatrix[16],World::mvmatrix[16],World::pmvmatrix[16],World::umatrix[16];
 
 void World::init() {	
 	rooms = new Room*[ROOMS_ALL];
 	
+	//generate rooms
 	for (int y=0; y<ROOMS_ALL; y++) {
 		rooms[y] = new Room[ROOMS_ALL];
 		
@@ -62,12 +63,13 @@ void World::init() {
 			Room room(x,y);
 			room.ghost = true;
 			
-			rooms[y][x] = Room(x,y);
+			//empty room
+			rooms[y][x] = room;
+			
+			//generate room
+			loadRoom(x,y);
 		}
 	}
-	loadRoom(0,0);
-	loadRoom(1,0);
-	loadRoom(-1,0);
 }
 
 void World::loadOSSpeed(float osSpeed) {
@@ -100,6 +102,16 @@ void World::loadMaterial(Material *material) {
 }
 
 void World::loadRoom(int rx, int ry) {
+	//destroy existent room
+	int ix = roomIndex(rx);
+	int iy = roomIndex(ry);
+	Room *roomOld = &(rooms[iy][ix]);
+	if (!roomOld->ghost) {
+		printf("room %d %d to be destroyed\n",ix,iy);
+		roomOld->destroy();
+	}
+	
+	//create new room
 	Room room(rx,ry);
 	int ox,oy,x,y,w,d;
 	
@@ -129,7 +141,7 @@ void World::loadRoom(int rx, int ry) {
 	for (int i=0; i<Room::BARRIERS; i++) {
 		Obstacle barrier(x,y,w,d);
 	}
-	*/c
+	*/
 	
 	int numEnemies = abs(rx);
 	if (abs(ry) > numEnemies) {
@@ -146,35 +158,19 @@ void World::loadRoom(int rx, int ry) {
 		room.enemies.push_back(enemy);
 	}
 	
-	if (ry < 0) {
-		ry = (ROOMS_ALL + (ry % -ROOMS_ALL)) % ROOMS_ALL;
-	}
-	else {
-		ry = ry % ROOMS_ALL;
-	}
-	if (rx < 0) {
-		rx = (ROOMS_ALL + (rx % -ROOMS_ALL)) % ROOMS_ALL;
-	}
-	else {
-		rx = rx % ROOMS_ALL;
-	}
-	rooms[ry][rx] = room;
+	rooms[iy][ix] = room;
 }
 
 void World::display() {
 	loadCamera();
 	loadLight(GL_LIGHT0);
 	
-	rooms[0][0].display();
-	rooms[0][1].display();
-	rooms[0][2].display();
-	/*
-	World::loadMaterial(&Obstacle::material);
-	vector<Obstacle>::iterator oit;
-	for (oit=obstacles.begin(); oit!=obstacles.end(); oit++) {
-		oit->display();
+	int dist = ROOMS_RENDERED/2;
+	for (int y=Player::roomY-dist; y<=Player::roomY+dist; y++) {
+		for (int x=Player::roomX-dist; x<=Player::roomY+dist; x++) {
+			rooms[roomIndex(y)][roomIndex(x)].display();
+		}
 	}
-	*/
 	
 	glPushMatrix();
 	
@@ -268,4 +264,15 @@ void World::drawCursor() {
 
 float World::getRandom() {
 	return randomizer(randomCore);
+}
+
+int World::roomIndex(int i) {
+	if (i < 0) {
+		i = (ROOMS_ALL + (i % -ROOMS_ALL)) % ROOMS_ALL;
+	}
+	else {
+		i = i % ROOMS_ALL;
+	}
+	
+	return i;
 }

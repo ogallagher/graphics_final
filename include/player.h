@@ -21,12 +21,20 @@ Controls:
 #include "../include/bullet.h"
 
 class Player : public Person {
+private:
+	static int worldX; //current of the worl
+	static int worldY;
+	
 public:
 	static const double RELOAD_TIME; //max time to spend reloading
+	
+	static int roomX; //room location
+	static int roomY;
 
 	static int score; //current player score based on enemy kills
 	static double reload; //time currently spent reloading
 
+	void move(); //extends Person::move()
 	void keyControl(); //move with WASD
 	void mouseControl(); //look at cursor
 	Bullet shoot(); //extend Person::shoot()

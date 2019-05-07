@@ -19,6 +19,7 @@ bullet.cpp
 #include "../include/obstacle.h"
 #include "../include/world.h"
 #include "../include/material.h"
+#include "../include/player.h"
 
 using namespace std;
 
@@ -80,7 +81,7 @@ bool Bullet::collidePeople(vector<Enemy> *enemies) {
 	for (vector<Enemy>::iterator eit=enemies->begin(); eit!=enemies->end() && !collided; eit++) {
 		collided = collidePerson(static_cast<Person*>(&(*eit)));
 		if(collided) {
-			eit->die(good);
+			eit->die(good,Player::roomX,Player::roomY);
 		}
 	}
 	

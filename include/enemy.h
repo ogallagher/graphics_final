@@ -36,7 +36,7 @@ public:
 	void shootControl();
 	Bullet shoot(); //extend Person::shoot()
 	void stay();
-	void die(bool goodBullet);
+	void die(bool goodBullet, int rx, int ry); //latter two args for removing from room
 };
 
 #endif

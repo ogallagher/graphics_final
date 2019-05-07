@@ -86,6 +86,7 @@ public:
 	static void updateCursor();
 	static void drawCursor();
 	static float getRandom(); //returns random float in range [0,1)
+	static int roomIndex(int); //creates valid World::rooms index
 };
 
 #endif

@@ -19,18 +19,22 @@ They are placed randomly.
 
 class Obstacle {
 public:
+	static unsigned int nextId;
+	
 	static Material material;
 	static const int DIM_MIN;
 	static const int HEIGHT;
 	static const int INFLUENCE_RADIUS;
 	
+	unsigned int id;
 	ovector location;
 	int dims[3];
 	
-	Obstacle(int, int, int, int); //x,y,width,depth
+	Obstacle(int, int, int, int); //x,z,width,depth
 	
 	void display();
 	std::string describe();
+	void destroy();
 };
 
 #endif

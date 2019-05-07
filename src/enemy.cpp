@@ -16,6 +16,7 @@ enemy.cpp
 #include "../include/world.h"
 #include "../include/player.h"
 #include "../include/bullet.h"
+#include "../include/room.h"
 
 using namespace std;
 
@@ -92,9 +93,25 @@ void Enemy::stay() {
 	standing = true;
 }
 
-void Enemy::die(bool goodBullet) {
+void Enemy::die(bool goodBullet, int rx, int ry) {
 	if (goodBullet) {
 		player->score++;
+		
+		//delete from room
+		if (rx != -1 && ry != -1) {
+			Room *room = &(World::rooms[ry][rx]);
+			vector<Enemy *>::iterator ra = room->enemies.begin();
+			vector<Enemy *>::iterator rb = room->enemies.end();
+		
+			bool found = false;
+			while (ra != rb && !found) {
+				if ((*ra)->id == id) {
+					room->enemies.erase(ra);
+					found = true;
+				}
+				ra++;
+			}
+		}
 	}
 	
 	vector<Enemy>::iterator a = World::enemies.begin();
@@ -102,7 +119,7 @@ void Enemy::die(bool goodBullet) {
 	
 	bool found = false;
 	while (a != b && !found) {
-		if (a->id == this->id) {
+		if (a->id == id) {
 			World::enemies.erase(a);
 			found = true;
 		}	

@@ -23,9 +23,7 @@ void Room::display() {
 		World::loadMaterial(&Obstacle::material);
 		
 		for (oit = obstacles.begin(); oit != obstacles.end(); oit++) {
-			Obstacle o = **oit;
-		
-			o.display();			
+			(*oit)->display();			
 		}
 		
 		Enemy *e;
@@ -45,6 +43,32 @@ void Room::display() {
 
 void Room::destroy() {
 	ghost = true;
-	obstacles.clear();
-	enemies.clear();
+	
+	printf("destroying obstacles...\n");
+	bool go = true;
+	oit = obstacles.end()-1;
+	while (go) {
+		(*oit)->destroy();
+		oit = obstacles.erase(oit);
+		
+		if (oit == obstacles.begin()) {
+			(*oit)->destroy();
+			obstacles.erase(oit);
+			go = false;
+		}
+	}
+	
+	printf("destroying enemies...\n");
+	go = true;
+	eit = enemies.end()-1;
+	while (go) {
+		(*eit)->die(false,-1,-1);
+		eit = enemies.erase(eit);
+		
+		if (eit == enemies.begin()) {
+			(*eit)->die(false,-1,-1); //die as if from another enemy. room erase handled.
+			enemies.erase(eit);
+			go = false;
+		}
+	}
 }

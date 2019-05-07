@@ -20,7 +20,11 @@ TODO <world>: implement rooms
 	- barriers
 + generate new enemies in room
 - destroy extra rooms
+	? destroy obstacles
+	? destroy enemies
 - generate new rooms dynamically
+	- update Player::room{X,Y}
+- pass enemies between rooms
 
 */
 
