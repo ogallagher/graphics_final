@@ -11,6 +11,7 @@ player.cpp
 //local headers
 #include "../include/player.h"
 #include "../include/world.h"
+#include "../include/bullet.h"
 
 int Player::score = 0;
 const double Player::RELOAD_TIME = 50;
@@ -49,4 +50,15 @@ void Player::shootControl() {
 	else { //reload
 		reload--;
 	}
+}
+
+Bullet Player::shoot() {
+	Bullet bullet = Person::shoot();
+	bullet.good = true;
+	return bullet;
+}
+
+void Player::die() {
+	//TODO end game
+	cout << "GAME OVER" << endl;
 }

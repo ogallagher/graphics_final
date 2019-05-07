@@ -40,7 +40,7 @@ Bullet Person::shoot() {
 	ovector bl(cos(bh),0,-sin(bh));
 	ovector bv(&bl);
 	
-	bl.mult(dimsTorso[2]/2 + Bullet::dims[2]/2);
+	bl.mult(dimsTorso[2] + Bullet::dims[2]/2);
 	bl.add(&location);
 	
 	bv.mult(Bullet::speed);
@@ -297,8 +297,4 @@ bool Person::collidePerson(Person *person) {
 		//not close enough to obstacle for any collision to occur
 		return false;
 	}
-}
-
-void Person::die() {
-	cout << "killed" << endl;
 }

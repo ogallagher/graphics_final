@@ -8,18 +8,25 @@ enemy.cpp
 
 */
 
-#include <iostream> //TODO delete
+//core includes
+#include <vector>
 
 //local includes
 #include "../include/enemy.h"
 #include "../include/world.h"
 #include "../include/player.h"
+#include "../include/bullet.h"
 
+using namespace std;
+
+unsigned int Enemy::nextId = 0;
 Player *Enemy::player;
 const int Enemy::RELOAD_TIME = 50;
 const int Enemy::FOV = 30;
 
 Enemy::Enemy() {
+	id = nextId++;
+	
 	materialBody.setColor(0.5,0,0);
 	
 	reload = RELOAD_TIME;
@@ -46,7 +53,7 @@ void Enemy::followControl() {
 			standing = false;
 		}
 		else { //stand
-			stand-=World::speed*(0.02);
+			stand -= World::speed*(0.02);
 		}
 	}
 	else {
@@ -62,7 +69,6 @@ void Enemy::followControl() {
 			velocity.set(&v);
 		}
 	}
-	//std::cout << "standing time: " << stand << endl;
 }
 
 void Enemy::shootControl() {
@@ -74,13 +80,32 @@ void Enemy::shootControl() {
 	}
 }
 
+Bullet Enemy::shoot() {
+	Bullet bullet = Person::shoot();
+	bullet.good = false;
+	return bullet;
+}
+
 void Enemy::stay() {
 	velocity.mult(0);
 	stand = standTime;
 	standing = true;
 }
 
-void Enemy::playerScore() {
-	Enemy::player->score++;
-	//std::cout << "Player score: " << Enemy::player->score << endl;
+void Enemy::die(bool goodBullet) {
+	if (goodBullet) {
+		player->score++;
+	}
+	
+	vector<Enemy>::iterator a = World::enemies.begin();
+	vector<Enemy>::iterator b = World::enemies.end();
+	
+	bool found = false;
+	while (a != b && !found) {
+		if (a->id == this->id) {
+			World::enemies.erase(a);
+			found = true;
+		}	
+		a++;
+	}
 }
