@@ -80,8 +80,7 @@ bool Bullet::collidePeople(vector<Enemy> *enemies) {
 	for (vector<Enemy>::iterator eit=enemies->begin(); eit!=enemies->end() && !collided; eit++) {
 		collided = collidePerson(static_cast<Person*>(&(*eit)));
 		if(collided) {
-			eit->die();
-			eit->score();
+			eit->die(good);
 		}
 	}
 	

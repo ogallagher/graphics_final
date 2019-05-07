@@ -8,17 +8,25 @@ enemy.cpp
 
 */
 
+//core includes
+#include <vector>
+
 //local includes
 #include "../include/enemy.h"
 #include "../include/world.h"
 #include "../include/player.h"
 #include "../include/bullet.h"
 
+using namespace std;
+
+unsigned int Enemy::nextId = 0;
 Player *Enemy::player;
 const int Enemy::RELOAD_TIME = 50;
 const int Enemy::FOV = 30;
 
 Enemy::Enemy() {
+	id = nextId++;
+	
 	materialBody.setColor(0.5,0,0);
 	
 	reload = RELOAD_TIME;
@@ -84,7 +92,20 @@ void Enemy::stay() {
 	standing = true;
 }
 
-void Enemy::die() {
-	//TODO remove self from World::enemies
-	player->score++;
+void Enemy::die(bool goodBullet) {
+	if (goodBullet) {
+		player->score++;
+	}
+	
+	vector<Enemy>::iterator a = World::enemies.begin();
+	vector<Enemy>::iterator b = World::enemies.end();
+	
+	bool found = false;
+	while (a != b && !found) {
+		if (a->id == this->id) {
+			World::enemies.erase(a);
+			found = true;
+		}	
+		a++;
+	}
 }

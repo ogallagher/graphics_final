@@ -22,7 +22,7 @@ Controls:
 
 class Player : public Person {
 public:
-	static const double RELOADTIME; //max time to spend reloading
+	static const double RELOAD_TIME; //max time to spend reloading
 
 	static int score; //current player score based on enemy kills
 	static double reload; //time currently spent reloading

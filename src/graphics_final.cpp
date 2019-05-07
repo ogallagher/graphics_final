@@ -10,9 +10,9 @@ moves, and slower when the player stands still.
 
 TODO <enemy>
 + know when hit
-- know when hit by good bullet
-- increment player::score accordingly
-- deletes itself
++ know when hit by good bullet
++ increment player::score accordingly
+= deletes itself
 
 */
 

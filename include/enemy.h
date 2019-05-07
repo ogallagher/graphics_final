@@ -18,10 +18,12 @@ enemy.h
 
 class Enemy : public Person {
 public:
+	static unsigned int nextId;
 	static Player *player; //pointer to player for easy access
 	static const int RELOAD_TIME; //max time to spend reloading
 	static const int FOV; //field of view (halved)
 	
+	unsigned int id; //unique identifier
 	int reload; //time currently spent reloading
 	int standTime; //max time to spend standing
 	float stand; //time currently spent standing
@@ -34,7 +36,7 @@ public:
 	void shootControl();
 	Bullet shoot(); //extend Person::shoot()
 	void stay();
-	void die();
+	void die(bool goodBullet);
 };
 
 #endif

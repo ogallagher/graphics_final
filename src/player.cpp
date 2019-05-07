@@ -14,7 +14,7 @@ player.cpp
 #include "../include/bullet.h"
 
 int Player::score = 0;
-const double Player::RELOADTIME = 50;
+const double Player::RELOAD_TIME = 50;
 double Player::reload = 0;
 
 void Player::keyControl() {
