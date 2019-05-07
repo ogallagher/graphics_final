@@ -45,7 +45,7 @@ private:
 public:
 	static const int EYE_NEAR;
 	static const int CURSOR_HEIGHT;
-	
+
 	static float pmatrix[16]; //projection
 	static float mvmatrix[16]; //modelview
 	static float pmvmatrix[16]; //projection * modelview
@@ -55,12 +55,15 @@ public:
 	static int dimsFOV[3];
 	static double t; //world clock
 	static double speed; //determines time slow-down and speed-up in the game
+	static double fastSpeed; //game speed when user is moving
+	static double slowSpeed; //game speed when user is still
+	static double osPlaceholder; //storing os speed
 	static int dims[3]; //eastwest,northsouth,updown
 	static float mouse[2]; //window coords: [-1,1]
 	static ovector pointer; //normalized ray camera-to-mouse
 	static ovector cursor; //intersection of pointer with ground plane
 	static bool clicked;
-	static bool keyW, keyD, keyS, keyA;
+	static bool keyW, keyD, keyS, keyA, keyWalk;
 	
 	static Camera *camera;
 	static Light *light;

@@ -26,6 +26,9 @@ int World::dimsFOV[3] = {600,600,600};
 int World::dims[3] = {200,10,200};
 double World::t = 0;
 double World::speed = 1;
+double World::fastSpeed = 1;
+double World::slowSpeed = 1;
+double World::osPlaceholder = 1;
 float World::mouse[2] = {0,0};
 ovector World::pointer;
 ovector World::cursor;
@@ -34,6 +37,7 @@ bool World::keyW = false;
 bool World::keyD = false;
 bool World::keyS = false;
 bool World::keyA = false;
+bool World::keyWalk = false;
 Camera *World::camera = new Camera();
 Light *World::light = new Light();
 random_device World::randomCore;
@@ -49,7 +53,10 @@ const int World::CURSOR_HEIGHT = Person::dimsTorso[1];
 float World::pmatrix[16],World::mvmatrix[16],World::pmvmatrix[16],World::umatrix[16];
 
 void World::loadOSSpeed(float osSpeed) {
+	osPlaceholder = osSpeed;
 	speed *= osSpeed;
+	fastSpeed = 1;
+	slowSpeed = 0.15;
 }
 
 void World::loadCamera() {
@@ -133,6 +140,12 @@ string World::describe() {
 
 void World::tick() {
 	t += 0.001*speed;
+	if(keyWalk) {
+		speed = fastSpeed*osPlaceholder;
+	}
+	else {
+		speed = slowSpeed*osPlaceholder;
+	}
 }
 
 void World::updateMouse(int x, int y) {

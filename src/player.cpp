@@ -14,8 +14,8 @@ player.cpp
 #include "../include/bullet.h"
 
 int Player::score = 0;
-const double Player::RELOAD_TIME = 50;
-double Player::reload = 0;
+const double Player::RELOAD_TIME = 3000;
+double Player::reload = RELOAD_TIME;
 
 void Player::keyControl() {
 	ovector keycontrol;
@@ -44,15 +44,13 @@ void Player::mouseControl() {
 }
 
 void Player::shootControl() {
-	if (reload == 0) { //TODO fire at player
-		reload = RELOAD_TIME;
-	}
-	else { //reload
-		reload--;
+	if (reload > 0) {
+		reload-= World::speed;
 	}
 }
 
 Bullet Player::shoot() {
+	
 	Bullet bullet = Person::shoot();
 	bullet.good = true;
 	return bullet;

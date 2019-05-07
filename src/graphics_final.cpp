@@ -76,6 +76,7 @@ void display() {
 	
 	player.keyControl();
 	player.mouseControl();
+	player.shootControl();
 	player.move();
 	player.collideObstacles(&World::obstacles);
 	player.display();
@@ -160,32 +161,41 @@ void reshape(int w, int h) {
 
 void keydown (unsigned char key, int x , int y)
 {
-	if (key == 'w') {
+	if (key == 'w' || key=='W') {
 		World::keyW = true;
+		World::keyWalk = true;
 	}
-	else if (key == 'd') {
+	else if (key == 'd' || key=='D') {
 		World::keyD = true;
+		World::keyWalk = true;
 	}
-	else if (key == 's') {
+	else if (key == 's' || key=='S') {
 		World::keyS = true;
+		World::keyWalk = true;
 	}
-	else if (key == 'a') {
+	else if (key == 'a' || key=='A') {
 		World::keyA = true;
+		World::keyWalk = true;
 	}
 }
 
 void keyup (unsigned char key, int x , int y) {
-	if (key == 'w') {
+	if (key == 'w' || key == 'W') {
 		World::keyW = false;
 	}
-	else if (key == 'd') {
+	else if (key == 'd' || key == 'D') {
 		World::keyD = false;
 	}
-	else if (key == 's') {
+	else if (key == 's' || key == 'S') {
 		World::keyS = false;
 	}
-	else if (key == 'a') {
+	else if (key == 'a' || key == 'A') {
 		World::keyA = false;
+	}
+
+	if (World::keyW == false && World::keyD == false &&
+		World::keyS == false && World::keyA == false) {
+			World::keyWalk = false;
 	}
 }
 
@@ -193,8 +203,10 @@ void mouseclick(int button, int status, int x, int y) {
 	if (status == GLUT_DOWN) {
 		if (button == GLUT_LEFT_BUTTON) {
 			World::clicked = true;
-			
-			World::bullets.push_back(player.shoot());
+			if(player.reload <= 0) {
+				World::bullets.push_back(player.shoot());
+				player.reload = Player::RELOAD_TIME;
+			}
 		}
 	}
 	else if (status == GLUT_UP) {
