@@ -88,17 +88,16 @@ void World::loadObstacles() {
 	Obstacle::material.setColor(0.5,0.5,0.5);
 	Obstacle::material.setADS(0.5,0.7,0.7);
 	
-	int numObstacles = 5;
+	int numObstacles = 10;
 	for (int i=0; i<numObstacles; i++) {
-		obstacles.push_back(Obstacle(World::dims[0]/numObstacles*i,World::dims[2]/numObstacles*i,10,10));
+		//obstacles.push_back(Obstacle((World::dims[0]/2)*getRandom(),(World::dims[2]/2)*getRandom(),10,10));
+		obstacles.push_back(Obstacle(getRandom()*World::dims[0] - (World::dims[0]/2),getRandom()*World::dims[2] - (World::dims[2]/2),10,10));
 	}
 }
 
-void World::loadEnemies() {
-	int numEnemies = 5;
+void World::loadEnemies(int numEnemies) {
 	for (int i=0; i<numEnemies; i++) {
 		Enemy e;
-		//e.location.set(-World::dims[0]*0.4,0,-World::dims[2]/2*0.4);
 		e.location.set(-World::dims[0]*getRandom(),0,-World::dims[2]/2*getRandom());
 		enemies.push_back(e);
 	}
@@ -113,6 +112,16 @@ void World::display() {
 	for (oit=obstacles.begin(); oit!=obstacles.end(); oit++) {
 		oit->display();
 	}
+	
+	World::loadMaterial(&Obstacle::material);
+	
+	// // render the bottom wall
+	// glBegin(GL_POLYGON);
+	// 	glVertex3f(-dims[0],0,-dims[0]);
+	// 	glVertex3f(-dims[0],0,dims[0]);
+	// 	glVertex3f(dims[0],0,dims[0]);
+	// 	glVertex3f(dims[0],0,-dims[0]);
+	// glEnd();
 	
 	glPushMatrix();
 	

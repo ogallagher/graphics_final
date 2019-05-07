@@ -287,7 +287,7 @@ int main(int argc, char** argv) {
 	cout << "init world" << endl;
 	World::loadOSSpeed(osSpeed);
 	World::loadObstacles();
-	World::loadEnemies();
+	World::loadEnemies(5);
 	World::camera->loadTarget(&(player.location));
 	Light *light = World::light;
 	light->loadTarget(&(player.location));
@@ -309,6 +309,5 @@ int main(int argc, char** argv) {
 	atime = chrono::high_resolution_clock::now();
 	 	
 	glutMainLoop();
-	
 	exit(EXIT_SUCCESS);
 }

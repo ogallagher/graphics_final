@@ -31,7 +31,7 @@ public:
 	void mouseControl(); //look at cursor
 	void shootControl();
 	Bullet shoot(); //extend Person::shoot()
-	void die();
+	bool die();
 };
 
 #endif

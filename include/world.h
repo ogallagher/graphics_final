@@ -77,7 +77,7 @@ public:
 	static void loadLight(int lightId); //calls glLightfv()
 	static void loadMaterial(Material *); //calls glMaterialfv
 	static void loadObstacles();
-	static void loadEnemies();
+	static void loadEnemies(int numEnemies);
 	static void display(); //renders camera, lighting, obstacles, enemies
 	static string describe();
 	static void tick();

@@ -25,6 +25,7 @@ public:
 	
 	unsigned int id; //unique identifier
 	float reload; //time currently spent reloading
+	float randReload; //random time that is added to reload for variety
 	int standTime; //max time to spend standing
 	float stand; //time currently spent standing
 	bool standing; //is currently standing (initially false)

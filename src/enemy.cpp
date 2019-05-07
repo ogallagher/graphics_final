@@ -22,12 +22,13 @@ using namespace std;
 unsigned int Enemy::nextId = 0;
 Player *Enemy::player;
 const int Enemy::FOV = 30;
+float randReload = 0;
 
 Enemy::Enemy() {
 	id = nextId++;
-	
+	randReload = World::getRandom() * (1000-300) + 300;
 	materialBody.setColor(0.5,0,0);
-	RELOAD_TIME = (3000 + 1000*World::getRandom()) - 500*World::getRandom();
+	RELOAD_TIME = 3000 + randReload;
 	reload = RELOAD_TIME;
 	standTime = 500*World::getRandom();
 	stand = 0;
@@ -52,7 +53,7 @@ void Enemy::followControl() {
 			standing = false;
 		}
 		else { //stand
-			stand -= World::speed*(0.02);
+			stand -= World::speed*(0.1);
 		}
 	}
 	else {
@@ -71,7 +72,7 @@ void Enemy::followControl() {
 }
 
 void Enemy::shootControl() {
-	if (reload <= 0) { //TODO fire at player
+	if (reload <= 0) {
 		World::bullets.push_back(shoot());
 		reload = RELOAD_TIME;
 	}
@@ -95,6 +96,7 @@ void Enemy::stay() {
 void Enemy::die(bool goodBullet) {
 	if (goodBullet) {
 		player->score++;
+		cout << "Current Score: " << player->score << endl;
 	}
 	
 	vector<Enemy>::iterator a = World::enemies.begin();
@@ -104,6 +106,7 @@ void Enemy::die(bool goodBullet) {
 	while (a != b && !found) {
 		if (a->id == this->id) {
 			World::enemies.erase(a);
+			World::loadEnemies(1);
 			found = true;
 		}	
 		a++;
