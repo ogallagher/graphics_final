@@ -21,16 +21,15 @@ using namespace std;
 
 unsigned int Enemy::nextId = 0;
 Player *Enemy::player;
-const int Enemy::RELOAD_TIME = 50;
 const int Enemy::FOV = 30;
 
 Enemy::Enemy() {
 	id = nextId++;
 	
 	materialBody.setColor(0.5,0,0);
-	
+	RELOAD_TIME = (3000 + 1000*World::getRandom()) - 500*World::getRandom();
 	reload = RELOAD_TIME;
-	standTime = 500;
+	standTime = 500*World::getRandom();
 	stand = 0;
 	standing = false;
 }
@@ -65,18 +64,19 @@ void Enemy::followControl() {
 		}
 		else { //move
 			v.norm();
-			v.mult(speed);
+			v.mult(speed*World::getRandom());
 			velocity.set(&v);
 		}
 	}
 }
 
 void Enemy::shootControl() {
-	if (reload == 0) { //TODO fire at player
+	if (reload <= 0) { //TODO fire at player
+		World::bullets.push_back(shoot());
 		reload = RELOAD_TIME;
 	}
 	else { //reload
-		reload--;
+		reload-=World::speed;
 	}
 }
 

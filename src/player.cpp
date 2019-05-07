@@ -50,7 +50,6 @@ void Player::shootControl() {
 }
 
 Bullet Player::shoot() {
-	
 	Bullet bullet = Person::shoot();
 	bullet.good = true;
 	return bullet;

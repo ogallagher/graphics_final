@@ -1,4 +1,4 @@
-﻿Build started 5/6/2019 11:25:08 PM.
+﻿Build started 5/7/2019 1:55:23 AM.
      1>Project "C:\Users\parkbj16\Documents\graphics_final\graphics_final.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /nologo /W1 /WX- /O2 /Oy- /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"bin\\" /Fd"bin\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt src\world.cpp
@@ -21,4 +21,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.50
+Time Elapsed 00:00:01.78

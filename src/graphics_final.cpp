@@ -99,12 +99,17 @@ void display() {
 			bit->collideObstacles(&World::obstacles) || 
 			bit->collidePeople(&World::enemies) || 
 			bit->collidePerson(&player)) {
+			if (bit->collidePerson(&player) && bit->good == false) {
+			player.die();
+			}
 			bit = World::bullets.erase(bit);
 		}
 		else {
 			bit->display();
 			bit++;
 		}
+		
+		
 	}
 	
 	//measure framerate and update World::speed

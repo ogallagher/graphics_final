@@ -56,7 +56,7 @@ void World::loadOSSpeed(float osSpeed) {
 	osPlaceholder = osSpeed;
 	speed *= osSpeed;
 	fastSpeed = 1;
-	slowSpeed = 0.15;
+	slowSpeed = 0.05;
 }
 
 void World::loadCamera() {
@@ -95,10 +95,11 @@ void World::loadObstacles() {
 }
 
 void World::loadEnemies() {
-	int numEnemies = 1;
+	int numEnemies = 5;
 	for (int i=0; i<numEnemies; i++) {
 		Enemy e;
-		e.location.set(-World::dims[0]*0.4,0,-World::dims[2]/2*0.4);
+		//e.location.set(-World::dims[0]*0.4,0,-World::dims[2]/2*0.4);
+		e.location.set(-World::dims[0]*getRandom(),0,-World::dims[2]/2*getRandom());
 		enemies.push_back(e);
 	}
 }
@@ -139,13 +140,13 @@ string World::describe() {
 }
 
 void World::tick() {
-	t += 0.001*speed;
 	if(keyWalk) {
 		speed = fastSpeed*osPlaceholder;
 	}
 	else {
 		speed = slowSpeed*osPlaceholder;
 	}
+	t += 0.001*speed;
 }
 
 void World::updateMouse(int x, int y) {

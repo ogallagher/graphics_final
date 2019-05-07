@@ -20,11 +20,11 @@ class Enemy : public Person {
 public:
 	static unsigned int nextId;
 	static Player *player; //pointer to player for easy access
-	static const int RELOAD_TIME; //max time to spend reloading
+	float RELOAD_TIME; //max time to spend reloading
 	static const int FOV; //field of view (halved)
 	
 	unsigned int id; //unique identifier
-	int reload; //time currently spent reloading
+	float reload; //time currently spent reloading
 	int standTime; //max time to spend standing
 	float stand; //time currently spent standing
 	bool standing; //is currently standing (initially false)
