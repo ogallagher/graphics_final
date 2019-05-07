@@ -20,37 +20,13 @@ double Player::reload = 0;
 
 int Player::roomX = 0;
 int Player::roomY = 0;
-int Player::worldX = 0;
-int Player::worldY = 0;
 
 void Player::move() {
 	Person::move();
 	
-	int newX = location.x/Room::DIM_MAX;
-	int newY = location.z/Room::DIM_MAX;
-	
-	if (newX != roomX) {
-		int x = 0;
-		int a = World::ROOMS_ALL;
-		if (newX < roomX) {
-			x = a;
-		}
-		
-		for (int y=0; y<=a; y++) {
-			World::loadRoom(x,y);
-		}
-	}
-	else if (newY != roomY) {
-		int y = 0;
-		int a = World::ROOMS_ALL;
-		if (newY < roomY) {
-			y = a;
-		}
-		
-		for (int x=0; x<=a; x++) {
-			World::loadRoom(x,y);
-		}
-	}
+	int rd = World::dims[0];
+	roomX = floor((location.x + rd/2) / rd);
+	roomY = floor((location.z + rd/2) / rd);
 }
 
 void Player::keyControl() {

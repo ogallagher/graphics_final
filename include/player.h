@@ -20,11 +20,7 @@ Controls:
 #include "../include/person.h"
 #include "../include/bullet.h"
 
-class Player : public Person {
-private:
-	static int worldX; //current of the worl
-	static int worldY;
-	
+class Player : public Person {	
 public:
 	static const double RELOAD_TIME; //max time to spend reloading
 	
