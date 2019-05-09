@@ -16,6 +16,7 @@ Computer Graphics
 #include "../include/bullet.h"
 #include "../include/enemy.h"
 
+unsigned int Person::nextId = 0;
 int Person::dimsHead[3] = {2,2,2};
 int Person::dimsTorso[3] = {3,5,3};
 int Person::dimsArm[3] = {1,5,1};
@@ -42,10 +43,22 @@ Bullet Person::shoot() {
 	
 	bl.mult(dimsTorso[2] + Bullet::dims[2]/2);
 	bl.add(&location);
+	bl.x += *rx;
+	bl.z += *ry;
 	
 	bv.mult(Bullet::speed);
 	
 	return Bullet(&bl,&bv);
+}
+
+int* Person::getRoom() {
+	int rd = World::dims[0];
+	
+	int *room = new int[2];
+	room[0] = floor((location.x + *rx + rd/2) / rd);
+	room[1] = floor((location.z + *ry + rd/2) / rd);
+	
+	return room;
 }
 
 void Person::drawHead() {
@@ -170,7 +183,7 @@ void Person::drawTorso() {
 void Person::display() {
 	glPushMatrix();
 
-	glTranslatef(location.x,location.y,location.z);
+	glTranslatef(*rx + location.x,location.y,*ry + location.z);
 	
 	drawTorso();
 
@@ -192,8 +205,12 @@ bool Person::collideObstacles(vector<Obstacle> *obstacles) {
 bool Person::collideObstacle(Obstacle *obstacle) {
 	//difference between locations
 	ovector d(&(obstacle->location));
-	d.y = 0;
+	d.x += *(obstacle->rx);
+	d.z += *(obstacle->ry);
 	d.sub(&location);
+	d.x -= *rx;
+	d.z -= *ry;
+	d.y = 0;
 
 	//initial distance check
 	if (d.mag() < INFLUENCE_RADIUS + Obstacle::INFLUENCE_RADIUS) {		
@@ -232,24 +249,13 @@ bool Person::collideObstacle(Obstacle *obstacle) {
 	}
 }
 
-bool Person::collidePeople(vector<Person> *people) {
-	bool collided = false;
-	
-	for (vector<Person>::iterator pit=people->begin(); pit!=people->end() && !collided; pit++) {
-		if (collidePerson(&(*pit))) {
-			collided = true;
-		}
-	}
-	
-	return collided;
-}
-
-bool Person::collidePeople(vector<Enemy> *enemies) {
+bool Person::collideEnemies(vector<Enemy> *enemies) {
 	bool collided = false;
 	
 	for (vector<Enemy>::iterator eit=enemies->begin(); eit!=enemies->end() && !collided; eit++) {
-		if (collidePerson(static_cast<Person*>(&(*eit)))) {
+		if (id < eit->id && collidePerson(static_cast<Person*>(&(*eit)))) {
 			collided = true;
+			printf("%d collided with %d\n",id,eit->id);
 		}
 	}
 	
@@ -259,11 +265,15 @@ bool Person::collidePeople(vector<Enemy> *enemies) {
 bool Person::collidePerson(Person *person) {
 	//difference between locations
 	ovector d(&(person->location));
-	d.y = 0;
+	d.x += *(person->rx);
+	d.z += *(person->ry);
 	d.sub(&location);
+	d.x -= *rx;
+	d.z -= *ry;
+	d.y = 0;
 
 	//initial distance check
-	if (d.mag() < INFLUENCE_RADIUS+INFLUENCE_RADIUS) {		
+	if (d.mag() < INFLUENCE_RADIUS) {		
 		//subtract dimensions around each object
 		int dx = abs(d.x) - (dimsTorso[0] + dimsArm[1]);
 		int dz = abs(d.z) - (dimsTorso[2] + dimsArm[1]);

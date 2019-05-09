@@ -21,10 +21,10 @@ moves, and slower when the player stands still.
 #ifdef __APPLE__
 #define GL_SILENCE_DEPRECATION //apple glut and opengl
 #include <GLUT/glut.h>
-#define osSpeed 50		//speed if Mac
+#define OS_SPEED 50		//speed if Mac
 #else
 #include <GL/glut.h> //windows glut and opengl
-#define osSpeed 1		//speed if Windows
+#define OS_SPEED 1		//speed if Windows
 #endif
 
 //local headers
@@ -75,35 +75,19 @@ void display() {
 	player.collideObstacles(&World::obstacles);
 	player.display();
 	
-	for (eit=World::enemies.begin(); eit!=World::enemies.end(); eit++) {
-		eit->followControl();
-		eit->shootControl();
-		eit->move();
-		if (eit->collideObstacles(&World::obstacles)) {
-			eit->stay();
-		}
-		eit->display();
-	}
-	
 	World::loadMaterial(&Bullet::material);
 	for (bit=World::bullets.begin(); bit!=World::bullets.end(); /*conditional increment*/) {
 		bit->move();
 		
-		if (bit->collideBounds() || 
-			bit->collideObstacles(&World::obstacles) || 
-			bit->collidePeople(&World::enemies) || 
+		if (bit->collideObstacles(&World::obstacles) || 
+			bit->collideEnemies(&World::enemies) || 
 			bit->collidePerson(&player)) {
-			if (bit->collidePerson(&player) && bit->good == false) {
-			player.die();
-			}
 			bit = World::bullets.erase(bit);
 		}
 		else {
 			bit->display();
 			bit++;
-		}
-		
-		
+		}		
 	}
 	
 	//measure framerate and update World::speed
@@ -277,23 +261,26 @@ int main(int argc, char** argv) {
 	initGLUT(argc,argv);
 	cout << "init opengl" << endl;
 	initGL();
+	
+	cout << "init player" << endl;
+	player.location.set(0,0,0);
 
 	cout << "init world" << endl;
-	World::loadOSSpeed(osSpeed);
-	World::loadObstacles();
-	World::loadEnemies(5);
+	World::loadOSSpeed(OS_SPEED);
 	World::camera->loadTarget(&(player.location));
 	Light *light = World::light;
 	light->loadTarget(&(player.location));
 	light->material.setColor(1,1,1); //white light
 	light->material.setADS(0.9,0.7,0.85);
+	World::init();
 	cout << World::describe() << endl;
+	
+	cout << "init obstacles" << endl;
+	Obstacle::material.setColor(0.5,0.5,0.5);
+	Obstacle::material.setADS(0.5,0.7,0.7);
 	
 	cout << "init enemies" << endl;
 	Enemy::loadPlayer(&player);
-
-	cout << "init player" << endl;
-	player.location.set(0,0,0);
 	
 	cout << "init bullets" << endl;
 	Bullet::material.setColor(0,1,0);

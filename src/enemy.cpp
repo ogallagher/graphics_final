@@ -13,26 +13,55 @@ enemy.cpp
 
 //local includes
 #include "../include/enemy.h"
-#include "../include/world.h"
 #include "../include/player.h"
+#include "../include/world.h"
+#include "../include/room.h"
 #include "../include/bullet.h"
 
 using namespace std;
 
-unsigned int Enemy::nextId = 0;
 Player *Enemy::player;
 const int Enemy::FOV = 30;
-float randReload = 0;
 
-Enemy::Enemy() {
+Enemy::Enemy(int *rx, int *ry) {
 	id = nextId++;
-	randReload = World::getRandom() * (1000-300) + 300;
+	
+	this->rx = rx;
+	this->ry = ry;
+	
 	materialBody.setColor(0.5,0,0);
-	RELOAD_TIME = 3000 + randReload;
-	reload = RELOAD_TIME;
+	
+	reloadTime = 2500 * World::getRandom() + 500;
+	reload = reloadTime;
+	
 	standTime = 500*World::getRandom();
 	stand = 0;
 	standing = false;
+	dead = false;
+}
+
+bool Enemy::collideBounds() {
+	int rd = (World::dims[0] - Obstacle::DIM_MIN) / 2;
+
+	if (location.x > rd) {
+		location.x = rd - 1;
+		return true;
+	}
+	else if (location.x < -rd) {
+		location.x = -rd + 1;
+		return true;
+	}
+
+	if (location.z > rd) {
+		location.z = rd - 1;
+		return true;
+	}
+	else if (location.z < -rd) {
+		location.z = -rd + 1;
+		return true;
+	}
+
+	return false;
 }
 
 void Enemy::loadPlayer(Player *player) {
@@ -42,12 +71,18 @@ void Enemy::loadPlayer(Player *player) {
 void Enemy::followControl() {
 	//look at player
 	ovector gaze(&(player->location));
+	gaze.x += *(player->rx);
+	gaze.z += *(player->ry);
 	gaze.sub(&location);
+	gaze.x -= *rx;
+	gaze.z -= *ry;
 	heading = gaze.headingY();
 	
 	if (standing) {
 		if (stand < 0) { //change destination
 			destination.set(&(player->location));
+			destination.x += *(player->rx);
+			destination.z += *(player->ry);
 			standing = false;
 		}
 		else { //stand
@@ -56,15 +91,14 @@ void Enemy::followControl() {
 	}
 	else {
 		ovector v(&destination);
+		v.x += *(player->rx);
+		v.z += *(player->ry);
 		v.sub(&location);
+		v.x -= *rx;
+		v.z -= *ry;
 	
 		if (v.mag() < Person::dimsTorso[0]/2 + Person::dimsArm[1]) { //arrive
 			stay();
-		}
-		else { //move
-			v.norm();
-			v.mult(speed*World::getRandom());
-			velocity.set(&v);
 		}
 	}
 }
@@ -72,7 +106,7 @@ void Enemy::followControl() {
 void Enemy::shootControl() {
 	if (reload <= 0) {
 		World::bullets.push_back(shoot());
-		reload = RELOAD_TIME;
+		reload = reloadTime;
 	}
 	else { //reload
 		reload-=World::speed;
@@ -93,20 +127,24 @@ void Enemy::stay() {
 
 void Enemy::die(bool goodBullet) {
 	if (goodBullet) {
-		player->score++;
-		cout << "Current Score: " << player->score << endl;
+		cout << "Current Score: " << (++player->score) << endl;
 	}
 	
-	vector<Enemy>::iterator a = World::enemies.begin();
-	vector<Enemy>::iterator b = World::enemies.end();
+	//remove pointer from room
+	int *roomId = getRoom();
+	Room *room = &World::rooms[World::roomIndex(roomId[1])][World::roomIndex(roomId[0])];
+	vector<Enemy *>::iterator a = room->enemies.begin();
+	vector<Enemy *>::iterator b = room->enemies.end();
 	
 	bool found = false;
 	while (a != b && !found) {
-		if (a->id == this->id) {
-			World::enemies.erase(a);
-			World::loadEnemies(1);
+		if ((*a)->id == this->id) {
+			room->enemies.erase(a);
 			found = true;
+			cout << "room enemy" << id << " died" << endl;
+		}
+		else {
+			a++;
 		}	
-		a++;
 	}
 }

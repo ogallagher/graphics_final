@@ -19,15 +19,20 @@ They are placed randomly.
 
 class Obstacle {
 public:
+	static unsigned int nextId;
+	
 	static Material material;
+	static const int DIM_MIN;
 	static const int HEIGHT;
 	static const int INFLUENCE_RADIUS;
 	
+	unsigned int id;
 	ovector location;
 	int dims[3];
-	std::string description;
+	int *rx; //pointers to room locations
+	int *ry;
 	
-	Obstacle(int, int, int, int); //x,y,width,depth
+	Obstacle(int *rx, int *ry, int x, int z, int w, int d);
 	
 	void display();
 	std::string describe();

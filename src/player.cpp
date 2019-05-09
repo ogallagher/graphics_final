@@ -12,10 +12,26 @@ player.cpp
 #include "../include/player.h"
 #include "../include/world.h"
 #include "../include/bullet.h"
+#include "../include/room.h"
 
 int Player::score = 0;
 const double Player::RELOAD_TIME = 3000;
 double Player::reload = RELOAD_TIME;
+
+int Player::roomX = 0;
+int Player::roomY = 0;
+
+Player::Player() {
+	id = nextId++;
+}
+
+void Player::move() {
+	Person::move();
+	
+	int *room = getRoom();
+	roomX = room[0];
+	roomY = room[1];
+}
 
 void Player::keyControl() {
 	ovector keycontrol;

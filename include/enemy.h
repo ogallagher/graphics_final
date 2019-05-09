@@ -18,20 +18,20 @@ enemy.h
 
 class Enemy : public Person {
 public:
-	static unsigned int nextId;
 	static Player *player; //pointer to player for easy access
-	float RELOAD_TIME; //max time to spend reloading
 	static const int FOV; //field of view (halved)
 	
 	unsigned int id; //unique identifier
+	float reloadTime; //max time to spend reloading
 	float reload; //time currently spent reloading
-	float randReload; //random time that is added to reload for variety
 	int standTime; //max time to spend standing
 	float stand; //time currently spent standing
 	bool standing; //is currently standing (initially false)
 	ovector destination; //current movement target (often player->location)
+	bool dead;
 	
-	Enemy();
+	Enemy(int *rx, int *ry);
+	bool collideBounds(); //return true if at edge of room
 	static void loadPlayer(Player *);
 	void followControl();
 	void shootControl();

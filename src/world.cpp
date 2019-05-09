@@ -20,6 +20,7 @@ world.cpp
 #include "../include/obstacle.h"
 #include "../include/light.h"
 #include "../include/material.h"
+#include "../include/room.h"
 
 int World::dimsWindow[2] = {600,600};
 int World::dimsFOV[3] = {600,600,600};
@@ -28,7 +29,7 @@ double World::t = 0;
 double World::speed = 1;
 double World::fastSpeed = 1;
 double World::slowSpeed = 1;
-double World::osPlaceholder = 1;
+double World::osSpeed = 1;
 float World::mouse[2] = {0,0};
 ovector World::pointer;
 ovector World::cursor;
@@ -43,17 +44,34 @@ Light *World::light = new Light();
 random_device World::randomCore;
 uniform_real_distribution<float> World::randomizer(0.0,1.0);
 
+Room **World::rooms;
 vector<Bullet> World::bullets;
 vector<Obstacle> World::obstacles;
 vector<Enemy> World::enemies;
 
 const int World::EYE_NEAR = World::dimsFOV[2]/20;
 const int World::CURSOR_HEIGHT = Person::dimsTorso[1];
+const int World::ROOMS_RENDERED = 3; //render 3x3 square at a time (odd number)
+const int World::ROOMS_ALL = 5; //keep a 7x7 grid in memory (odd number)
 
 float World::pmatrix[16],World::mvmatrix[16],World::pmvmatrix[16],World::umatrix[16];
 
+void World::init() {	
+	rooms = new Room*[ROOMS_ALL];
+	
+	//generate rooms
+	for (int y=0; y<ROOMS_ALL; y++) {
+		rooms[y] = new Room[ROOMS_ALL];
+		
+		for (int x=0; x<ROOMS_ALL; x++) {
+			//generate room
+			loadRoom(x,y);
+		}
+	}
+}
+
 void World::loadOSSpeed(float osSpeed) {
-	osPlaceholder = osSpeed;
+	World::osSpeed = osSpeed;
 	speed *= osSpeed;
 	fastSpeed = 1;
 	slowSpeed = 0.05;
@@ -84,22 +102,70 @@ void World::loadMaterial(Material *material) {
 	glMaterialfv(GL_FRONT, GL_SPECULAR, material->specular);
 }
 
-void World::loadObstacles() {
-	Obstacle::material.setColor(0.5,0.5,0.5);
-	Obstacle::material.setADS(0.5,0.7,0.7);
+void World::loadRoom(int rx, int ry) {
+	//modify room in array
+	Room *room = &(rooms[ry][rx]);
+	room->id[0] = rx;
+	room->id[1] = ry;
+	room->rx = rx * Room::DIM_MAX;
+	room->ry = ry * Room::DIM_MAX;
 	
-	int numObstacles = 10;
-	for (int i=0; i<numObstacles; i++) {
-		//obstacles.push_back(Obstacle((World::dims[0]/2)*getRandom(),(World::dims[2]/2)*getRandom(),10,10));
-		obstacles.push_back(Obstacle(getRandom()*World::dims[0] - (World::dims[0]/2),getRandom()*World::dims[2] - (World::dims[2]/2),10,10));
+	int *rxPtr = &(room->rx);
+	int *ryPtr = &(room->ry);
+	int x,y,w,d;
+	
+	//create obstacles
+	w = (Room::WALL_DIM_MAX-Obstacle::DIM_MIN) * getRandom() + Obstacle::DIM_MIN;
+	d = Obstacle::DIM_MIN;
+	x = 0;
+	y = -dims[0]/2 - Obstacle::DIM_MIN/2;
+	Obstacle *wallN = new Obstacle(rxPtr,ryPtr,x,y,w,d);
+	obstacles.push_back(*wallN);
+	room->obstacles.push_back(wallN);
+	
+	d = Room::WALL_DIM_MAX * getRandom() + Obstacle::DIM_MIN;
+	w = Obstacle::DIM_MIN;
+	x = dims[0]/2 + Obstacle::DIM_MIN/2;
+	y = Obstacle::DIM_MIN;
+	Obstacle *wallE = new Obstacle(rxPtr,ryPtr,x,y,w,d);
+	obstacles.push_back(*wallE);
+	room->obstacles.push_back(wallE);
+	
+	w = (dims[0] - Obstacle::DIM_MIN)/2;
+	for (int i=0; i < Room::PILLARS * getRandom(); i++) {
+		x = 2.0 * getRandom() * w - w;
+		y = 2.0 * getRandom() * w - w;
+		
+		Obstacle *pillar = new Obstacle(rxPtr,ryPtr,x,y,Obstacle::DIM_MIN,Obstacle::DIM_MIN);
+		
+		obstacles.push_back(*pillar);
+		room->obstacles.push_back(pillar);
 	}
-}
-
-void World::loadEnemies(int numEnemies) {
+	
+	int rw = (dims[0] - Obstacle::DIM_MIN)/2;
+	for (int i=0; i < Room::BARRIERS * getRandom(); i++) {
+		x = 2.0 * getRandom() * rw - rw;
+		y = 2.0 * getRandom() * rw - rw;
+		w = Room::PILLAR_DIM_MAX * getRandom();
+		d = Room::PILLAR_DIM_MAX * getRandom();
+		
+		Obstacle *barrier = new Obstacle(rxPtr,ryPtr,x,y,w,d);
+		
+		obstacles.push_back(*barrier);
+		room->obstacles.push_back(barrier);
+	}
+	
+	//create initial enemies
+	int numEnemies = rx+ry;
+	w = dims[0] - Obstacle::DIM_MIN;
 	for (int i=0; i<numEnemies; i++) {
-		Enemy e;
-		e.location.set(-World::dims[0]*getRandom(),0,-World::dims[2]/2*getRandom());
-		enemies.push_back(e);
+		x = w*getRandom() - w/2;
+		y = w*getRandom() - w/2;
+	
+		Enemy *enemy = new Enemy(&(room->rx),&(room->ry));
+		enemy->location.set(x,0,y);
+		enemies.push_back(*enemy);
+		room->enemies.push_back(enemy);
 	}
 }
 
@@ -107,21 +173,12 @@ void World::display() {
 	loadCamera();
 	loadLight(GL_LIGHT0);
 	
-	World::loadMaterial(&Obstacle::material);
-	vector<Obstacle>::iterator oit;
-	for (oit=obstacles.begin(); oit!=obstacles.end(); oit++) {
-		oit->display();
+	int dist = floor(ROOMS_RENDERED/2);
+	for (int y=Player::roomY-dist; y<=Player::roomY+dist; y++) {
+		for (int x=Player::roomX-dist; x<=Player::roomX+dist; x++) {
+			rooms[roomIndex(y)][roomIndex(x)].display(x,y);
+		}
 	}
-	
-	World::loadMaterial(&Obstacle::material);
-	
-	glPushMatrix();
-	
-	glScalef(dims[0],dims[1],dims[2]);
-	glColor3f(1,1,1);
-	glutWireCube(1.0);
-
-	glPopMatrix();
 }
 
 string World::describe() {
@@ -133,7 +190,7 @@ string World::describe() {
 	
 	vector<Obstacle>::iterator oit;
 	for (oit=obstacles.begin(); oit!=obstacles.end(); oit++) {
-		description += oit->describe() + ",";
+		description += oit->describe() + "\n";
 	}
 	description += "]";
 	
@@ -142,10 +199,10 @@ string World::describe() {
 
 void World::tick() {
 	if(keyWalk) {
-		speed = fastSpeed*osPlaceholder;
+		speed = fastSpeed * osSpeed;
 	}
 	else {
-		speed = slowSpeed*osPlaceholder;
+		speed = slowSpeed * osSpeed;
 	}
 	t += 0.001*speed;
 }
@@ -213,4 +270,15 @@ void World::drawCursor() {
 
 float World::getRandom() {
 	return randomizer(randomCore);
+}
+
+int World::roomIndex(int i) {
+	if (i < 0) {
+		i = (ROOMS_ALL + (i % -ROOMS_ALL)) % ROOMS_ALL;
+	}
+	else {
+		i = i % ROOMS_ALL;
+	}
+	
+	return i;
 }

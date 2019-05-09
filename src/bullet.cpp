@@ -19,6 +19,8 @@ bullet.cpp
 #include "../include/obstacle.h"
 #include "../include/world.h"
 #include "../include/material.h"
+#include "../include/player.h"
+#include "../include/room.h"
 
 using namespace std;
 
@@ -55,8 +57,9 @@ void Bullet::move() {
 }
 
 bool Bullet::collideBounds() {
-	if (location.x < -World::dims[0]/2 || location.x > World::dims[0]/2 || 
-	location.z < -World::dims[2]/2 || location.z > World::dims[2]/2) {
+	int bound = World::ROOMS_RENDERED/2 * Room::DIM_MAX;
+	if (location.x < -bound || location.x > bound || 
+		location.z < -bound || location.z > bound) {
 		return true;
 	}
 	else {
@@ -64,23 +67,18 @@ bool Bullet::collideBounds() {
 	}
 }
 
-bool Bullet::collidePeople(vector<Person> *people) {
+bool Bullet::collideEnemies(vector<Enemy> *enemies) {
 	bool collided = false;
 	
-	for (vector<Person>::iterator pit=people->begin(); pit!=people->end() && !collided; pit++) {
-		collided = collidePerson(&(*pit));
-	}
-	
-	return collided;
-}
-
-bool Bullet::collidePeople(vector<Enemy> *enemies) {
-	bool collided = false;
-	
-	for (vector<Enemy>::iterator eit=enemies->begin(); eit!=enemies->end() && !collided; eit++) {
+	for (vector<Enemy>::iterator eit=enemies->begin(); eit!=enemies->end() && !collided; /*condinc*/) {
 		collided = collidePerson(static_cast<Person*>(&(*eit)));
-		if(collided && good == true) {
+		
+		if(collided) {
 			eit->die(good);
+			eit = World::enemies.erase(eit);
+		}
+		else {
+			eit++;
 		}
 	}
 	
@@ -90,12 +88,16 @@ bool Bullet::collidePeople(vector<Enemy> *enemies) {
 bool Bullet::collidePerson(Person *person) {
 	//check influence radius
 	ovector d(&(person->location));
+	d.x += *(person->rx);
+	d.z += *(person->ry);
 	d.sub(&location);
 	d.y = 0;
 	
 	if (d.mag() < INFLUENCE_RADIUS + Person::INFLUENCE_RADIUS) {
 		//location of previous frame
 		ovector c(&(person->location));
+		c.x += *(person->rx);
+		c.z += *(person->ry);
 		c.sub(&past);
 		c.y = 0;
 		
@@ -241,12 +243,16 @@ bool Bullet::collideObstacles(vector<Obstacle> *obstacles) {
 bool Bullet::collideObstacle(Obstacle *obstacle) {
 	//check influence radius
 	ovector d(&(obstacle->location));
+	d.x += *(obstacle->rx);
+	d.z += *(obstacle->ry);
 	d.sub(&location);
 	d.y = 0;
 	
 	if (d.mag() < INFLUENCE_RADIUS + Obstacle::INFLUENCE_RADIUS) {
 		//location of previous frame
 		ovector c(&(obstacle->location));
+		c.x += *(obstacle->rx);
+		c.z += *(obstacle->ry);
 		c.sub(&past);
 		c.y = 0;
 		
@@ -281,10 +287,10 @@ bool Bullet::collideObstacle(Obstacle *obstacle) {
 			}
 		}
 		else { //now=2,0,6
-			if (d.z > ow) { //now=6
+			if (d.z > od) { //now=6
 				return false; //TODO corner cases
 			}
-			else if (d.z < -ow) { //now=2
+			else if (d.z < -od) { //now=2
 				return false; //TODO corner cases
 			}
 			else { //now=0

@@ -30,8 +30,7 @@ void Camera::move() {
 	
 	ovector v(&destination);
 	v.sub(&location);
-	v.mult(easing*World::osPlaceholder);
-
+	v.mult(easing * World::osSpeed);
 
 	location.add(&v);
 }
