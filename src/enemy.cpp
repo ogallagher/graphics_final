@@ -38,6 +38,30 @@ Enemy::Enemy(int *rx, int *ry) {
 	this->ry = ry;
 }
 
+bool Enemy::collideBounds() {
+	int rd = (World::dims[0] - Obstacle::DIM_MIN) / 2;
+	
+	if (location.x > rd) {
+		location.x = rd - 1;
+		return true;
+	}
+	else if (location.x < -rd) {
+		location.x = -rd + 1;
+		return true;
+	}
+	
+	if (location.z > rd) {
+		location.z = rd - 1;
+		return true;
+	}
+	else if (location.z < -rd) {
+		location.z = -rd + 1;
+		return true;
+	}
+	
+	return false;
+}
+
 void Enemy::loadPlayer(Player *player) {
 	Enemy::player = player;
 }

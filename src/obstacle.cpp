@@ -39,14 +39,24 @@ Obstacle::Obstacle(int *rx, int *ry, int x, int z, int w, int d) {
 	location.y = HEIGHT/2;
 	
 	if (w < INFLUENCE_RADIUS*2) {
-		dims[0] = w;
+		if (w < DIM_MIN) {
+			dims[0] = DIM_MIN;
+		}
+		else {
+			dims[0] = w;
+		}
 	}
 	else {
 		dims[0] = INFLUENCE_RADIUS*2;
 	}
 	dims[1] = HEIGHT;
 	if (d < INFLUENCE_RADIUS*2) {
-		dims[2] = d;
+		if (d < DIM_MIN) {
+			dims[2] = DIM_MIN;
+		}
+		else {
+			dims[2] = d;
+		}
 	}
 	else {
 		dims[2] = INFLUENCE_RADIUS*2;

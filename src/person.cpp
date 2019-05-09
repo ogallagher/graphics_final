@@ -239,12 +239,13 @@ bool Person::collideObstacle(Obstacle *obstacle) {
 	}
 }
 
-bool Person::collidePeople(vector<Enemy> *enemies) {
+bool Person::collideEnemies(vector<Enemy> *enemies) {
 	bool collided = false;
 	
 	for (vector<Enemy>::iterator eit=enemies->begin(); eit!=enemies->end() && !collided; eit++) {
-		if (collidePerson(static_cast<Person*>(&(*eit)))) {
+		if (id < eit->id && collidePerson(static_cast<Person*>(&(*eit)))) {
 			collided = true;
+			printf("%d collided with %d\n",id,eit->id);
 		}
 	}
 	
@@ -254,11 +255,15 @@ bool Person::collidePeople(vector<Enemy> *enemies) {
 bool Person::collidePerson(Person *person) {
 	//difference between locations
 	ovector d(&(person->location));
-	d.y = 0;
+	d.x += *(person->rx);
+	d.z += *(person->ry);
 	d.sub(&location);
+	d.x -= *rx;
+	d.z -= *ry;
+	d.y = 0;
 
 	//initial distance check
-	if (d.mag() < INFLUENCE_RADIUS+INFLUENCE_RADIUS) {		
+	if (d.mag() < INFLUENCE_RADIUS) {		
 		//subtract dimensions around each object
 		int dx = abs(d.x) - (dimsTorso[0] + dimsArm[1]);
 		int dz = abs(d.z) - (dimsTorso[2] + dimsArm[1]);

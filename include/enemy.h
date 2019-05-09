@@ -29,6 +29,7 @@ public:
 	ovector destination; //current movement target (often player->location)
 	
 	Enemy(int *rx, int *ry);
+	bool collideBounds(); //return true if at edge of room
 	static void loadPlayer(Player *);
 	void followControl();
 	void shootControl();

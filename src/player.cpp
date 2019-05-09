@@ -31,9 +31,6 @@ void Player::move() {
 	int rd = World::dims[0];
 	roomX = floor((location.x + rd/2) / rd);
 	roomY = floor((location.z + rd/2) / rd);
-	cout << roomX << " " << roomY << "="
-		 << World::roomIndex(roomX) << " " << World::roomIndex(roomY)
-	     << endl;
 }
 
 void Player::keyControl() {

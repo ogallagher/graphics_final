@@ -32,7 +32,7 @@ public:
 	int *rx; //pointers to room locations
 	int *ry;
 	
-	Obstacle(int *rx, int *ry, int x, int z, int w, int d); //x,z,width,depth
+	Obstacle(int *rx, int *ry, int x, int z, int w, int d);
 	
 	void display();
 	std::string describe();

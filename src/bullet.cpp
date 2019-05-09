@@ -20,6 +20,7 @@ bullet.cpp
 #include "../include/world.h"
 #include "../include/material.h"
 #include "../include/player.h"
+#include "../include/room.h"
 
 using namespace std;
 
@@ -56,8 +57,9 @@ void Bullet::move() {
 }
 
 bool Bullet::collideBounds() {
-	if (location.x < -World::dims[0]/2 || location.x > World::dims[0]/2 || 
-	location.z < -World::dims[2]/2 || location.z > World::dims[2]/2) {
+	int bound = World::ROOMS_RENDERED/2 * Room::DIM_MAX;
+	if (location.x < -bound || location.x > bound || 
+		location.z < -bound || location.z > bound) {
 		return true;
 	}
 	else {

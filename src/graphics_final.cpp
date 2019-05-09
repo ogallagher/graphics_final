@@ -14,17 +14,12 @@ TODO <world>: implement rooms
 + store enemies in rooms
 + store rooms 2d array in world
 + generate new rooms
-- generate new obstacles in room
++ generate new obstacles in room
 	+ walls
-	- pillars
-	- barriers
+	+ pillars
+	+ barriers
 + generate new enemies in room
-- destroy extra rooms
-	? destroy obstacles
-	? destroy enemies
-- generate new rooms dynamically
-	- update Player::room{X,Y}
-- pass enemies between rooms
++ cycle through rooms
 
 */
 
@@ -96,8 +91,7 @@ void display() {
 	for (bit=World::bullets.begin(); bit!=World::bullets.end(); /*conditional increment*/) {
 		bit->move();
 		
-		if (bit->collideBounds() ||
-			bit->collideObstacles(&World::obstacles) || 
+		if (bit->collideObstacles(&World::obstacles) || 
 			bit->collideEnemies(&World::enemies) || 
 			bit->collidePerson(&player)) {
 			bit = World::bullets.erase(bit);
@@ -268,6 +262,9 @@ int main(int argc, char** argv) {
 	initGLUT(argc,argv);
 	cout << "init opengl" << endl;
 	initGL();
+	
+	cout << "init player" << endl;
+	player.location.set(0,0,0);
 
 	cout << "init world" << endl;
 	World::loadOSSpeed(osSpeed);
@@ -285,9 +282,6 @@ int main(int argc, char** argv) {
 	
 	cout << "init enemies" << endl;
 	Enemy::loadPlayer(&player);
-
-	cout << "init player" << endl;
-	player.location.set(0,0,0);
 	
 	cout << "init bullets" << endl;
 	Bullet::material.setColor(0,1,0);

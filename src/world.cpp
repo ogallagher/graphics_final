@@ -47,8 +47,8 @@ vector<Enemy> World::enemies;
 
 const int World::EYE_NEAR = World::dimsFOV[2]/20;
 const int World::CURSOR_HEIGHT = Person::dimsTorso[1];
-const int World::ROOMS_RENDERED = 3; //render 3x3 square at a time
-const int World::ROOMS_ALL = 7; //keep at most a 7x7 grid in memory before discarding
+const int World::ROOMS_RENDERED = 3; //render 3x3 square at a time (odd number)
+const int World::ROOMS_ALL = 5; //keep a 7x7 grid in memory (odd number)
 
 float World::pmatrix[16],World::mvmatrix[16],World::pmvmatrix[16],World::umatrix[16];
 
@@ -96,22 +96,23 @@ void World::loadMaterial(Material *material) {
 }
 
 void World::loadRoom(int rx, int ry) {
-	//make sure room is within array range
-	int ix = roomIndex(rx);
-	int iy = roomIndex(ry);
-	
 	//modify room in array
-	Room *room = &(rooms[iy][ix]);
-	room->id[0] = ix;
-	room->id[1] = iy;
+	Room *room = &(rooms[ry][rx]);
+	room->id[0] = rx;
+	room->id[1] = ry;
+	room->rx = rx * Room::DIM_MAX;
+	room->ry = ry * Room::DIM_MAX;
 	
+	int *rxPtr = &(room->rx);
+	int *ryPtr = &(room->ry);
 	int x,y,w,d;
 	
+	//create obstacles
 	w = (Room::WALL_DIM_MAX-Obstacle::DIM_MIN) * getRandom() + Obstacle::DIM_MIN;
 	d = Obstacle::DIM_MIN;
 	x = 0;
 	y = -dims[0]/2 - Obstacle::DIM_MIN/2;
-	Obstacle *wallN = new Obstacle(&(room->rx),&(room->ry),x,y,w,d);
+	Obstacle *wallN = new Obstacle(rxPtr,ryPtr,x,y,w,d);
 	obstacles.push_back(*wallN);
 	room->obstacles.push_back(wallN);
 	
@@ -119,28 +120,41 @@ void World::loadRoom(int rx, int ry) {
 	w = Obstacle::DIM_MIN;
 	x = dims[0]/2 + Obstacle::DIM_MIN/2;
 	y = Obstacle::DIM_MIN;
-	Obstacle *wallE = new Obstacle(&(room->rx),&(room->ry),x,y,w,d);
+	Obstacle *wallE = new Obstacle(rxPtr,ryPtr,x,y,w,d);
 	obstacles.push_back(*wallE);
 	room->obstacles.push_back(wallE);
 	
-	/*
-	for (int i=0; i<Room::PILLARS; i++) {
-		Obstacle pillar(x,y,Obstacle::DIM_MIN,Obstacle::DIM_MIN);
+	w = (dims[0] - Obstacle::DIM_MIN)/2;
+	for (int i=0; i < Room::PILLARS * getRandom(); i++) {
+		x = 2.0 * getRandom() * w - w;
+		y = 2.0 * getRandom() * w - w;
+		
+		Obstacle *pillar = new Obstacle(rxPtr,ryPtr,x,y,Obstacle::DIM_MIN,Obstacle::DIM_MIN);
+		
+		obstacles.push_back(*pillar);
+		room->obstacles.push_back(pillar);
 	}
-	for (int i=0; i<Room::BARRIERS; i++) {
-		Obstacle barrier(x,y,w,d);
-	}
-	*/
 	
-	int numEnemies = abs(rx);
-	if (abs(ry) > numEnemies) {
-		numEnemies = abs(ry);
+	int rw = (dims[0] - Obstacle::DIM_MIN)/2;
+	for (int i=0; i < Room::BARRIERS * getRandom(); i++) {
+		x = 2.0 * getRandom() * rw - rw;
+		y = 2.0 * getRandom() * rw - rw;
+		w = Room::PILLAR_DIM_MAX * getRandom();
+		d = Room::PILLAR_DIM_MAX * getRandom();
+		
+		Obstacle *barrier = new Obstacle(rxPtr,ryPtr,x,y,w,d);
+		
+		obstacles.push_back(*barrier);
+		room->obstacles.push_back(barrier);
 	}
-	w = dims[0];
+	
+	//create initial enemies
+	int numEnemies = rx+ry;
+	w = dims[0] - Obstacle::DIM_MIN;
 	for (int i=0; i<numEnemies; i++) {
 		x = w*getRandom() - w/2;
 		y = w*getRandom() - w/2;
-		
+	
 		Enemy *enemy = new Enemy(&(room->rx),&(room->ry));
 		enemy->location.set(x,0,y);
 		enemies.push_back(*enemy);
@@ -152,21 +166,22 @@ void World::display() {
 	loadCamera();
 	loadLight(GL_LIGHT0);
 	
-	int dist = ROOMS_RENDERED/2;
+	int dist = floor(ROOMS_RENDERED/2);
 	for (int y=Player::roomY-dist; y<=Player::roomY+dist; y++) {
-		for (int x=Player::roomX-dist; x<=Player::roomY+dist; x++) {
+		for (int x=Player::roomX-dist; x<=Player::roomX+dist; x++) {
 			rooms[roomIndex(y)][roomIndex(x)].display(x,y);
 		}
 	}
 	
-	glPushMatrix();
 	/*
+	glPushMatrix();
+	
 	glScalef(dims[0],dims[1],dims[2]);
 	glColor3f(1,1,1);
 	glutWireCube(1.0);
-	*/
 
 	glPopMatrix();
+	*/
 }
 
 string World::describe() {
@@ -178,7 +193,7 @@ string World::describe() {
 	
 	vector<Obstacle>::iterator oit;
 	for (oit=obstacles.begin(); oit!=obstacles.end(); oit++) {
-		description += oit->describe() + ",";
+		description += oit->describe() + "\n";
 	}
 	description += "]";
 	

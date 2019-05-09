@@ -72,7 +72,7 @@ public:
 	Bullet shoot();
 
 	bool collideObstacles(vector<Obstacle> *);
-	bool collidePeople(vector<Enemy> *);
+	bool collideEnemies(vector<Enemy> *);
 	bool collideObstacle(Obstacle *);
 	bool collidePerson(Person *);
 

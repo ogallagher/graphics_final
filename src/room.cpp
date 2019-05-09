@@ -30,13 +30,14 @@ void Room::display(int rx, int ry) {
 	Enemy *e;
 	for (eit = enemies.begin(); eit != enemies.end(); eit++) {
 		e = *eit;
-	
 		e->followControl();
 		e->shootControl();
-		e->move();
-		if (e->collideObstacles(&World::obstacles)) {
+		if (e->collideBounds() || e->collideObstacles(&World::obstacles)) {
 			e->stay();
 		}
-		e->display();
+		else {
+			e->move();
+		}
+		e->display();			
 	}	
 }
