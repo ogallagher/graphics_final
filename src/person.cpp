@@ -15,6 +15,7 @@ Computer Graphics
 #include "../include/person.h"
 #include "../include/bullet.h"
 #include "../include/enemy.h"
+#include "../include/room.h"
 
 unsigned int Person::nextId = 0;
 int Person::dimsHead[3] = {2,2,2};
@@ -35,7 +36,7 @@ void Person::move() {
 	}
 }
 
-Bullet Person::shoot() {
+Bullet* Person::shoot() {
 	float bh = heading/180*3.141593;
 	
 	ovector bl(cos(bh),0,-sin(bh));
@@ -48,11 +49,11 @@ Bullet Person::shoot() {
 	
 	bv.mult(Bullet::speed);
 	
-	return Bullet(&bl,&bv);
+	return new Bullet(&bl,&bv);
 }
 
 int* Person::getRoom() {
-	int rd = World::dims[0];
+	int rd = Room::DIM_MAX;
 	
 	int *room = new int[2];
 	room[0] = floor((location.x + *rx + rd/2) / rd);
@@ -190,11 +191,11 @@ void Person::display() {
 	glPopMatrix();
 }
 
-bool Person::collideObstacles(vector<Obstacle> *obstacles) {
+bool Person::collideObstacles(vector<Obstacle*> *obstacles) {
 	bool collided = false;
 	
-	for (vector<Obstacle>::iterator oit=obstacles->begin(); oit!=obstacles->end() && !collided; oit++) {
-		if (collideObstacle(&(*oit))) {
+	for (vector<Obstacle*>::iterator oit=obstacles->begin(); oit!=obstacles->end() && !collided; oit++) {
+		if (collideObstacle(*oit)) {
 			collided = true;
 		}
 	}
@@ -249,13 +250,13 @@ bool Person::collideObstacle(Obstacle *obstacle) {
 	}
 }
 
-bool Person::collideEnemies(vector<Enemy> *enemies) {
+bool Person::collideEnemies(vector<Enemy*> *enemies) {
 	bool collided = false;
 	
-	for (vector<Enemy>::iterator eit=enemies->begin(); eit!=enemies->end() && !collided; eit++) {
-		if (id < eit->id && collidePerson(static_cast<Person*>(&(*eit)))) {
+	for (vector<Enemy*>::iterator eit=enemies->begin(); eit!=enemies->end() && !collided; eit++) {
+		if (id < (*eit)->id && collidePerson(static_cast<Person*>(*eit))) {
 			collided = true;
-			printf("%d collided with %d\n",id,eit->id);
+			printf("%d collided with %d\n",id,(*eit)->id);
 		}
 	}
 	

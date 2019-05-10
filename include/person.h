@@ -69,11 +69,11 @@ public:
 
 	void move();
 	void display();
-	Bullet shoot();
+	Bullet* shoot();
 	int* getRoom();
 
-	bool collideObstacles(vector<Obstacle> *);
-	bool collideEnemies(vector<Enemy> *);
+	bool collideObstacles(vector<Obstacle*> *);
+	bool collideEnemies(vector<Enemy*> *);
 	bool collideObstacle(Obstacle *);
 	bool collidePerson(Person *);
 

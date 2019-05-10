@@ -53,9 +53,9 @@ int fpsInterval = 5000;
 int fpsIdeal = 60;
 
 Player player;
-vector<Bullet>::iterator bit;
-vector<Obstacle>::iterator oit;
-vector<Enemy>::iterator eit;
+vector<Bullet*>::iterator bit;
+vector<Obstacle*>::iterator oit;
+vector<Enemy*>::iterator eit;
 
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -76,16 +76,23 @@ void display() {
 	player.display();
 	
 	World::loadMaterial(&Bullet::material);
+	Bullet *bptr = nullptr;
 	for (bit=World::bullets.begin(); bit!=World::bullets.end(); /*conditional increment*/) {
-		bit->move();
+		bptr = *bit;
+		bptr->move();
 		
-		if (bit->collideObstacles(&World::obstacles) || 
-			bit->collideEnemies(&World::enemies) || 
-			bit->collidePerson(&player)) {
+		if (bptr->collideObstacles(&World::obstacles) || 
+			bptr->collideEnemies(&World::enemies)) {
 			bit = World::bullets.erase(bit);
+			delete bptr;
+		}
+		else if (bptr->collidePerson(&player)) {
+			player.die();
+			bit = World::bullets.erase(bit);
+			delete bptr;
 		}
 		else {
-			bit->display();
+			bptr->display();
 			bit++;
 		}		
 	}
@@ -213,6 +220,7 @@ void initGLUT(int argc, char**argv) {
 	dimsScreen[1] = glutGet(GLUT_SCREEN_HEIGHT);
 	glutInitWindowPosition(dimsScreen[0]/2 - World::dimsWindow[0]/2, dimsScreen[1]/2 - World::dimsWindow[1]/2);
 	glutCreateWindow(GAME_NAME);
+	glutSetCursor(GLUT_CURSOR_NONE);
 	
 	//glut event handlers
 	glutDisplayFunc(display);

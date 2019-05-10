@@ -73,9 +73,9 @@ public:
 	static Light *light;
 	
 	static Room **rooms;
-	static vector<Bullet> bullets;
-	static vector<Obstacle> obstacles;
-	static vector<Enemy> enemies;
+	static vector<Bullet *> bullets;
+	static vector<Obstacle *> obstacles;
+	static vector<Enemy *> enemies;
 
 	static void init();
 	static void loadOSSpeed(float);

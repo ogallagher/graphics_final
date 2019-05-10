@@ -35,7 +35,7 @@ public:
 	static void loadPlayer(Player *);
 	void followControl();
 	void shootControl();
-	Bullet shoot(); //extend Person::shoot()
+	Bullet* shoot(); //extend Person::shoot()
 	void stay();
 	void die(bool goodBullet);
 };

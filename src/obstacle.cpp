@@ -79,9 +79,10 @@ void Obstacle::display() {
 }
 
 string Obstacle::describe() {
-	string description = "obstacle" + to_string(id) + "[x=" + to_string(location.x)
-						+ " y=" + to_string(location.y)
-						+ " z=" + to_string(location.x)
+	string description = "obstacle" + to_string(id) + "[" + to_string(location.x)
+						+ " " + to_string(location.y)
+						+ " " + to_string(location.x)
+						+ " " + to_string(location.w)
 						+ " dims=" + to_string(dims[0])
 						+ " " + to_string(dims[1]) + " " + to_string(dims[2]) + "]";
 	return description;

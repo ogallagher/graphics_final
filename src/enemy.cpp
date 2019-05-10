@@ -31,11 +31,11 @@ Enemy::Enemy(int *rx, int *ry) {
 	
 	materialBody.setColor(0.5,0,0);
 	
-	reloadTime = 2500 * World::getRandom() + 500;
+	reloadTime = 2500;// * World::getRandom() + 500;
 	reload = reloadTime;
 	
-	standTime = 500*World::getRandom();
-	stand = 0;
+	standTime = 5000*World::getRandom() + 1000;
+	stand = standTime;
 	standing = false;
 	dead = false;
 }
@@ -86,36 +86,52 @@ void Enemy::followControl() {
 			standing = false;
 		}
 		else { //stand
-			stand -= World::speed*(0.1);
+			stand -= World::speed;
 		}
 	}
 	else {
-		ovector v(&destination);
-		v.x += *(player->rx);
-		v.z += *(player->ry);
-		v.sub(&location);
-		v.x -= *rx;
-		v.z -= *ry;
+		int *room = getRoom();
+		
+		if (room[0] == player->roomX && room[1] == player->roomY) {
+			ovector v(&destination);
+			v.x += *(player->rx);
+			v.z += *(player->ry);
+			v.sub(&location);
+			v.x -= *rx;
+			v.z -= *ry;
 	
-		if (v.mag() < Person::dimsTorso[0]/2 + Person::dimsArm[1]) { //arrive
+			if (v.mag() < Person::dimsTorso[0] + Person::dimsArm[1]) { //arrive
+				stay();
+			}
+			else {
+				v.norm();
+				v.mult(speed);
+				velocity.set(&v);
+			}
+		}
+		else {
 			stay();
 		}
 	}
 }
 
 void Enemy::shootControl() {
-	if (reload <= 0) {
-		World::bullets.push_back(shoot());
-		reload = reloadTime;
-	}
-	else { //reload
-		reload-=World::speed;
+	int *room = getRoom();
+	
+	if (room[0] == player->roomX && room[1] == player->roomY) {
+		if (reload <= 0) {
+			World::bullets.push_back(shoot());
+			reload = reloadTime;
+		}
+		else { //reload
+			reload-=World::speed;
+		}
 	}
 }
 
-Bullet Enemy::shoot() {
-	Bullet bullet = Person::shoot();
-	bullet.good = false;
+Bullet* Enemy::shoot() {
+	Bullet *bullet = Person::shoot();
+	bullet->good = false;
 	return bullet;
 }
 
@@ -138,10 +154,10 @@ void Enemy::die(bool goodBullet) {
 	
 	bool found = false;
 	while (a != b && !found) {
-		if ((*a)->id == this->id) {
+		if ((*a)->id == id) {
 			room->enemies.erase(a);
 			found = true;
-			cout << "room enemy" << id << " died" << endl;
+			cout << "enemy" << id << " died" << endl;
 		}
 		else {
 			a++;

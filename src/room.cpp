@@ -23,6 +23,7 @@ void Room::display(int rx, int ry) {
 	this->ry = ry*DIM_MAX;
 			
 	World::loadMaterial(&Obstacle::material);
+	
 	for (oit = obstacles.begin(); oit != obstacles.end(); oit++) {
 		(*oit)->display();			
 	}
@@ -33,12 +34,15 @@ void Room::display(int rx, int ry) {
 		
 		e->followControl();
 		e->shootControl();
-		if (e->collideBounds() || e->collideObstacles(&World::obstacles)) {
+		
+		if (e->collideBounds() || 
+			e->collideObstacles(&obstacles)) {
 			e->stay();
 		}
 		else {
 			e->move();
 		}
+		
 		e->display();		
 	}	
 }

@@ -35,8 +35,8 @@ public:
 	void keyControl(); //move with WASD
 	void mouseControl(); //look at cursor
 	void shootControl();
-	Bullet shoot(); //extend Person::shoot()
-	bool die();
+	Bullet* shoot(); //extend Person::shoot()
+	void die();
 };
 
 #endif

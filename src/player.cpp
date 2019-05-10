@@ -30,7 +30,7 @@ void Player::move() {
 	
 	int *room = getRoom();
 	roomX = room[0];
-	roomY = room[1];
+	roomY = room[1];	
 }
 
 void Player::keyControl() {
@@ -65,14 +65,13 @@ void Player::shootControl() {
 	}
 }
 
-Bullet Player::shoot() {
-	Bullet bullet = Person::shoot();
-	bullet.good = true;
+Bullet* Player::shoot() {
+	Bullet *bullet = Person::shoot();
+	bullet->good = true;
 	return bullet;
 }
 
-bool Player::die() {
+void Player::die() {
 	cout << "GAME OVER" << endl;
 	cout << "Final Score: " << score << endl;
-	exit(0);
 }

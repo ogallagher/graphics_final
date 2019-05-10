@@ -67,15 +67,18 @@ bool Bullet::collideBounds() {
 	}
 }
 
-bool Bullet::collideEnemies(vector<Enemy> *enemies) {
+bool Bullet::collideEnemies(vector<Enemy*> *enemies) {
 	bool collided = false;
 	
-	for (vector<Enemy>::iterator eit=enemies->begin(); eit!=enemies->end() && !collided; /*condinc*/) {
-		collided = collidePerson(static_cast<Person*>(&(*eit)));
+	for (vector<Enemy*>::iterator eit=enemies->begin(); eit!=enemies->end() && !collided; /*condinc*/) {
+		collided = collidePerson(static_cast<Person*>(*eit));
 		
 		if(collided) {
-			eit->die(good);
+			Enemy *eptr = *eit;
+			eptr->die(good);
 			eit = World::enemies.erase(eit);
+			
+			delete eptr; //prevent memory leak, now that all pointers are gone
 		}
 		else {
 			eit++;
@@ -230,11 +233,11 @@ bool Bullet::collidePerson(Person *person) {
 	}
 }
 
-bool Bullet::collideObstacles(vector<Obstacle> *obstacles) {
+bool Bullet::collideObstacles(vector<Obstacle*> *obstacles) {
 	bool collided = false;
 	
-	for (vector<Obstacle>::iterator oit=obstacles->begin(); oit!=obstacles->end() && !collided; oit++) {
-		collided = collideObstacle(&(*oit));
+	for (vector<Obstacle*>::iterator oit=obstacles->begin(); oit!=obstacles->end() && !collided; oit++) {
+		collided = collideObstacle(*oit);
 	}
 	
 	return collided;
