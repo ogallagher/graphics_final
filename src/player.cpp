@@ -15,7 +15,7 @@ player.cpp
 #include "../include/room.h"
 
 int Player::score = 0;
-const double Player::RELOAD_TIME = 3000;
+const double Player::RELOAD_TIME = 2500;
 double Player::reload = RELOAD_TIME;
 
 int Player::roomX = 0;

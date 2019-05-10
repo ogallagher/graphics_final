@@ -34,6 +34,7 @@ class Person;
 class Enemy;
 class Material;
 class Room;
+class Player;
 
 //namespaces
 using namespace std;
@@ -71,6 +72,7 @@ public:
 	
 	static Camera *camera;
 	static Light *light;
+	static Player *player;
 	
 	static Room **rooms;
 	static vector<Bullet *> bullets;

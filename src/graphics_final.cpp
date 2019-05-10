@@ -52,7 +52,7 @@ int dtime = 0;
 int fpsInterval = 5000;
 int fpsIdeal = 60;
 
-Player player;
+Player *player = nullptr;
 vector<Bullet*>::iterator bit;
 vector<Obstacle*>::iterator oit;
 vector<Enemy*>::iterator eit;
@@ -68,12 +68,12 @@ void display() {
 	World::updateCursor();
 	World::drawCursor();
 	
-	player.keyControl();
-	player.mouseControl();
-	player.shootControl();
-	player.move();
-	player.collideObstacles(&World::obstacles);
-	player.display();
+	player->keyControl();
+	player->mouseControl();
+	player->shootControl();
+	player->move();
+	player->collideObstacles(&World::obstacles);
+	player->display();
 	
 	World::loadMaterial(&Bullet::material);
 	Bullet *bptr = nullptr;
@@ -86,8 +86,8 @@ void display() {
 			bit = World::bullets.erase(bit);
 			delete bptr;
 		}
-		else if (bptr->collidePerson(&player)) {
-			player.die();
+		else if (bptr->collidePerson(player)) {
+			player->die();
 			bit = World::bullets.erase(bit);
 			delete bptr;
 		}
@@ -193,9 +193,9 @@ void mouseclick(int button, int status, int x, int y) {
 	if (status == GLUT_DOWN) {
 		if (button == GLUT_LEFT_BUTTON) {
 			World::clicked = true;
-			if(player.reload <= 0) {
-				World::bullets.push_back(player.shoot());
-				player.reload = Player::RELOAD_TIME;
+			if(player->reload <= 0) {
+				World::bullets.push_back(player->shoot());
+				player->reload = Player::RELOAD_TIME;
 			}
 		}
 	}
@@ -269,30 +269,11 @@ int main(int argc, char** argv) {
 	initGLUT(argc,argv);
 	cout << "init opengl" << endl;
 	initGL();
-	
-	cout << "init player" << endl;
-	player.location.set(0,0,0);
 
 	cout << "init world" << endl;
 	World::loadOSSpeed(OS_SPEED);
-	World::camera->loadTarget(&(player.location));
-	Light *light = World::light;
-	light->loadTarget(&(player.location));
-	light->material.setColor(1,1,1); //white light
-	light->material.setADS(0.9,0.7,0.85);
 	World::init();
-	cout << World::describe() << endl;
-	
-	cout << "init obstacles" << endl;
-	Obstacle::material.setColor(0.5,0.5,0.5);
-	Obstacle::material.setADS(0.5,0.7,0.7);
-	
-	cout << "init enemies" << endl;
-	Enemy::loadPlayer(&player);
-	
-	cout << "init bullets" << endl;
-	Bullet::material.setColor(0,1,0);
-	Bullet::material.setADS(1,0,0);
+	player = World::player;
 	
 	cout << "init framerate clock" << endl;
 	atime = chrono::high_resolution_clock::now();

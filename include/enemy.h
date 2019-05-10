@@ -18,7 +18,6 @@ enemy.h
 
 class Enemy : public Person {
 public:
-	static Player *player; //pointer to player for easy access
 	static const int FOV; //field of view (halved)
 	
 	unsigned int id; //unique identifier

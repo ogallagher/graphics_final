@@ -39,8 +39,10 @@ bool World::keyD = false;
 bool World::keyS = false;
 bool World::keyA = false;
 bool World::keyWalk = false;
+
 Camera *World::camera = new Camera();
 Light *World::light = new Light();
+Player *World::player = new Player();
 random_device World::randomCore;
 uniform_real_distribution<float> World::randomizer(0.0,1.0);
 
@@ -52,11 +54,31 @@ vector<Enemy*> World::enemies;
 const int World::EYE_NEAR = World::dimsFOV[2]/20;
 const int World::CURSOR_HEIGHT = Person::dimsTorso[1];
 const int World::ROOMS_RENDERED = 3; //render 3x3 square at a time (odd number)
-const int World::ROOMS_ALL = 5; //keep a 7x7 grid in memory (odd number)
+const int World::ROOMS_ALL = 7; //keep a 7x7 grid in memory (odd number)
 
 float World::pmatrix[16],World::mvmatrix[16],World::pmvmatrix[16],World::umatrix[16];
 
-void World::init() {	
+void World::init() {
+	cout << "init player" << endl;
+	player->location.set(0,0,0);
+	player->reload = 0;
+	
+	cout << "init camera" << endl;
+	camera->loadTarget(&(player->location));
+	
+	cout << "init light" << endl;
+	light->loadTarget(&(player->location));
+	light->material.setColor(1,1,1); //white light
+	light->material.setADS(0.9,0.7,0.85);
+	
+	cout << "init obstacle materials" << endl;
+	Obstacle::material.setColor(0.5,0.5,0.5);
+	Obstacle::material.setADS(0.5,0.7,0.7);
+	
+	cout << "init bullet materials" << endl;
+	Bullet::material.setColor(0,1,0);
+	Bullet::material.setADS(1,0,0);
+	
 	rooms = new Room*[ROOMS_ALL];
 	
 	//generate rooms

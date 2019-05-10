@@ -22,7 +22,7 @@ Controls:
 
 class Player : public Person {	
 public:
-	static const double RELOAD_TIME; //max time to spend reloading
+	static const double RELOAD_TIME; //time to spend reloading
 	
 	static int roomX; //room location
 	static int roomY;

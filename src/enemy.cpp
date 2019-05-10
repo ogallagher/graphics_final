@@ -20,7 +20,6 @@ enemy.cpp
 
 using namespace std;
 
-Player *Enemy::player;
 const int Enemy::FOV = 30;
 
 Enemy::Enemy(int *rx, int *ry) {
@@ -31,10 +30,10 @@ Enemy::Enemy(int *rx, int *ry) {
 	
 	materialBody.setColor(0.5,0,0);
 	
-	reloadTime = 2500;// * World::getRandom() + 500;
+	reloadTime = 2500 * World::getRandom() + 500;
 	reload = reloadTime;
 	
-	standTime = 5000*World::getRandom() + 1000;
+	standTime = 5000 * World::getRandom() + 1000;
 	stand = standTime;
 	standing = false;
 	dead = false;
@@ -64,11 +63,9 @@ bool Enemy::collideBounds() {
 	return false;
 }
 
-void Enemy::loadPlayer(Player *player) {
-	Enemy::player = player;
-}
-
 void Enemy::followControl() {
+	Player *player = World::player;
+	
 	//look at player
 	ovector gaze(&(player->location));
 	gaze.x += *(player->rx);
@@ -90,42 +87,31 @@ void Enemy::followControl() {
 		}
 	}
 	else {
-		int *room = getRoom();
-		
-		if (room[0] == player->roomX && room[1] == player->roomY) {
-			ovector v(&destination);
-			v.x += *(player->rx);
-			v.z += *(player->ry);
-			v.sub(&location);
-			v.x -= *rx;
-			v.z -= *ry;
-	
-			if (v.mag() < Person::dimsTorso[0] + Person::dimsArm[1]) { //arrive
-				stay();
-			}
-			else {
-				v.norm();
-				v.mult(speed);
-				velocity.set(&v);
-			}
+		ovector v(&destination);
+		v.x += *(player->rx);
+		v.z += *(player->ry);
+		v.sub(&location);
+		v.x -= *rx;
+		v.z -= *ry;
+
+		if (v.mag() < Person::dimsTorso[0] + Person::dimsArm[1]) { //arrive
+			stay();
 		}
 		else {
-			stay();
+			v.norm();
+			v.mult(speed);
+			velocity.set(&v);
 		}
 	}
 }
 
-void Enemy::shootControl() {
-	int *room = getRoom();
-	
-	if (room[0] == player->roomX && room[1] == player->roomY) {
-		if (reload <= 0) {
-			World::bullets.push_back(shoot());
-			reload = reloadTime;
-		}
-		else { //reload
-			reload-=World::speed;
-		}
+void Enemy::shootControl() {	
+	if (reload <= 0) {
+		World::bullets.push_back(shoot());
+		reload = reloadTime;
+	}
+	else { //reload
+		reload-=World::speed;
 	}
 }
 
@@ -143,7 +129,7 @@ void Enemy::stay() {
 
 void Enemy::die(bool goodBullet) {
 	if (goodBullet) {
-		cout << "Current Score: " << (++player->score) << endl;
+		cout << "Current Score: " << (++World::player->score) << endl;
 	}
 	
 	//remove pointer from room
