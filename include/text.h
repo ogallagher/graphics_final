@@ -18,19 +18,21 @@ Defines shapes for drawing flat text
 
 //local includes
 #include "../include/ovector.h"
+#include "../include/material.h"
 
 class Text {
 private:
-	static drawChar(char); //draws a character in a 1x1 square centered on the origin
+	static void drawChar(char); //draws a character in a 1x1 square centered on the origin
 	
 public:
 	Material material;
-	string value;
+	int stroke;
+	std::string value;
 	int length;
-	float scale;
+	float scale[3];
 	ovector location;
 	
-	Text(string val, int siz);
+	Text(std::string val, int siz);
 	void display();
 	void lower();
 };

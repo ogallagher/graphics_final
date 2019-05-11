@@ -8,6 +8,12 @@ Submission for the 3D OpenGL final project.
 It's a top-down shooter with SuperHot-like mechanics, where time is faster when the player
 moves, and slower when the player stands still.
 
+TODO <stages>: create start, play, and end stages
+= Text class
+	= displays number chars
+	- supports transformations and materials
+	- has stroke thickness parameter (as well as bullet)
+
 */
 
 //core headers
@@ -76,6 +82,7 @@ void display() {
 	player->display();
 	
 	World::loadMaterial(&Bullet::material);
+	glLineWidth(Bullet::stroke);
 	Bullet *bptr = nullptr;
 	for (bit=World::bullets.begin(); bit!=World::bullets.end(); /*conditional increment*/) {
 		bptr = *bit;
@@ -250,9 +257,6 @@ void initGL() {
 
 	//background color
 	glClearColor(0.0,0.1,0.1,1);
-
-	//stroke thickness
-	glLineWidth(2);
 	
 	//lighting
     glEnable(GL_LIGHTING);

@@ -27,6 +27,7 @@ using namespace std;
 int Bullet::dims[3] = {1,1,2};
 float Bullet::speed = 0.1;
 Material Bullet::material;
+int Bullet::stroke = 2;
 
 const int Bullet::HEIGHT = Person::dimsTorso[1];
 const int Bullet::INFLUENCE_RADIUS = dims[2]*4;
