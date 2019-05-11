@@ -6,7 +6,8 @@ Computer Graphics
 
 text.h
 
-Defines shapes for drawing flat text
+Defines shapes for drawing flat text in 3D space with
+transforms, material properties, and interactivity;
 
 */
 
@@ -22,19 +23,24 @@ Defines shapes for drawing flat text
 
 class Text {
 private:
-	static void drawChar(char); //draws a character in a 1x1 square centered on the origin
+	static void drawChar(char); //draws a centered character in a 1x1 square
+	
+	int w,h; //dimensions halved
+	void lower(); //converts to lower case
+	void measure(); //sets dims
 	
 public:
 	Material material;
 	int stroke;
 	std::string value;
 	int length;
-	float scale[3];
+	float scale[2];
 	ovector location;
 	
-	Text(std::string val, int siz);
+	Text();
+	Text(std::string val, int sx, int sy);
 	void display();
-	void lower();
+	bool selected();
 };
 
 #endif

@@ -59,15 +59,7 @@ const int World::ROOMS_ALL = 7; //keep a 7x7 grid in memory (odd number)
 float World::pmatrix[16],World::mvmatrix[16],World::pmvmatrix[16],World::umatrix[16];
 
 void World::init() {
-	cout << "init player" << endl;
-	player->location.set(0,0,0);
-	player->reload = 0;
-	
-	cout << "init camera" << endl;
-	camera->loadTarget(&(player->location));
-	
 	cout << "init light" << endl;
-	light->loadTarget(&(player->location));
 	light->material.setColor(1,1,1); //white light
 	light->material.setADS(0.9,0.7,0.85);
 	
@@ -79,14 +71,34 @@ void World::init() {
 	Bullet::material.setColor(0,1,0);
 	Bullet::material.setADS(1,0,0);
 	
+	cout << "init rooms matrix" << endl;
 	rooms = new Room*[ROOMS_ALL];
-	
-	//generate rooms
 	for (int y=0; y<ROOMS_ALL; y++) {
 		rooms[y] = new Room[ROOMS_ALL];
-		
+	}
+}
+
+void World::reset() {
+	cout << "reset player" << endl;
+	player->location.set(0,0,0);
+	player->reload = 0;
+	player->score = 0;
+	
+	cout << "focus camera on player" << endl;
+	camera->loadTarget(&(player->location));
+	
+	cout << "focus light on player" << endl;
+	light->loadTarget(&(player->location));
+	
+	cout << "clear obstacles" << endl;
+	obstacles.clear();
+	
+	cout << "clear enemies" << endl;
+	enemies.clear();
+	
+	cout << "load rooms" << endl;
+	for (int y=0; y<ROOMS_ALL; y++) {		
 		for (int x=0; x<ROOMS_ALL; x++) {
-			//generate room
 			loadRoom(x,y);
 		}
 	}
@@ -135,6 +147,8 @@ void World::loadRoom(int rx, int ry) {
 	int *rxptr = &(room->rx);
 	int *ryptr = &(room->ry);
 	int x,y,w,d;
+	
+	room->clear();
 	
 	//create obstacles
 	w = (Room::WALL_DIM_MAX-Obstacle::DIM_MIN) * getRandom() + Obstacle::DIM_MIN;

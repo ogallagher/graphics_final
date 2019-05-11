@@ -80,6 +80,7 @@ public:
 	static vector<Enemy *> enemies;
 
 	static void init();
+	static void reset();
 	static void loadOSSpeed(float);
 	static void loadCamera(); //calls gluLookAt()
 	static void loadLight(int lightId); //calls glLightfv()

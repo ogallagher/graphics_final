@@ -38,18 +38,31 @@ text.cpp
 
 using namespace std;
 
-Text::Text(string text, int size) {
-	value = text;
-	length = value.length();
+Text::Text() {
+	value = "";
+	length = 0;
+	
 	scale[0] = 1;
 	scale[1] = 1;
-	scale[2] = 1;
 	
-	lower();
+	w = 0;
+	h = 0;
 	
 	material.setColor(1,1,1); //white
 	material.setADS(1,0,0); //ambient
 	stroke = 4;
+}
+
+Text::Text(string text, int sx, int sy) {
+	Text();
+	
+	value = text;
+	length = value.length();
+	scale[0] = sx;
+	scale[1] = sy;
+	
+	lower();
+	measure();
 }
 
 void Text::drawChar(char c) {
@@ -73,7 +86,6 @@ void Text::drawChar(char c) {
 		
 		case '0':
 		case 'o':
-		case 'd':
 		LEFT_DOWN;
 		BOTTOM_ACROSS;
 		//continue
@@ -128,9 +140,9 @@ void Text::display() {
 	glPushMatrix();
 	
 	//transforms
-	//glRotatef(90,1,0,0);
-	glScalef(scale[0],scale[1],scale[2]);
 	glTranslatef(location.x,location.y,location.z);
+	glScalef(scale[0],scale[1],1);
+	glRotatef(90,1,0,0);
 	
 	//material
 	World::loadMaterial(&material);
@@ -138,11 +150,42 @@ void Text::display() {
 	
 	//characters
 	char c;
+	int y=0;
+	int x=0;
 	for (int i=0; i<length; i++) {
-		drawChar(value[i]);
+		glTranslatef(x,y,0);
+		
+		c = value[i];
+		
+		if (c == '\n') {
+			y++;
+			x=0;
+		}
+		else {
+			drawChar(c);
+			x++;
+		}
 	}
 	
 	glPopMatrix();
+}
+
+bool Text::selected() {
+	if (World::clicked) {
+		//find text-World::cursor distance (assuming they're on the same plane)
+		ovector d(&World::cursor);
+		d.sub(&location);
+		
+		if (d.x > -w && d.x < w && d.z > -h && d.z < h) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	else {
+		return false;
+	}
 }
 
 void Text::lower() {
@@ -154,4 +197,33 @@ void Text::lower() {
 			c += 32;
 		}
 	}
+}
+
+void Text::measure() {
+	char c;
+	w=0;
+	h=0;
+	int r=0;
+	
+	for (int i=0; i<length; i++) {
+		c = value[i];
+		
+		if (c == '\n') {
+			h++;
+			if (r > w) {
+				w = r;
+			}
+			r=0;
+		}
+		else {
+			drawChar(c);
+			r++;
+		}
+	}
+	if (r > w) {
+		w = r;
+	}
+	
+	w *= scale[0] * 0.5;
+	h *= scale[1] * 0.5;
 }

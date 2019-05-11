@@ -59,3 +59,17 @@ void Room::display(int rx, int ry) {
 		e->display();		
 	}	
 }
+
+void Room::clear() {
+	for (oit = obstacles.begin(); oit != obstacles.end(); ) {
+		delete *oit; //remove from heap
+		
+		oit = obstacles.erase(oit); //remove from vector
+	}
+	
+	for (eit = enemies.begin(); eit != enemies.end(); ) {
+		delete *eit; //remove from heap
+		
+		eit = enemies.erase(eit); //remove from vector
+	}
+}

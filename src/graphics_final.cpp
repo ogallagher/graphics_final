@@ -10,9 +10,15 @@ moves, and slower when the player stands still.
 
 TODO <stages>: create start, play, and end stages
 = Text class
-	= displays number chars
-	- supports transformations and materials
-	- has stroke thickness parameter (as well as bullet)
+	+ displays number chars
+	+ supports transformations and materials
+	+ has stroke thickness parameter (as well as bullet)
+	+ is interactive
+	- supports some letter chars
+- stage variable
+	- start stage
+	= play stage
+	- end stage
 
 */
 
@@ -43,12 +49,13 @@ TODO <stages>: create start, play, and end stages
 #include "../include/obstacle.h"
 #include "../include/light.h"
 #include "../include/material.h"
+#include "../include/text.h"
 
 //namespaces
 using namespace std;
 
 //application variables
-#define GAME_NAME "Minuteman"
+const string GAME_NAME = "Minuteman";
 int dimsScreen[2];
 #define FOV 60
 int idleCount = 0;
@@ -58,10 +65,39 @@ int dtime = 0;
 int fpsInterval = 5000;
 int fpsIdeal = 60;
 
+#define STAGE_START 0
+#define STAGE_PLAY 1
+#define STAGE_END 2
+int stage = STAGE_START;
+
 Player *player = nullptr;
 vector<Bullet*>::iterator bit;
 vector<Obstacle*>::iterator oit;
 vector<Enemy*>::iterator eit;
+
+Text welcome("Welcome to " + GAME_NAME, 5, 5);
+Text score("0", 10, 10);
+Text gameover("GAME OVER", 5, 5);
+
+void setStage(int next) {
+	switch (next) {
+		case STAGE_START:
+		//TODO stage start
+		break;
+		
+		case STAGE_PLAY:
+		World::reset();
+		break;
+		
+		case STAGE_END:
+		//TODO stage end
+		break;
+		
+		default:
+		break;
+	}
+	stage = next;
+}
 
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -95,7 +131,6 @@ void display() {
 		}
 		else if (bptr->collidePerson(player)) {
 			player->die();
-			exit(EXIT_SUCCESS);
 			bit = World::bullets.erase(bit);
 			delete bptr;
 		}
@@ -157,8 +192,7 @@ void reshape(int w, int h) {
 	//implicity calls glutPostRedisplay()
 }
 
-void keydown (unsigned char key, int x , int y)
-{
+void keydown(unsigned char key, int x , int y) {
 	if (key == 'w' || key=='W') {
 		World::keyW = true;
 		World::keyWalk = true;
@@ -177,7 +211,7 @@ void keydown (unsigned char key, int x , int y)
 	}
 }
 
-void keyup (unsigned char key, int x , int y) {
+void keyup(unsigned char key, int x , int y) {
 	if (key == 'w' || key == 'W') {
 		World::keyW = false;
 	}
@@ -227,7 +261,7 @@ void initGLUT(int argc, char**argv) {
 	dimsScreen[0] = glutGet(GLUT_SCREEN_WIDTH);
 	dimsScreen[1] = glutGet(GLUT_SCREEN_HEIGHT);
 	glutInitWindowPosition(dimsScreen[0]/2 - World::dimsWindow[0]/2, dimsScreen[1]/2 - World::dimsWindow[1]/2);
-	glutCreateWindow(GAME_NAME);
+	glutCreateWindow(GAME_NAME.c_str());
 	glutSetCursor(GLUT_CURSOR_NONE);
 	
 	//glut event handlers
@@ -266,7 +300,7 @@ void initGL() {
 
 //program main
 int main(int argc, char** argv) {
-	cout << "<<" << GAME_NAME << ">>" << endl;
+	cout << "<-- " << GAME_NAME << " -->" << endl;
 	cout << "Computer Graphics final project: 3D top-down shooter" << endl;
 	cout << "Owen Gallagher, Brian Park" << endl;
 	
@@ -279,6 +313,8 @@ int main(int argc, char** argv) {
 	World::loadOSSpeed(OS_SPEED);
 	World::init();
 	player = World::player;
+	
+	setStage(STAGE_PLAY);
 	
 	cout << "init framerate clock" << endl;
 	atime = chrono::high_resolution_clock::now();

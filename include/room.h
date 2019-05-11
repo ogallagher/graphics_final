@@ -46,6 +46,7 @@ public:
 	};
 	
 	void display(int rx, int ry);
+	void clear();
 };
 
 #endif
