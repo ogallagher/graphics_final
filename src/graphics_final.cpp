@@ -88,6 +88,7 @@ void display() {
 		}
 		else if (bptr->collidePerson(player)) {
 			player->die();
+			exit(EXIT_SUCCESS);
 			bit = World::bullets.erase(bit);
 			delete bptr;
 		}
