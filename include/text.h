@@ -41,6 +41,7 @@ public:
 	
 	Text();
 	Text(std::string text, int sx, int sy);
+	void set(std::string text);
 	void display();
 	bool selected();
 };

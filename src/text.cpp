@@ -23,7 +23,7 @@ text.cpp
 #include "../include/world.h"
 #include "../include/bullet.h"
 
-const float Text::SPACING = 0.05;
+const float Text::SPACING = 0.1;
 
 //macros (final semicolon not included)
 #define TOP_ACROSS glVertex3f(-0.5+SPACING,0.5-SPACING,0); glVertex3f(0.5-SPACING,0.5-SPACING,0)
@@ -38,10 +38,10 @@ const float Text::SPACING = 0.05;
 #define RIGHT_DOWN glVertex3f(0.5-SPACING,0.5-SPACING,0); glVertex3f(0.5-SPACING,-0.5+SPACING,0)
 #define RIGHT_DOWN_TOP glVertex3f(0.5-SPACING,0.5-SPACING,0); glVertex3f(0.5-SPACING,0,0)
 #define RIGHT_DOWN_BOTTOM glVertex3f(0.5-SPACING,0,0); glVertex3f(0.5-SPACING,-0.5+SPACING,0)
-#define TOP_LEFT_DOWN glVertex3f(-0.5+SPACING,0.5-SPACING,0); glVertex3f(0.5-SPACING,0,0)
-#define TOP_RIGHT_DOWN glVertex3f(0.5-SPACING,0.5-SPACING,0); glVertex3f(-0.5+SPACING,0,0)
-#define BOTTOM_LEFT_DOWN glVertex3f(-0.5+SPACING,0,0); glVertex3f(0.5-SPACING,-0.5+SPACING,0)
-#define BOTTOM_RIGHT_DOWN glVertex3f(0.5-SPACING,0,0); glVertex3f(-0.5+SPACING,-0.5+SPACING,0)
+#define TOP_LEFT glVertex3f(-0.5+SPACING,0.5-SPACING,0); glVertex3f(0.5-SPACING,0,0)
+#define TOP_RIGHT glVertex3f(0.5-SPACING,0.5-SPACING,0); glVertex3f(-0.5+SPACING,0,0)
+#define BOTTOM_LEFT glVertex3f(-0.5+SPACING,0,0); glVertex3f(0.5-SPACING,-0.5+SPACING,0)
+#define BOTTOM_RIGHT glVertex3f(0.5-SPACING,0,0); glVertex3f(-0.5+SPACING,-0.5+SPACING,0)
 
 using namespace std;
 
@@ -54,8 +54,6 @@ Text::Text() {
 	w = 0;
 	h = 0;
 	
-	material.setColor(1.0,1.0,1.0); //white
-	material.setADS(1,0,0); //ambient
 	stroke = 4;
 }
 
@@ -69,6 +67,13 @@ Text::Text(string text, int sx, int sy) {
 	scale[0] = sx;
 	scale[1] = sy;
 	
+	lower();
+	measure();
+}
+
+void Text::set(string text) {
+	value = text;
+	length = value.length();
 	lower();
 	measure();
 }
@@ -150,7 +155,143 @@ void Text::drawChar(char c) {
 		CENTER_ACROSS;
 		break;
 		
-		default:
+		case 'a':
+		TOP_ACROSS;
+		CENTER_ACROSS;
+		LEFT_DOWN;
+		RIGHT_DOWN;
+		break;
+		
+		case 'c':
+		TOP_ACROSS;
+		BOTTOM_ACROSS;
+		LEFT_DOWN;
+		break;
+		
+		case 'd':
+		LEFT_DOWN;
+		TOP_LEFT;
+		BOTTOM_RIGHT;
+		break;
+		
+		case 'e':
+		TOP_ACROSS;
+		CENTER_ACROSS;
+		BOTTOM_ACROSS;
+		LEFT_DOWN;
+		break;
+		
+		case 'f':
+		TOP_ACROSS;
+		CENTER_ACROSS;
+		LEFT_DOWN;
+		break;
+		
+		case 'g':
+		TOP_ACROSS;
+		BOTTOM_ACROSS;
+		LEFT_DOWN;
+		RIGHT_DOWN_BOTTOM;
+		break;
+		
+		case 'h':
+		CENTER_ACROSS;
+		LEFT_DOWN;
+		RIGHT_DOWN;
+		break;
+		
+		case 'j':
+		BOTTOM_ACROSS;
+		RIGHT_DOWN;
+		LEFT_DOWN_BOTTOM;
+		break;
+		
+		case 'k':
+		LEFT_DOWN;
+		TOP_RIGHT;
+		BOTTOM_LEFT;
+		break;
+		
+		case 'l':
+		LEFT_DOWN;
+		BOTTOM_ACROSS;
+		break;
+		
+		case 'm':
+		TOP_ACROSS;
+		LEFT_DOWN;
+		CENTER_DOWN;
+		RIGHT_DOWN;
+		break;
+		
+		case 'n':
+		TOP_LEFT;
+		LEFT_DOWN;
+		RIGHT_DOWN;
+		break;
+		
+		case 'p':
+		TOP_ACROSS;
+		CENTER_ACROSS;
+		LEFT_DOWN;
+		RIGHT_DOWN_TOP;
+		break;
+		
+		case 'q':
+		TOP_ACROSS;
+		BOTTOM_ACROSS;
+		LEFT_DOWN;
+		RIGHT_DOWN;
+		BOTTOM_LEFT;
+		break;
+		
+		case 'r':
+		LEFT_DOWN;
+		CENTER_ACROSS;
+		TOP_LEFT;
+		BOTTOM_LEFT;
+		break;
+		
+		case 't':
+		TOP_ACROSS;
+		CENTER_DOWN;
+		break;
+		
+		case 'u':
+		LEFT_DOWN;
+		BOTTOM_ACROSS;
+		RIGHT_DOWN;
+		break;
+		
+		case 'v':
+		RIGHT_DOWN;
+		LEFT_DOWN_TOP;
+		BOTTOM_LEFT;
+		break;
+		
+		case 'w':
+		LEFT_DOWN;
+		BOTTOM_ACROSS;
+		RIGHT_DOWN;
+		CENTER_DOWN;
+		break;
+		
+		case 'x':
+		BOTTOM_LEFT;
+		BOTTOM_RIGHT;
+		break;
+		
+		case 'y':
+		RIGHT_DOWN;
+		TOP_LEFT;
+		break;
+		
+		case '>':
+		TOP_LEFT;
+		BOTTOM_RIGHT;
+		break;
+		
+		default: //whitespace
 		break;
 	}
 	
@@ -161,7 +302,7 @@ void Text::display() {
 	glPushMatrix();
 	
 	//transforms
-	glTranslatef(location.x - (w - scale[0]/2),location.y + (h - scale[1]/2),location.z);
+	glTranslatef(location.x - (w - scale[0]/2),World::CURSOR_HEIGHT,location.z);
 	glRotatef(-90,1,0,0);
 	glScalef(scale[0],scale[1],1);
 	

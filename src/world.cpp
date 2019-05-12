@@ -167,28 +167,30 @@ void World::loadRoom(int rx, int ry) {
 	obstacles.push_back(wallE);
 	room->obstacles.push_back(wallE);
 	
-	w = (dims[0] - Obstacle::DIM_MIN)/2;
-	for (int i=0; i < Room::PILLARS * getRandom(); i++) {
-		x = 2.0 * getRandom() * w - w;
-		y = 2.0 * getRandom() * w - w;
+	if (rx != 0 || ry != 0) {
+		w = (dims[0] - Obstacle::DIM_MIN)/2;
+		for (int i=0; i < Room::PILLARS * getRandom(); i++) {
+			x = 2.0 * getRandom() * w - w;
+			y = 2.0 * getRandom() * w - w;
 		
-		Obstacle *pillar = new Obstacle(rxptr,ryptr,x,y,Obstacle::DIM_MIN,Obstacle::DIM_MIN);
+			Obstacle *pillar = new Obstacle(rxptr,ryptr,x,y,Obstacle::DIM_MIN,Obstacle::DIM_MIN);
 		
-		obstacles.push_back(pillar);
-		room->obstacles.push_back(pillar);
-	}
+			obstacles.push_back(pillar);
+			room->obstacles.push_back(pillar);
+		}
 	
-	int rw = (dims[0] - Obstacle::DIM_MIN)/2;
-	for (int i=0; i < Room::BARRIERS * getRandom(); i++) {
-		x = 2.0 * getRandom() * rw - rw;
-		y = 2.0 * getRandom() * rw - rw;
-		w = Room::PILLAR_DIM_MAX * getRandom();
-		d = Room::PILLAR_DIM_MAX * getRandom();
+		int rw = (dims[0] - Obstacle::DIM_MIN)/2;
+		for (int i=0; i < Room::BARRIERS * getRandom(); i++) {
+			x = 2.0 * getRandom() * rw - rw;
+			y = 2.0 * getRandom() * rw - rw;
+			w = Room::PILLAR_DIM_MAX * getRandom();
+			d = Room::PILLAR_DIM_MAX * getRandom();
 		
-		Obstacle *barrier = new Obstacle(rxptr,ryptr,x,y,w,d);
+			Obstacle *barrier = new Obstacle(rxptr,ryptr,x,y,w,d);
 		
-		obstacles.push_back(barrier);
-		room->obstacles.push_back(barrier);
+			obstacles.push_back(barrier);
+			room->obstacles.push_back(barrier);
+		}
 	}
 	
 	//create initial enemies

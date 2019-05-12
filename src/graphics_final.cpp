@@ -75,8 +75,21 @@ vector<Bullet*>::iterator bit;
 vector<Obstacle*>::iterator oit;
 vector<Enemy*>::iterator eit;
 
-Text welcomeText("welcome to " + GAME_NAME, 5, 5);
-Text scoreText("123\n456\n789\n 0 ", 10, 10);
+const int INTRO_LEN = 7;
+string intro[INTRO_LEN] = {
+	"hit enter >",
+	"wasd keys to move\nmouse to shoot >",
+	"time is faster\nwhen you move >",
+	"your score is the number\nof enemies you kill >",
+	"if you get hit\nyou die >",
+	"you win when there\nare no enemies left >",
+	"but i highly\ndoubtyou can get\nthat far"
+};
+int introId = 0;
+Text titleText(GAME_NAME, 12, 18);
+Text welcomeText(intro[introId], 5, 10);
+Text startText("begin", 10, 15);
+Text scoreText("0", 10, 10);
 Text gameoverText("game over", 5, 5);
 
 void setStage(int next) {
@@ -104,6 +117,9 @@ void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	
+	if (stage == STAGE_START) {
+		
+	}
 	if (stage == STAGE_PLAY) {
 		World::tick();
 		World::camera->move();
@@ -111,10 +127,6 @@ void display() {
 		World::display();
 		World::updateCursor();
 		World::drawCursor();
-		
-		scoreText.location.set(&(player->location));
-		scoreText.location.z += 10;
-		scoreText.display();
 	
 		player->keyControl();
 		player->mouseControl();
@@ -122,6 +134,16 @@ void display() {
 		player->move();
 		player->collideObstacles(&World::obstacles);
 		player->display();
+		
+		titleText.location.set(&(player->location));
+		titleText.location.y += 10;
+		titleText.location.z -= 15;
+		titleText.display();
+		
+		welcomeText.location.set(&(player->location));
+		welcomeText.location.y += 10;
+		welcomeText.location.z += 10;
+		welcomeText.display();
 	
 		World::loadMaterial(&Bullet::material);
 		glLineWidth(Bullet::stroke);
@@ -215,6 +237,12 @@ void keydown(unsigned char key, int x , int y) {
 	else if (key == 'a' || key=='A') {
 		World::keyA = true;
 		World::keyWalk = true;
+	}
+	else if (key == '\n' || key == '\r') {
+		if (stage == STAGE_PLAY) {
+			introId = (introId + 1) % INTRO_LEN;
+			welcomeText.set(intro[introId]);
+		}
 	}
 }
 
@@ -320,6 +348,10 @@ int main(int argc, char** argv) {
 	World::loadOSSpeed(OS_SPEED);
 	World::init();
 	player = World::player;
+	
+	cout << "init text" << endl;
+	titleText.material.setColor(0.4,0,1);
+	startText.material.setColor(0.3,1,0.2);
 	
 	setStage(STAGE_PLAY);
 	
