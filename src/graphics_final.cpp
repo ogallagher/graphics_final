@@ -65,11 +65,6 @@ int dtime = 0;
 int fpsInterval = 5000;
 int fpsIdeal = 60;
 
-#define STAGE_START 0
-#define STAGE_PLAY 1
-#define STAGE_END 2
-int stage = STAGE_START;
-
 Player *player = nullptr;
 vector<Bullet*>::iterator bit;
 vector<Obstacle*>::iterator oit;
@@ -85,21 +80,22 @@ string intro[INTRO_LEN] = {
 	"you win when there\nare no enemies left >",
 	"but i highly\ndoubtyou can get\nthat far"
 };
-int introId = 0;
+int introProgress = 0;
 Text titleText(GAME_NAME, 12, 18);
-Text welcomeText(intro[introId], 5, 10);
+Text welcomeText(intro[introProgress], 5, 10);
 Text startText("begin", 10, 15);
 Text scoreText("0", 10, 10);
-Text gameoverText("game over", 5, 5);
+Text gameoverText("game over", 10, 15);
 
 void setStage(int next) {
 	switch (next) {
 		case STAGE_START:
-		//TODO stage start
-		break;
+		introProgress = 0;
 		
 		case STAGE_PLAY:
 		World::reset();
+		player->score = 0;
+		scoreText.set("0");
 		break;
 		
 		case STAGE_END:
@@ -110,87 +106,128 @@ void setStage(int next) {
 		break;
 	}
 	
-	stage = next;
+	World::stage = next;
 }
 
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	
-	if (stage == STAGE_START) {
-		
-	}
-	if (stage == STAGE_PLAY) {
-		World::tick();
-		World::camera->move();
-		World::light->move();
-		World::display();
-		World::updateCursor();
-		World::drawCursor();
+	World::tick();
+	World::camera->move();
+	World::light->move();
+	World::display();
+	World::updateCursor();
+	World::drawCursor();
 	
-		player->keyControl();
-		player->mouseControl();
-		player->shootControl();
-		player->move();
-		player->collideObstacles(&World::obstacles);
-		player->display();
-		
+	player->keyControl();
+	player->mouseControl();
+	player->shootControl();
+	player->move();
+	player->collideObstacles(&World::obstacles);
+	player->display();
+	
+	World::loadMaterial(&Bullet::material);
+	Bullet *bptr = nullptr;
+	for (bit=World::bullets.begin(); bit!=World::bullets.end(); /*conditional increment*/) {
+		bptr = *bit;
+		bptr->move();
+	
+		if (bptr->collideObstacles(&World::obstacles)) {
+			bit = World::bullets.erase(bit);
+			delete bptr;
+		}
+		else if (bptr->collideEnemies(&World::enemies)) {
+			if (bptr->good) {
+				scoreText.set(to_string(player->score)); //update score text
+			}
+			
+			bit = World::bullets.erase(bit);
+			delete bptr;
+		}
+		else if (bptr->collidePerson(player)) {
+			player->die();
+			
+			bit = World::bullets.erase(bit);
+			delete bptr;
+			
+			setStage(STAGE_END);
+		}
+		else {
+			bptr->display();
+			bit++;
+		}		
+	}
+	
+	if (World::stage == STAGE_START) {
 		titleText.location.set(&(player->location));
-		titleText.location.y += 10;
 		titleText.location.z -= 15;
 		titleText.display();
 		
-		welcomeText.location.set(&(player->location));
-		welcomeText.location.y += 10;
-		welcomeText.location.z += 10;
-		welcomeText.display();
-	
-		World::loadMaterial(&Bullet::material);
-		glLineWidth(Bullet::stroke);
-		Bullet *bptr = nullptr;
-		for (bit=World::bullets.begin(); bit!=World::bullets.end(); /*conditional increment*/) {
-			bptr = *bit;
-			bptr->move();
-		
-			if (bptr->collideObstacles(&World::obstacles) || 
-				bptr->collideEnemies(&World::enemies)) {
-				bit = World::bullets.erase(bit);
-				delete bptr;
-			}
-			else if (bptr->collidePerson(player)) {
-				player->die();
-				bit = World::bullets.erase(bit);
-				delete bptr;
+		if (introProgress < INTRO_LEN) {
+			welcomeText.location.set(&(player->location));
+			welcomeText.location.z += 10;
+			welcomeText.display();
+		}
+		else {
+			startText.location.set(&(player->location));
+			startText.location.z += 15;
+			
+			if (startText.selected()) { //checks dist to cursor
+				setStage(STAGE_PLAY);
 			}
 			else {
-				bptr->display();
-				bit++;
-			}		
-		}
-	
-		//measure framerate and update World::speed
-		idleCount++;
-		btime = chrono::high_resolution_clock::now();
-		dtime += chrono::duration_cast<chrono::milliseconds>(btime - atime).count();
-		atime = btime;
-	
-		if (dtime >= fpsInterval) {
-			float fps = (float)idleCount*1000/dtime;
-			float dfps = (fps-fpsIdeal)/fpsIdeal;
-			float adfps = abs(dfps);
-			if (adfps > 0.05) {
-				if (adfps < 0.5) {
-					World::speed *= 1-dfps;
-					cout << "World::speed = " << World::speed << endl;
-				}
-				else {
-					cout << "fps measurement ignored: " << fps << endl;
-				}
+				startText.display();
 			}
-		
-			dtime = 0;
-			idleCount = 0;
 		}
+	}
+	else if (World::stage == STAGE_PLAY) {
+		scoreText.location.set(&(player->location));
+		scoreText.location.y += 30;
+		scoreText.display();
+	}
+	else if (World::stage == STAGE_END) {
+		gameoverText.location.set(&(player->location));
+		gameoverText.location.z -= 15;
+		gameoverText.display();
+		
+		scoreText.location.set(&(player->location));
+		scoreText.location.y += 30;
+		scoreText.display();
+		
+		startText.location.set(&(player->location));
+		startText.location.z += 15;
+		
+		if (startText.selected()) {
+			setStage(STAGE_PLAY);
+		}
+		else {
+			startText.display();
+		}
+	}
+	
+	//measure framerate and update World::speed
+	idleCount++;
+	btime = chrono::high_resolution_clock::now();
+	dtime += chrono::duration_cast<chrono::milliseconds>(btime - atime).count();
+	atime = btime;
+
+	if (dtime >= fpsInterval) {
+		float fps = (float)idleCount*1000/dtime;
+		float dfps = (fps-fpsIdeal)/fpsIdeal;
+		float adfps = abs(dfps);
+		if (adfps > 0.05) {
+			if (adfps < 0.5) {
+				World::speed *= 1-dfps;
+				cout << "World::speed = " << World::speed << endl;
+			}
+			else {
+				cout << "fps measurement ignored: " << fps << endl;
+			}
+		}
+	
+		dtime = 0;
+		idleCount = 0;
 	}
 	
 	glutSwapBuffers();
@@ -239,9 +276,13 @@ void keydown(unsigned char key, int x , int y) {
 		World::keyWalk = true;
 	}
 	else if (key == '\n' || key == '\r') {
-		if (stage == STAGE_PLAY) {
-			introId = (introId + 1) % INTRO_LEN;
-			welcomeText.set(intro[introId]);
+		if (World::stage == STAGE_START) {
+			if (introProgress < INTRO_LEN-1) {
+				welcomeText.set(intro[++introProgress]);
+			}
+			else {
+				introProgress = INTRO_LEN;
+			}
 		}
 	}
 }
@@ -327,6 +368,9 @@ void initGL() {
 	//background color
 	glClearColor(0.0,0.1,0.1,1);
 	
+	//stroke width
+	glLineWidth(2);
+	
 	//lighting
     glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
@@ -351,9 +395,16 @@ int main(int argc, char** argv) {
 	
 	cout << "init text" << endl;
 	titleText.material.setColor(0.4,0,1);
-	startText.material.setColor(0.3,1,0.2);
 	
-	setStage(STAGE_PLAY);
+	startText.material.setColor(0.3,1,0.2);
+	startText.materialHovered.setColor(1,1,1);
+	
+	gameoverText.material.setColor(1,0,0);
+	
+	scoreText.horizontal = false;
+	scoreText.material.setColor(0.8,0.7,0);
+		
+	setStage(STAGE_START);
 	
 	cout << "init framerate clock" << endl;
 	atime = chrono::high_resolution_clock::now();

@@ -36,6 +36,10 @@ class Material;
 class Room;
 class Player;
 
+#define STAGE_START 0
+#define STAGE_PLAY 1
+#define STAGE_END 2
+
 //namespaces
 using namespace std;
 
@@ -58,6 +62,7 @@ public:
 	
 	static int dimsWindow[2];
 	static int dimsFOV[3];
+	static int stage;
 	static double t; //world clock
 	static double speed; //determines time slow-down and speed-up in the game
 	static double fastSpeed; //game speed when user is moving

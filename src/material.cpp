@@ -57,3 +57,15 @@ void Material::setADS(float a, float d, float s) {
 	spec = s;
 	update();
 }
+
+void Material::set(Material *clone) {
+	color[0] = clone->color[0];
+	color[1] = clone->color[1];
+	color[2] = clone->color[2];
+	alpha = clone->alpha;
+	amb=clone->amb;
+	dif=clone->dif;
+	spec=clone->spec;
+	
+	update(); //updates opengl values
+}

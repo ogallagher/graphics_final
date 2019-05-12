@@ -30,6 +30,7 @@ public:
 	void setColor(float r, float g, float b);
 	void setAlpha(float a);
 	void setADS(float a, float d, float s);
+	void set(Material *);
 };
 
 #endif

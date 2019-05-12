@@ -27,17 +27,20 @@ private:
 	
 	static void drawChar(char); //draws a centered character in a 1x1 square
 	
+	bool hovered;
+	
 	void lower(); //converts to lower case
 	void measure(); //sets dims
 	
 public:
 	Material material;
-	int stroke;
+	Material materialHovered;
 	std::string value;
 	int length;
 	float scale[2];
 	ovector location;
 	int w,h; //dimensions halved
+	bool horizontal;
 	
 	Text();
 	Text(std::string text, int sx, int sy);

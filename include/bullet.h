@@ -31,7 +31,6 @@ public:
 	static int dims[3];
 	static float speed;
 	static Material material;
-	static int stroke;
 	
 	ovector location;
 	ovector past; //location from one frame ago

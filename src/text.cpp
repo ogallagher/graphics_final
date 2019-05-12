@@ -47,25 +47,25 @@ using namespace std;
 
 Text::Text() {
 	length = 0;
-	
 	scale[0] = 1;
 	scale[1] = 1;
-	
 	w = 0;
 	h = 0;
-	
-	stroke = 4;
+	horizontal = true;
+	hovered = false;
 }
 
 Text::Text(string text, int sx, int sy) {
-	Text();
 	material.setColor(1.0,1.0,1.0); //white
 	material.setADS(1,0,0); //ambient
+	materialHovered.set(&material);
 	
 	value = text;
 	length = value.length();
 	scale[0] = sx;
 	scale[1] = sy;
+	horizontal = true;
+	hovered = false;
 	
 	lower();
 	measure();
@@ -302,14 +302,23 @@ void Text::display() {
 	glPushMatrix();
 	
 	//transforms
-	glTranslatef(location.x - (w - scale[0]/2),World::CURSOR_HEIGHT,location.z);
-	glRotatef(-90,1,0,0);
+	if (horizontal) {
+		glTranslatef(location.x - (w - scale[0]/2),World::CURSOR_HEIGHT,location.z);
+		glRotatef(-90,1,0,0);
+	}
+	else {
+		glTranslatef(location.x - (w - scale[0]/2),location.y,location.z);
+	}
 	glScalef(scale[0],scale[1],1);
 	
 	//material
-	World::loadMaterial(&material);
-	glLineWidth(stroke);
-	
+	if (hovered) {
+		World::loadMaterial(&materialHovered);
+	}
+	else {
+		World::loadMaterial(&material);
+	}
+		
 	//characters
 	char c;
 	int x=0;
@@ -331,21 +340,18 @@ void Text::display() {
 }
 
 bool Text::selected() {
-	if (World::clicked) {
-		//find text-World::cursor distance (assuming they're on the same plane)
-		ovector d(&World::cursor);
-		d.sub(&location);
-		
-		if (d.x > -w && d.x < w && d.z > -h && d.z < h) {
-			return true;
-		}
-		else {
-			return false;
-		}
+	//find text-World::cursor distance (assuming they're on the same plane)
+	ovector d(&World::cursor);
+	d.sub(&location);
+	
+	if (d.x > -w && d.x < w && d.z > -h && d.z < h) {
+		hovered = true;
 	}
 	else {
-		return false;
+		hovered = false;
 	}
+	
+	return (World::clicked && hovered);
 }
 
 void Text::lower() {
@@ -364,7 +370,7 @@ void Text::lower() {
 void Text::measure() {
 	char c;
 	w=0;
-	h=0;
+	h=1;
 	int r=0;
 	
 	for (int i=0; i<length; i++) {

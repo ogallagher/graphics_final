@@ -29,35 +29,37 @@ void Room::display(int rx, int ry) {
 		(*oit)->display();			
 	}
 	
-	//enemies
-	Enemy *e;
-	bool active = false;
-	int rdx = id[0] - World::roomIndex(World::player->roomX);
-	int rdy = id[1] - World::roomIndex(World::player->roomY);
-	if ( rdx == 0 && rdy == 0 ) {
-		active = true;
-	}
-	for (eit = enemies.begin(); eit != enemies.end(); eit++) {
-		e = *eit;
+	if (World::stage == STAGE_PLAY) {
+		//enemies
+		Enemy *e;
+		bool active = false;
+		int rdx = id[0] - World::roomIndex(World::player->roomX);
+		int rdy = id[1] - World::roomIndex(World::player->roomY);
+		if ( rdx == 0 && rdy == 0 ) {
+			active = true;
+		}
+		for (eit = enemies.begin(); eit != enemies.end(); eit++) {
+			e = *eit;
 		
-		if (active) {
-			e->followControl();
-			e->shootControl();
+			if (active) {
+				e->followControl();
+				e->shootControl();
 			
-			if (e->collideBounds() || 
-				e->collideObstacles(&obstacles)) {
-				e->stay();
+				if (e->collideBounds() || 
+					e->collideObstacles(&obstacles)) {
+					e->stay();
+				}
+				else {
+					e->move();
+				}
 			}
 			else {
-				e->move();
+				e->stay();
 			}
-		}
-		else {
-			e->stay();
-		}
 		
-		e->display();		
-	}	
+			e->display();		
+		}	
+	}
 }
 
 void Room::clear() {

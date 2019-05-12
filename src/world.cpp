@@ -25,6 +25,7 @@ world.cpp
 int World::dimsWindow[2] = {600,600};
 int World::dimsFOV[3] = {600,600,600};
 int World::dims[3] = {200,10,200};
+int World::stage = STAGE_START;
 double World::t = 0;
 double World::speed = 1;
 double World::fastSpeed = 1;
