@@ -21,20 +21,27 @@ text.cpp
 //local includes
 #include "../include/text.h"
 #include "../include/world.h"
+#include "../include/bullet.h"
+
+const float Text::SPACING = 0.05;
 
 //macros (final semicolon not included)
-#define TOP_ACROSS glVertex3f(-0.5,0.5,0); glVertex3f(0.5,0.5,0)
-#define CENTER_ACROSS glVertex3f(-0.5,0,0); glVertex3f(0.5,0,0)
-#define BOTTOM_ACROSS glVertex3f(-0.5,-0.5,0); glVertex3f(0.5,-0.5,0)
-#define LEFT_DOWN glVertex3f(-0.5,0.5,0); glVertex3f(-0.5,-0.5,0)
-#define LEFT_DOWN_TOP glVertex3f(-0.5,0.5,0); glVertex3f(-0.5,0,0)
-#define LEFT_DOWN_BOTTOM glVertex3f(-0.5,0,0); glVertex3f(-0.5,-0.5,0)
-#define CENTER_DOWN glVertex3f(0,0.5,0); glVertex3f(0,-0.5,0)
-#define CENTER_DOWN_TOP glVertex3f(0,0.5,0); glVertex3f(0,0,0)
-#define CENTER_DOWN_BOTTOM glVertex3f(0,0,0); glVertex3f(0,-0.5,0)
-#define RIGHT_DOWN glVertex3f(0.5,0.5,0); glVertex3f(0.5,-0.5,0)
-#define RIGHT_DOWN_TOP glVertex3f(0.5,0.5,0); glVertex3f(0.5,0,0)
-#define RIGHT_DOWN_BOTTOM glVertex3f(0.5,0,0); glVertex3f(0.5,-0.5,0)
+#define TOP_ACROSS glVertex3f(-0.5+SPACING,0.5-SPACING,0); glVertex3f(0.5-SPACING,0.5-SPACING,0)
+#define CENTER_ACROSS glVertex3f(-0.5+SPACING,0,0); glVertex3f(0.5-SPACING,0,0)
+#define BOTTOM_ACROSS glVertex3f(-0.5+SPACING,-0.5+SPACING,0); glVertex3f(0.5-SPACING,-0.5+SPACING,0)
+#define LEFT_DOWN glVertex3f(-0.5+SPACING,0.5-SPACING,0); glVertex3f(-0.5+SPACING,-0.5+SPACING,0)
+#define LEFT_DOWN_TOP glVertex3f(-0.5+SPACING,0.5-SPACING,0); glVertex3f(-0.5+SPACING,0,0)
+#define LEFT_DOWN_BOTTOM glVertex3f(-0.5+SPACING,0,0); glVertex3f(-0.5+SPACING,-0.5+SPACING,0)
+#define CENTER_DOWN glVertex3f(0,0.5-SPACING,0); glVertex3f(0,-0.5+SPACING,0)
+#define CENTER_DOWN_TOP glVertex3f(0,0.5-SPACING,0); glVertex3f(0,0,0)
+#define CENTER_DOWN_BOTTOM glVertex3f(0,0,0); glVertex3f(0,-0.5+SPACING,0)
+#define RIGHT_DOWN glVertex3f(0.5-SPACING,0.5-SPACING,0); glVertex3f(0.5-SPACING,-0.5+SPACING,0)
+#define RIGHT_DOWN_TOP glVertex3f(0.5-SPACING,0.5-SPACING,0); glVertex3f(0.5-SPACING,0,0)
+#define RIGHT_DOWN_BOTTOM glVertex3f(0.5-SPACING,0,0); glVertex3f(0.5-SPACING,-0.5+SPACING,0)
+#define TOP_LEFT_DOWN glVertex3f(-0.5+SPACING,0.5-SPACING,0); glVertex3f(0.5-SPACING,0,0)
+#define TOP_RIGHT_DOWN glVertex3f(0.5-SPACING,0.5-SPACING,0); glVertex3f(-0.5+SPACING,0,0)
+#define BOTTOM_LEFT_DOWN glVertex3f(-0.5+SPACING,0,0); glVertex3f(0.5-SPACING,-0.5+SPACING,0)
+#define BOTTOM_RIGHT_DOWN glVertex3f(0.5-SPACING,0,0); glVertex3f(-0.5+SPACING,-0.5+SPACING,0)
 
 using namespace std;
 
@@ -47,13 +54,15 @@ Text::Text() {
 	w = 0;
 	h = 0;
 	
-	material.setColor(1,1,0); //white
+	material.setColor(1.0,1.0,1.0); //white
 	material.setADS(1,0,0); //ambient
 	stroke = 4;
 }
 
 Text::Text(string text, int sx, int sy) {
 	Text();
+	material.setColor(1.0,1.0,1.0); //white
+	material.setADS(1,0,0); //ambient
 	
 	value = text;
 	length = value.length();
@@ -82,6 +91,7 @@ void Text::drawChar(char c) {
 		break;
 		
 		case '2':
+		case 'z':
 		TOP_ACROSS;
 		CENTER_ACROSS;
 		BOTTOM_ACROSS;
@@ -103,6 +113,7 @@ void Text::drawChar(char c) {
 		break;
 		
 		case '5':
+		case 's':
 		TOP_ACROSS;
 		CENTER_ACROSS;
 		BOTTOM_ACROSS;
@@ -150,9 +161,9 @@ void Text::display() {
 	glPushMatrix();
 	
 	//transforms
-	glTranslatef(location.x,location.y,location.z);
+	glTranslatef(location.x - (w - scale[0]/2),location.y + (h - scale[1]/2),location.z);
+	glRotatef(-90,1,0,0);
 	glScalef(scale[0],scale[1],1);
-	//glRotatef(90,1,0,0);
 	
 	//material
 	World::loadMaterial(&material);
@@ -160,16 +171,18 @@ void Text::display() {
 	
 	//characters
 	char c;
+	int x=0;
 	for (int i=0; i<length; i++) {
-		glTranslatef(1,0,0);
-		
 		c = value[i];
 		
 		if (c == '\n') {
-			glTranslatef(0,-1,0);
+			glTranslatef(-x,-1,0);
+			x = 0;
 		}
 		else {
 			drawChar(c);
+			glTranslatef(1,0,0);
+			x += 1;
 		}
 	}
 	

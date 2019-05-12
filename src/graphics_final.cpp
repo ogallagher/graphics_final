@@ -75,9 +75,9 @@ vector<Bullet*>::iterator bit;
 vector<Obstacle*>::iterator oit;
 vector<Enemy*>::iterator eit;
 
-Text welcomeText("Welcome to " + GAME_NAME, 5, 5);
-Text scoreText("0123456789", 10, 10);
-Text gameoverText("GAME OVER", 5, 5);
+Text welcomeText("welcome to " + GAME_NAME, 5, 5);
+Text scoreText("123\n456\n789\n 0 ", 10, 10);
+Text gameoverText("game over", 5, 5);
 
 void setStage(int next) {
 	switch (next) {
@@ -113,7 +113,7 @@ void display() {
 		World::drawCursor();
 		
 		scoreText.location.set(&(player->location));
-		scoreText.location.y = World::CURSOR_HEIGHT + scoreText.scale[1];
+		scoreText.location.z += 10;
 		scoreText.display();
 	
 		player->keyControl();

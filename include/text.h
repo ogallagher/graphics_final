@@ -23,9 +23,10 @@ transforms, material properties, and interactivity;
 
 class Text {
 private:
+	static const float SPACING;
+	
 	static void drawChar(char); //draws a centered character in a 1x1 square
 	
-	int w,h; //dimensions halved
 	void lower(); //converts to lower case
 	void measure(); //sets dims
 	
@@ -36,6 +37,7 @@ public:
 	int length;
 	float scale[2];
 	ovector location;
+	int w,h; //dimensions halved
 	
 	Text();
 	Text(std::string text, int sx, int sy);

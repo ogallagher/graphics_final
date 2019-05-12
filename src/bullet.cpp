@@ -138,12 +138,23 @@ bool Bullet::collidePerson(Person *person) {
 					}
 				}
 				else { //now=8
-					//TODO from right
 					if (c.z > od) { //past=2,3
-						return false;
+						if (c.x < -ow) { //past = 3
+							return true;
+						}
+						else { //past = 2
+							//TODO top left corner
+							return false;
+						}
 					}
 					else if (c.z < -od) { //past=5,6
-						return false;
+						if (c.x < -ow) { //past = 5
+							return true;
+						}
+						else {
+							//TODO bottom left corner
+							return false;
+						}
 					}
 					else { //past=4
 						return true; //hit left from right
@@ -173,12 +184,23 @@ bool Bullet::collidePerson(Person *person) {
 					}
 				}
 				else { //now=4
-					//TODO from left
 					if (c.z > od) { //past=1,2
-						return false;
+						if (c.x > ow) { //past=1
+							return true;
+						}
+						else { //past=2
+							//TODO top right corner
+							return false;
+						}
 					}
 					else if (c.z < -od) { //past=6,7
-						return false;
+						if (c.x > ow) { //past=7
+							return true;
+						}
+						else { //past=6
+							//TODO bottom right corner
+							return false;
+						}
 					}
 					else { //past=8
 						return true; //hit right from left
@@ -195,12 +217,23 @@ bool Bullet::collidePerson(Person *person) {
 					return false;
 				}
 				else {
-					//TODO from bottom
-					if (c.x > ow) { //past=4,5
-						return false;
+					if (c.x > ow) { //past=7,8
+						if (c.z < -od) { //past=7
+							return true;
+						}
+						else { //past=8
+							//TODO top left corner
+							return false;
+						}
 					}
-					else if (c.x < -ow) { //past=7,8
-						return false;
+					else if (c.x < -ow) { //past=4,5
+						if (c.z < -od) { //past=5
+							return true;
+						}
+						else { //past=4
+							//TODO top right corner
+							return false;
+						}
 					}
 					else { //past=6
 						return true; //hit top from bottom
@@ -212,12 +245,23 @@ bool Bullet::collidePerson(Person *person) {
 					return false;
 				}
 				else {
-					//TODO from top
-					if (c.x > ow) { //past=3,4
-						return false;
+					if (c.x > ow) { //past=1,8
+						if (c.z > od) { //past=1
+							return true;
+						}
+						else { //past=8
+							//TODO bottom left corner
+							return false;
+						}
 					}
-					else if (c.x < -ow) { //past=1,8
-						return false;
+					else if (c.x < -ow) { //past=3,4
+						if (c.z > od) { //past=3
+							return true;
+						}
+						else { //past=4
+							//TODO bottom right corner
+							return false;
+						}
 					}
 					else { //past=2
 						return true; //hit bottom from top
