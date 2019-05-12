@@ -10,10 +10,10 @@ Our project is a top-down view 3d shooting game with mechanics inspired by the g
 - glut input callbacks for mouse and keyboard events
 - sound effects
 - compound transformations for constructing complex 3d objects out of primitives
-- alpha blending for atmospheric fog at distance
-- basic 3d collision detection by ¿line/prism intersection?
+- basic 3d collision detection
 - material properties
 - lighting
+- custom text rendering
 
 # Compilation
 It's compatible on both Windows and Mac OS. For Windows, the Visual Studio project is included, and the executable should be located at `bin/graphics_final.exe`. For Mac, the `compile_mac.sh` script will put the executable at `bin/graphics_final_mac`.
