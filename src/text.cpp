@@ -39,7 +39,6 @@ text.cpp
 using namespace std;
 
 Text::Text() {
-	value = "";
 	length = 0;
 	
 	scale[0] = 1;
@@ -48,7 +47,7 @@ Text::Text() {
 	w = 0;
 	h = 0;
 	
-	material.setColor(1,1,1); //white
+	material.setColor(1,1,0); //white
 	material.setADS(1,0,0); //ambient
 	stroke = 4;
 }
@@ -69,40 +68,17 @@ void Text::drawChar(char c) {
 	glBegin(GL_LINES);
 	
 	switch (c) {
+		case '0':
+		case 'o':
+		TOP_ACROSS;
+		BOTTOM_ACROSS;
+		LEFT_DOWN;
+		RIGHT_DOWN;
+		break;
+		
 		case '1':
 		case 'i':
 		CENTER_DOWN;
-		//continue
-		
-		case '4':
-		CENTER_ACROSS;
-		LEFT_DOWN_TOP;
-		break;
-		
-		case '7':
-		TOP_ACROSS;
-		RIGHT_DOWN;
-		//continue
-		
-		case '0':
-		case 'o':
-		LEFT_DOWN;
-		BOTTOM_ACROSS;
-		//continue
-		
-		case '8':
-		case 'b':
-		CENTER_ACROSS;
-		break;
-		
-		case '3':
-		CENTER_ACROSS;
-		BOTTOM_ACROSS;
-		break;
-		
-		case '9':
-		LEFT_DOWN_TOP;
-		CENTER_ACROSS;
 		break;
 		
 		case '2':
@@ -111,6 +87,19 @@ void Text::drawChar(char c) {
 		BOTTOM_ACROSS;
 		RIGHT_DOWN_TOP;
 		LEFT_DOWN_BOTTOM;
+		break;
+		
+		case '3':
+		TOP_ACROSS;
+		CENTER_ACROSS;
+		BOTTOM_ACROSS;
+		RIGHT_DOWN;
+		break;
+		
+		case '4':
+		RIGHT_DOWN;
+		LEFT_DOWN_TOP;
+		CENTER_ACROSS;
 		break;
 		
 		case '5':
@@ -129,6 +118,27 @@ void Text::drawChar(char c) {
 		RIGHT_DOWN_BOTTOM;
 		break;
 		
+		case '7':
+		TOP_ACROSS;
+		RIGHT_DOWN;
+		break;
+		
+		case '8':
+		case 'b':
+		TOP_ACROSS;
+		CENTER_ACROSS;
+		BOTTOM_ACROSS;
+		LEFT_DOWN;
+		RIGHT_DOWN;
+		break;
+		
+		case '9':
+		TOP_ACROSS;
+		RIGHT_DOWN;
+		LEFT_DOWN_TOP;
+		CENTER_ACROSS;
+		break;
+		
 		default:
 		break;
 	}
@@ -142,7 +152,7 @@ void Text::display() {
 	//transforms
 	glTranslatef(location.x,location.y,location.z);
 	glScalef(scale[0],scale[1],1);
-	glRotatef(90,1,0,0);
+	//glRotatef(90,1,0,0);
 	
 	//material
 	World::loadMaterial(&material);
@@ -150,20 +160,16 @@ void Text::display() {
 	
 	//characters
 	char c;
-	int y=0;
-	int x=0;
 	for (int i=0; i<length; i++) {
-		glTranslatef(x,y,0);
+		glTranslatef(1,0,0);
 		
 		c = value[i];
 		
 		if (c == '\n') {
-			y++;
-			x=0;
+			glTranslatef(0,-1,0);
 		}
 		else {
 			drawChar(c);
-			x++;
 		}
 	}
 	
@@ -196,6 +202,8 @@ void Text::lower() {
 		if (c >= 'A' && c <= 'Z') {
 			c += 32;
 		}
+		
+		value[i] = c;
 	}
 }
 
@@ -216,7 +224,6 @@ void Text::measure() {
 			r=0;
 		}
 		else {
-			drawChar(c);
 			r++;
 		}
 	}

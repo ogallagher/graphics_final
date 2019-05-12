@@ -75,9 +75,9 @@ vector<Bullet*>::iterator bit;
 vector<Obstacle*>::iterator oit;
 vector<Enemy*>::iterator eit;
 
-Text welcome("Welcome to " + GAME_NAME, 5, 5);
-Text score("0", 10, 10);
-Text gameover("GAME OVER", 5, 5);
+Text welcomeText("Welcome to " + GAME_NAME, 5, 5);
+Text scoreText("0123456789", 10, 10);
+Text gameoverText("GAME OVER", 5, 5);
 
 void setStage(int next) {
 	switch (next) {
@@ -96,6 +96,7 @@ void setStage(int next) {
 		default:
 		break;
 	}
+	
 	stage = next;
 }
 
@@ -103,65 +104,71 @@ void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	
-	World::tick();
-	World::camera->move();
-	World::light->move();
-	World::display();
-	World::updateCursor();
-	World::drawCursor();
-	
-	player->keyControl();
-	player->mouseControl();
-	player->shootControl();
-	player->move();
-	player->collideObstacles(&World::obstacles);
-	player->display();
-	
-	World::loadMaterial(&Bullet::material);
-	glLineWidth(Bullet::stroke);
-	Bullet *bptr = nullptr;
-	for (bit=World::bullets.begin(); bit!=World::bullets.end(); /*conditional increment*/) {
-		bptr = *bit;
-		bptr->move();
+	if (stage == STAGE_PLAY) {
+		World::tick();
+		World::camera->move();
+		World::light->move();
+		World::display();
+		World::updateCursor();
+		World::drawCursor();
 		
-		if (bptr->collideObstacles(&World::obstacles) || 
-			bptr->collideEnemies(&World::enemies)) {
-			bit = World::bullets.erase(bit);
-			delete bptr;
-		}
-		else if (bptr->collidePerson(player)) {
-			player->die();
-			bit = World::bullets.erase(bit);
-			delete bptr;
-		}
-		else {
-			bptr->display();
-			bit++;
-		}		
-	}
+		scoreText.location.set(&(player->location));
+		scoreText.location.y = World::CURSOR_HEIGHT + scoreText.scale[1];
+		scoreText.display();
 	
-	//measure framerate and update World::speed
-	idleCount++;
-	btime = chrono::high_resolution_clock::now();
-	dtime += chrono::duration_cast<chrono::milliseconds>(btime - atime).count();
-	atime = btime;
+		player->keyControl();
+		player->mouseControl();
+		player->shootControl();
+		player->move();
+		player->collideObstacles(&World::obstacles);
+		player->display();
 	
-	if (dtime >= fpsInterval) {
-		float fps = (float)idleCount*1000/dtime;
-		float dfps = (fps-fpsIdeal)/fpsIdeal;
-		float adfps = abs(dfps);
-		if (adfps > 0.05) {
-			if (adfps < 0.5) {
-				World::speed *= 1-dfps;
-				cout << "World::speed = " << World::speed << endl;
+		World::loadMaterial(&Bullet::material);
+		glLineWidth(Bullet::stroke);
+		Bullet *bptr = nullptr;
+		for (bit=World::bullets.begin(); bit!=World::bullets.end(); /*conditional increment*/) {
+			bptr = *bit;
+			bptr->move();
+		
+			if (bptr->collideObstacles(&World::obstacles) || 
+				bptr->collideEnemies(&World::enemies)) {
+				bit = World::bullets.erase(bit);
+				delete bptr;
+			}
+			else if (bptr->collidePerson(player)) {
+				player->die();
+				bit = World::bullets.erase(bit);
+				delete bptr;
 			}
 			else {
-				cout << "fps measurement ignored: " << fps << endl;
-			}
+				bptr->display();
+				bit++;
+			}		
 		}
+	
+		//measure framerate and update World::speed
+		idleCount++;
+		btime = chrono::high_resolution_clock::now();
+		dtime += chrono::duration_cast<chrono::milliseconds>(btime - atime).count();
+		atime = btime;
+	
+		if (dtime >= fpsInterval) {
+			float fps = (float)idleCount*1000/dtime;
+			float dfps = (fps-fpsIdeal)/fpsIdeal;
+			float adfps = abs(dfps);
+			if (adfps > 0.05) {
+				if (adfps < 0.5) {
+					World::speed *= 1-dfps;
+					cout << "World::speed = " << World::speed << endl;
+				}
+				else {
+					cout << "fps measurement ignored: " << fps << endl;
+				}
+			}
 		
-		dtime = 0;
-		idleCount = 0;
+			dtime = 0;
+			idleCount = 0;
+		}
 	}
 	
 	glutSwapBuffers();

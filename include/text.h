@@ -38,7 +38,7 @@ public:
 	ovector location;
 	
 	Text();
-	Text(std::string val, int sx, int sy);
+	Text(std::string text, int sx, int sy);
 	void display();
 	bool selected();
 };
