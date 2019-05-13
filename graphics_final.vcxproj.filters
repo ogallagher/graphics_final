@@ -48,6 +48,12 @@
     <ClInclude Include="include\matrixutils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\room.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\text.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\graphics_final.cpp">
@@ -84,6 +90,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\room.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\text.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

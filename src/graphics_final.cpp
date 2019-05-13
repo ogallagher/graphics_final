@@ -8,18 +8,6 @@ Submission for the 3D OpenGL final project.
 It's a top-down shooter with SuperHot-like mechanics, where time is faster when the player
 moves, and slower when the player stands still.
 
-TODO <stages>: create start, play, and end stages
-= Text class
-	+ displays number chars
-	+ supports transformations and materials
-	+ has stroke thickness parameter (as well as bullet)
-	+ is interactive
-	- supports some letter chars
-- stage variable
-	- start stage
-	= play stage
-	- end stage
-
 */
 
 //core headers
@@ -36,7 +24,7 @@ TODO <stages>: create start, play, and end stages
 #define OS_SPEED 50		//speed if Mac
 #else
 #include <GL/glut.h> //windows glut and opengl
-#define OS_SPEED 1		//speed if Windows
+#define OS_SPEED 2.5		//speed if Windows
 #endif
 
 //local headers

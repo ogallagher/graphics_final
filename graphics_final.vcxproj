@@ -98,6 +98,8 @@
     <ClInclude Include="include\ovector.h" />
     <ClInclude Include="include\person.h" />
     <ClInclude Include="include\player.h" />
+    <ClInclude Include="include\room.h" />
+    <ClInclude Include="include\text.h" />
     <ClInclude Include="include\world.h" />
   </ItemGroup>
   <ItemGroup>
@@ -112,6 +114,8 @@
     <ClCompile Include="src\ovector.cpp" />
     <ClCompile Include="src\person.cpp" />
     <ClCompile Include="src\player.cpp" />
+    <ClCompile Include="src\room.cpp" />
+    <ClCompile Include="src\text.cpp" />
     <ClCompile Include="src\world.cpp" />
   </ItemGroup>
   <ItemGroup>
